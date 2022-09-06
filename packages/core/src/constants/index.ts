@@ -10,10 +10,4 @@ export {
 } from "./rpcs";
 export type { RpcProviderName } from "./rpcs";
 
-export {
-  chain,
-  chainId,
-  allChains,
-  defaultChains,
-  defaultL2Chains,
-} from "./chains";
+export { chain, chainId, allChains, defaultChains } from "./chains";

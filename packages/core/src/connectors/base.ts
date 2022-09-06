@@ -1,5 +1,4 @@
 import { default as EventEmitter } from "eventemitter3";
-
 import { defaultChains } from "../constants";
 import { Chain } from "../types";
 
@@ -37,7 +36,7 @@ export abstract class Connector<
     chains = defaultChains,
     options,
   }: {
-    chains?: Chain[];
+    chains: Chain[];
     options: Options;
   }) {
     super();
@@ -45,9 +44,6 @@ export abstract class Connector<
     this.options = options;
   }
 
-  abstract connect(config?: {
-    chainId?: number;
-  }): Promise<Required<ConnectorData>>;
   abstract disconnect(): Promise<void>;
   abstract getAccount(): Promise<string>;
   abstract getChainId(): Promise<number>;
@@ -65,16 +61,16 @@ export abstract class Connector<
   protected abstract onChainChanged(chain: number | string): void;
   protected abstract onDisconnect(error: Error): void;
 
-  protected getBlockExplorerUrls(chain: Chain) {
-    const { default: blockExplorer, ...blockExplorers } =
-      chain.blockExplorers ?? {};
-    if (blockExplorer)
-      return [
-        blockExplorer.url,
-        ...Object.values(blockExplorers).map((x) => x.url),
-      ];
-    return [];
-  }
+  // protected getBlockExplorerUrls(chain: Chain) {
+  //   const { default: blockExplorer, ...blockExplorers } =
+  //     chain.blockExplorers ?? {};
+  //   if (blockExplorer)
+  //     return [
+  //       blockExplorer.url,
+  //       ...Object.values(blockExplorers).map((x) => x.url),
+  //     ];
+  //   return [];
+  // }
 
   protected isChainUnsupported(chainId: number) {
     return !this.chains.some((x) => x.id === chainId);

@@ -1,13 +1,10 @@
 import { Signer as BaseSigner, providers } from "ethers";
 
-import {
-  BlockExplorer,
-  BlockExplorerName,
-  RpcProviderName,
-} from "../constants";
-
-export type Address = `0x${string}`;
-export type Hash = `0x${string}`;
+// import {
+//   BlockExplorer,
+//   BlockExplorerName,
+//   RpcProviderName,
+// } from "../constants";
 
 export type Chain = {
   /** ID in number form */
@@ -16,29 +13,29 @@ export type Chain = {
   name: string;
   /** Internal network name */
   network: string;
-  /** Currency used by chain */
-  nativeCurrency?: AddEthereumChainParameter["nativeCurrency"];
-  /** Collection of RPC endpoints */
-  rpcUrls: { [key in RpcProviderName]?: string } & {
-    [key: string]: string;
-    default: string;
-  };
-  /** Collection of block explorers */
-  blockExplorers?: {
-    [key in BlockExplorerName]?: BlockExplorer;
-  } & {
-    [key: string]: BlockExplorer;
-    default: BlockExplorer;
-  };
+  // /** Currency used by chain */
+  // nativeCurrency?: AddEthereumChainParameter["nativeCurrency"];
+  // /** Collection of RPC endpoints */
+  // rpcUrls: { [key in RpcProviderName]?: string } & {
+  //   [key: string]: string;
+  //   default: string;
+  // };
+  // /** Collection of block explorers */
+  // blockExplorers?: {
+  //   [key in BlockExplorerName]?: BlockExplorer;
+  // } & {
+  //   [key: string]: BlockExplorer;
+  //   default: BlockExplorer;
+  // };
   /** ENS registry */
   ens?: {
     address: string;
   };
-  /** Chain multicall contract */
-  multicall?: {
-    address: string;
-    blockCreated: number;
-  };
+  // /** Chain multicall contract */
+  //  multicall?: {
+  //   address: string;
+  //   blockCreated: number;
+  // };
   /** Flag for test networks */
   testnet?: boolean;
 };
@@ -66,7 +63,6 @@ export type WebSocketProvider = providers.WebSocketProvider & {
 };
 
 export type Signer = BaseSigner;
-
 
 type AddEthereumChainParameter = {
   /** A 0x-prefixed hexadecimal string */
