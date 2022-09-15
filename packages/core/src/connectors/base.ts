@@ -36,7 +36,7 @@ export abstract class Connector<
     chains = defaultChains,
     options,
   }: {
-    chains: Chain[];
+    chains?: Chain[];
     options: Options;
   }) {
     super();
@@ -44,6 +44,9 @@ export abstract class Connector<
     this.options = options;
   }
 
+  abstract connect(config?: {
+    chainId?: number;
+  }): Promise<Required<ConnectorData>>;
   abstract disconnect(): Promise<void>;
   abstract getAccount(): Promise<string>;
   abstract getChainId(): Promise<number>;
