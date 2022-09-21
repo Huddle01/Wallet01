@@ -1,6 +1,6 @@
 import { default as EventEmitter } from "eventemitter3";
 import { defaultChains } from "../constants";
-import { Chain } from "../types";
+import { CustomChainConfig } from "../types";
 
 export type ConnectorData<Provider = any> = {
   account?: string;
@@ -26,7 +26,7 @@ export abstract class Connector<
   /** Connector name */
   abstract readonly name: string;
   /** Chains connector supports */
-  readonly chains: Chain[];
+  readonly chains: CustomChainConfig[];
   /** Options to use with connector */
   readonly options: Options;
   /** Whether connector is usable */
@@ -36,7 +36,7 @@ export abstract class Connector<
     chains = defaultChains,
     options,
   }: {
-    chains?: Chain[];
+    chains?: CustomChainConfig[];
     options: Options;
   }) {
     super();
@@ -53,7 +53,7 @@ export abstract class Connector<
   abstract getProvider(config?: { chainId?: number }): Promise<Provider>;
   abstract getSigner(config?: { chainId?: number }): Promise<Signer>;
   abstract isAuthorized(): Promise<boolean>;
-  switchChain?(chainId: number): Promise<Chain>;
+  switchChain?(chainId: number): Promise<CustomChainConfig>;
   watchAsset?(asset: {
     address: string;
     image?: string;
@@ -76,6 +76,6 @@ export abstract class Connector<
   // }
 
   protected isChainUnsupported(chainId: number) {
-    return !this.chains.some((x) => x.id === chainId);
+    return !this.chains.some((x) => x.chainId === chainId);
   }
 }

@@ -6,48 +6,22 @@ import { Signer as BaseSigner, providers } from "ethers";
 //   RpcProviderName,
 // } from "../constants";
 
-export type Chain = {
-  /** ID in number form */
-  id: number;
-  /** Human-readable name */
-  name: string;
-  /** Internal network name */
-  network: string;
-  // /** Currency used by chain */
-  // nativeCurrency?: AddEthereumChainParameter["nativeCurrency"];
-  // /** Collection of RPC endpoints */
-  // rpcUrls: { [key in RpcProviderName]?: string } & {
-  //   [key: string]: string;
-  //   default: string;
-  // };
-  // /** Collection of block explorers */
-  // blockExplorers?: {
-  //   [key in BlockExplorerName]?: BlockExplorer;
-  // } & {
-  //   [key: string]: BlockExplorer;
-  //   default: BlockExplorer;
-  // };
-  /** ENS registry */
-  ens?: {
-    address: string;
-  };
-  // /** Chain multicall contract */
-  //  multicall?: {
-  //   address: string;
-  //   blockCreated: number;
-  // };
-  /** Flag for test networks */
-  testnet?: boolean;
+export type CustomChainConfig = {
+  chainNamespace: "eip155" | "solana" | "other";
+  chainId: number;
+  rpcTarget?: string;
+  displayName: string;
+  blockExplorer?: string;
+  ticker: string;
+  tickerName: string;
 };
 
 export type ChainProviderFn<
   TProvider extends Provider = providers.BaseProvider,
-  TWebSocketProvider extends WebSocketProvider = providers.WebSocketProvider,
-  TChain extends Chain = Chain
+  TChain extends CustomChainConfig = CustomChainConfig
 > = (chain: TChain) => {
   chain: TChain;
   provider: () => ProviderWithFallbackConfig<TProvider>;
-  webSocketProvider?: () => TWebSocketProvider;
 } | null;
 
 export type FallbackProviderConfig = Omit<
@@ -57,9 +31,9 @@ export type FallbackProviderConfig = Omit<
 export type ProviderWithFallbackConfig<TProvider extends Provider = Provider> =
   TProvider & FallbackProviderConfig;
 
-export type Provider = providers.BaseProvider & { chains?: Chain[] };
+export type Provider = providers.BaseProvider & { chains?: CustomChainConfig[] };
 export type WebSocketProvider = providers.WebSocketProvider & {
-  chains?: Chain[];
+  chains?: CustomChainConfig[];
 };
 
 export type Signer = BaseSigner;
