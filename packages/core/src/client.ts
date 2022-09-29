@@ -1,6 +1,6 @@
 import { providers } from "ethers";
 import { EventEmitter } from "eventemitter3";
-import { Connector } from "./connectors/base";
+import { Connector, ConnectorData } from "./connectors/base";
 import { InjectedConnector } from "./connectors/injected";
 import { CustomChainConfig } from "./types";
 
@@ -11,7 +11,7 @@ export const ADAPTER_STATUS = {
     CONNECTED: "connected",
     DISCONNECTED: "disconnected",
     ERRORED: "errored",
-  } as const;
+} as const;
 
 export type ADAPTER_STATUS_TYPE = typeof ADAPTER_STATUS[keyof typeof ADAPTER_STATUS];
 
@@ -28,8 +28,11 @@ interface IClient {
     chainConfig: Partial<CustomChainConfig> & Pick<CustomChainConfig, "chainNamespace">;
     status: ADAPTER_STATUS_TYPE;
     connector: Connector;
-    connect: () => void;
+    connect: (chainId: number) => void;
     disconnect(): void;
+    resolveDid(): Promise<string>;
+    getAccount(): Promise<string>;
+    signTxn(): Promise<void>;
 }
 
 export default class Client extends EventEmitter implements IClient {
@@ -46,14 +49,34 @@ export default class Client extends EventEmitter implements IClient {
         super();
         this.chainConfig = chainConfig;
         this.connector = connector;
-        this.provider = provider
+        this.provider = provider;
     }
 
-    connect() {
-        this.connector.connect()
+    async getAccount(): Promise<string> {
+        const account = await this.connector.getAccount()
+        return account[0]
     }
 
-    disconnect(): void {
+    connect(chainId: number) {
+        this.connector.connect(chainId)
+        this.status = 'connected'
+    }
+
+    disconnect() {
         this.connector.disconnect()
+        this.status = 'disconnected'
+    }
+
+    async resolveDid() {
+        const did = await this.connector.resolveDid()
+        return did
+    }
+
+    async signTxn(): Promise<void> {
+        await this.connector.signTxn('')
+    }
+
+    getChainId () {
+        return this.chainConfig.chainId;
     }
 }

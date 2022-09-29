@@ -18,47 +18,39 @@ export interface ConnectorEvents<Provider = any> {
 
 export abstract class Connector<
   Provider = any,
-  Options = any,
   Signer = any
 > extends EventEmitter<ConnectorEvents<Provider>> {
-  /** Unique connector id */
+
   abstract readonly id: string;
-  /** Connector name */
   abstract readonly name: string;
-  /** Chains connector supports */
   readonly chains: CustomChainConfig[];
-  /** Options to use with connector */
-  readonly options: Options;
-  /** Whether connector is usable */
   abstract readonly ready: boolean;
 
   constructor({
     chains = defaultChains,
-    options,
   }: {
     chains?: CustomChainConfig[];
-    options: Options;
   }) {
     super();
     this.chains = chains;
-    this.options = options;
   }
 
-  abstract connect(config?: {
-    chainId?: number;
-  }): Promise<Required<ConnectorData>>;
+  abstract connect(chainId: number): Promise<Required<ConnectorData> | undefined>;
   abstract disconnect(): Promise<void>;
-  abstract getAccount(): Promise<string>;
-  abstract getChainId(): Promise<number>;
-  abstract getProvider(config?: { chainId?: number }): Promise<Provider>;
+  abstract getAccount(): Promise<string[]>;
+  abstract getChainId(): Promise<string>;
+  // abstract getProvider(): Promise<Provider>;
   abstract getSigner(config?: { chainId?: number }): Promise<Signer>;
   abstract isAuthorized(): Promise<boolean>;
+  abstract resolveDid(): Promise<string>;
+  abstract signTxn(message: string): Promise<void>;
   switchChain?(chainId: number): Promise<CustomChainConfig>;
   watchAsset?(asset: {
     address: string;
     image?: string;
     symbol: string;
   }): Promise<boolean>;
+
 
   protected abstract onAccountsChanged(accounts: string[]): void;
   protected abstract onChainChanged(chain: number | string): void;

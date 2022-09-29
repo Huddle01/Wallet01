@@ -1,9 +1,9 @@
 import { providers } from "ethers";
-import { getAddress, hexValue } from "ethers/lib/utils";
-import { Chain } from "../types";
+// import { getAddress, hexValue } from "ethers/lib/utils";
+import { CustomChainConfig, Ethereum } from "../types";
 import { ConnectorNotFoundError } from "../utils/errors";
 
-import { Connector } from "./base";
+import { Connector, ConnectorData } from "./base";
 
 export type InjectedConnectorOptions = {
   /** Name of connector */
@@ -25,7 +25,6 @@ export type InjectedConnectorOptions = {
 
 export class InjectedConnector extends Connector<
   Window["ethereum"],
-  InjectedConnectorOptions | undefined,
   providers.JsonRpcSigner
 > {
   readonly id: string;
@@ -41,10 +40,10 @@ export class InjectedConnector extends Connector<
     chains,
     options = { shimDisconnect: true },
   }: {
-    chains?: Chain[];
+    chains?: CustomChainConfig[];
     options?: InjectedConnectorOptions;
   } = {}) {
-    super({ chains, options });
+    super({ chains });
 
     let name = "Injected";
     const overrideName = options.name;
@@ -65,7 +64,41 @@ export class InjectedConnector extends Connector<
     this.name = name;
   }
 
-  async connect({ chainId }: { chainId?: number } = {}) {
+  async getAccount(): Promise<string[]> {
+    if (this.#provider) {
+      return await this.#provider?.request({ method: "eth_requestAccounts" },)
+    }
+    return ['']
+  }
+
+  async getChainId(): Promise<string> {
+    if (this.#provider) {
+      return await this.#provider?.request({method: "eth_chainId"})
+    }
+    return ''
+  }
+
+
+
+  async isAuthorized(): Promise<boolean> {
+
+  }
+
+  getSigner(config?: { chainId?: number | undefined; } | undefined): Promise<providers.JsonRpcSigner> {
+
+  }
+
+  switchChain(chainId: number): Promise<CustomChainConfig> {
+    return {
+      chainNamespace: "eip155",
+      chainId: chainId,
+      displayName: '',
+      ticker: '',
+      tickerName: ''
+    }
+  }
+
+  async connect(chainId: number) {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new ConnectorNotFoundError();
@@ -84,21 +117,51 @@ export class InjectedConnector extends Connector<
       let unsupported = this.isChainUnsupported(id);
       if (chainId && id !== chainId) {
         const chain = await this.switchChain?.(chainId);
-        id = chain.id;
+        id = chain?.chainId;
         unsupported = this.isChainUnsupported(id);
       }
 
-      // Add shim to storage signalling wallet is connected
-      if (this.options?.shimDisconnect)
-        getClient().storage?.setItem(this.shimDisconnectKey, true);
+      const data: Required<ConnectorData> = {
+        account: account,
+        chain: {
+          id: id,
+          unsupported: unsupported
+        },
+        provider: {
+          provider
+        }
+      }
 
-      return { account, chain: { id, unsupported }, provider };
+      // Add shim to storage signalling wallet is connected
+
+      return data;
     } catch (error) {
-      if (this.isUserRejectedRequestError(error))
-        throw new UserRejectedRequestError(error);
-      if ((<RpcError>error).code === -32002)
-        throw new ResourceUnavailableError(error);
-      throw error;
+
     }
+  }
+
+  async disconnect(): Promise<void> {
+
+  }
+
+  async resolveDid(): Promise<string> {
+    return 'Hello!'
+  }
+
+  async signTxn(message: string): Promise<void> {
+
+  }
+
+
+  protected onAccountsChanged(accounts: string[]): void {
+
+  }
+
+  protected onChainChanged(chain: string | number): void {
+
+  }
+
+  protected onDisconnect(error: Error): void {
+
   }
 }

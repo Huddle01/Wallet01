@@ -31,7 +31,7 @@ export type FallbackProviderConfig = Omit<
 export type ProviderWithFallbackConfig<TProvider extends Provider = Provider> =
   TProvider & FallbackProviderConfig;
 
-export type Provider = providers.BaseProvider & { chains?: CustomChainConfig[] };
+// export type Provider = providers.BaseProvider & { chains?: CustomChainConfig[] };
 export type WebSocketProvider = providers.WebSocketProvider & {
   chains?: CustomChainConfig[];
 };
@@ -168,6 +168,12 @@ export interface Ethereum extends InjectedProviders {
     method: "wallet_switchEthereumChain";
     params: [{ chainId: string }];
   }): Promise<null>;
+}
+
+export interface Provider {
+  on?: (eventName: EventType, listener: Listener) => void;
+  removeListener?: (eventName: EventType, listener: Listener) => void;
+  request<T>(args: RequestArguments): Promise<T>;
 }
 
 declare global {
