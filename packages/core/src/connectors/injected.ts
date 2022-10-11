@@ -1,106 +1,112 @@
-import { providers } from "ethers";
-// import { getAddress, hexValue } from "ethers/lib/utils";
-import { CustomChainConfig, Ethereum } from "../types";
+import { ethers, providers } from "ethers";
+import { hexValue } from "ethers/lib/utils";
+
+import { CustomChainConfig } from "../types";
 import { ConnectorNotFoundError } from "../utils/errors";
 
 import { Connector, ConnectorData } from "./base";
+import {  ExternalProvider, Web3Provider } from '@ethersproject/providers';
+import detectEthereumProvider from '@metamask/detect-provider'
+
 
 export type InjectedConnectorOptions = {
-  /** Name of connector */
   name?: string | ((detectedName: string | string[]) => string);
-  /**
-   * MetaMask 10.9.3 emits disconnect event when chain is changed.
-   * This flag prevents the `"disconnect"` event from being emitted upon switching chains.
-   * @see https://github.com/MetaMask/metamask-extension/issues/13375#issuecomment-1027663334
-   */
-  shimChainChangedDisconnect?: boolean;
-  /**
-   * MetaMask and other injected providers do not support programmatic disconnect.
-   * This flag simulates the disconnect behavior by keeping track of connection status in storage.
-   * @see https://github.com/MetaMask/metamask-extension/issues/10353
-   * @default true
-   */
-  shimDisconnect?: boolean;
 };
 
 export class InjectedConnector extends Connector<
-  Window["ethereum"],
+  Web3Provider,
   providers.JsonRpcSigner
 > {
   readonly id: string;
   readonly name: string;
   readonly ready = typeof window != "undefined" && !!window.ethereum;
 
-  #provider?: Window["ethereum"];
-  #switchingChains?: boolean;
+  provider: Web3Provider | undefined;
 
-  protected shimDisconnectKey = "injected.shimDisconnect";
+  // protected shimDisconnectKey = "injected.shimDisconnect";
 
   constructor({
     chains,
-    options = { shimDisconnect: true },
   }: {
     chains?: CustomChainConfig[];
-    options?: InjectedConnectorOptions;
   } = {}) {
     super({ chains });
 
     let name = "Injected";
-    const overrideName = options.name;
-    if (typeof overrideName === "string") name = overrideName;
-    else if (typeof window !== "undefined") {
-      // const detectedName = getInjectedName(window.ethereum);
-      const detectedName = "metamask";
-
-      if (overrideName) name = overrideName(detectedName);
-      else
-        name =
-          typeof detectedName === "string"
-            ? detectedName
-            : <string>detectedName[0];
-    }
 
     this.id = "injected";
     this.name = name;
   }
 
-  async getAccount(): Promise<string[]> {
-    if (this.#provider) {
-      return await this.#provider?.request({ method: "eth_requestAccounts" },)
+
+
+  async getProvider() {
+    // if (typeof window !== 'undefined' && !!window.ethereum) throw new Error("Window Not Found")
+    const provider = await detectEthereumProvider()
+
+    if (provider) {
+
+      console.log('Ethereum successfully detected!')
+      const _provider = new ethers.providers.Web3Provider(provider)
+      this.provider = _provider
+      return this.provider
+
+    } else {
+      throw new Error('Please install a Browser Wallet')
     }
-    return ['']
+  }
+
+  async getAccount(): Promise<string[]> {
+    if (!this.provider) throw new Error("Provider Undefined!")
+    try {
+      const result = await this.provider.send("eth_requestAccounts", [])
+      console.log({result}) 
+      return result
+    } catch (err) {
+      console.error(err)
+      throw new Error('Error in getting Accounts')
+    }
   }
 
   async getChainId(): Promise<string> {
-    if (this.#provider) {
-      return await this.#provider?.request({method: "eth_chainId"})
+    if (this.provider) {
+      const { result } = await this.provider?.send("eth_chainId", [])
+      return result
     }
     return ''
   }
 
-
-
-  async isAuthorized(): Promise<boolean> {
-
+  async getSigner(): Promise<providers.JsonRpcSigner> {
+    // console.log(this.provider)
+    // if (!this.provider) throw new Error("Provider Undefined!")
+    const provider = await this.getProvider()
+    const signer = await provider.getSigner()
+    return signer
   }
 
-  getSigner(config?: { chainId?: number | undefined; } | undefined): Promise<providers.JsonRpcSigner> {
+  async switchChain(chainId: number): Promise<void> {
 
-  }
+    const provider = await this.getProvider()
 
-  switchChain(chainId: number): Promise<CustomChainConfig> {
-    return {
-      chainNamespace: "eip155",
-      chainId: chainId,
-      displayName: '',
-      ticker: '',
-      tickerName: ''
+    const id = hexValue(chainId)
+    try {
+      await provider?.send(
+        'wallet_switchEthereumChain',
+        [{ chainId: id }]
+      )
     }
+    catch (error) {
+      console.log("error in switching chain", error)
+    }
+
   }
 
   async connect(chainId: number) {
     try {
       const provider = await this.getProvider();
+      this.provider = provider
+      // const signer = await this.getSigner()
+      // console.log(signer)
       if (!provider) throw new ConnectorNotFoundError();
 
       if (provider.on) {
@@ -111,57 +117,61 @@ export class InjectedConnector extends Connector<
 
       this.emit("message", { type: "connecting" });
 
-      const account = await this.getAccount();
       // Switch to chain if provided
-      let id = await this.getChainId();
-      let unsupported = this.isChainUnsupported(id);
+      // const account = await this.getAccount();
+      // console.log(account)
+      let id = Number(await this.getChainId())
+      // let unsupported = this.isChainUnsupported(id);
       if (chainId && id !== chainId) {
-        const chain = await this.switchChain?.(chainId);
-        id = chain?.chainId;
-        unsupported = this.isChainUnsupported(id);
+        await this.switchChain?.(chainId);
       }
 
-      const data: Required<ConnectorData> = {
-        account: account,
+      const data: ConnectorData = {
+        account: (await this.getAccount())[0],
         chain: {
           id: id,
-          unsupported: unsupported
         },
-        provider: {
-          provider
-        }
+        provider: this.provider
       }
-
+      console.log(data, 'connect method data')
       // Add shim to storage signalling wallet is connected
 
       return data;
     } catch (error) {
-
+      console.error(error)
     }
   }
 
   async disconnect(): Promise<void> {
-
+    const provider = this.getProvider();
+    if (!provider) return;
+    // TODO: remove any local storage or states
   }
 
-  async resolveDid(): Promise<string> {
-    return 'Hello!'
+  async resolveDid(address: string): Promise<string | null> {
+    // if (!this.provider) throw new Error("Provider Undefined!")
+    const provider = await this.getProvider()
+    const name = await provider.lookupAddress(address);
+    console.log(name)
+    return name;
   }
 
-  async signTxn(message: string): Promise<void> {
-
+  async signMessage(message: string): Promise<void> {
+    const signer = await this.getSigner()
+    console.log(signer)
+    await signer.signMessage(message)
   }
 
 
   protected onAccountsChanged(accounts: string[]): void {
-
+    console.log('Account Changed')
   }
 
   protected onChainChanged(chain: string | number): void {
-
+    console.log('Chain Changed')
   }
 
   protected onDisconnect(error: Error): void {
-
+    console.log('Wallet disconnected')
   }
 }

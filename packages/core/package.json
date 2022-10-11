@@ -1,13 +1,14 @@
 {
-  "name": "core",
+  "name": "@huddle01/wallets",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./index.ts",
   "scripts": {},
   "keywords": [],
   "author": "deepso",
   "license": "ISC",
   "dependencies": {
+    "@metamask/detect-provider": "^2.0.0",
     "ethers": "^5.6.9",
     "eventemitter3": "^4.0.7"
   }

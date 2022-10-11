@@ -1,10 +1,12 @@
 import { default as EventEmitter } from "eventemitter3";
 import { defaultChains } from "../constants";
 import { CustomChainConfig } from "../types";
+import { Web3Provider } from '@ethersproject/providers';
+
 
 export type ConnectorData<Provider = any> = {
   account?: string;
-  chain?: { id: number; unsupported: boolean };
+  chain?: { id: number; };
   provider?: Provider;
 };
 
@@ -35,16 +37,16 @@ export abstract class Connector<
     this.chains = chains;
   }
 
-  abstract connect(chainId: number): Promise<Required<ConnectorData> | undefined>;
+  abstract connect(chainId: number): Promise<ConnectorData<any> | undefined>;
   abstract disconnect(): Promise<void>;
   abstract getAccount(): Promise<string[]>;
   abstract getChainId(): Promise<string>;
-  // abstract getProvider(): Promise<Provider>;
+  abstract getProvider(): Promise<Web3Provider | undefined>;
   abstract getSigner(config?: { chainId?: number }): Promise<Signer>;
-  abstract isAuthorized(): Promise<boolean>;
-  abstract resolveDid(): Promise<string>;
-  abstract signTxn(message: string): Promise<void>;
-  switchChain?(chainId: number): Promise<CustomChainConfig>;
+  // abstract isAuthorized(): Promise<boolean>;
+  abstract resolveDid(address: string): Promise<string | null>;
+  abstract signMessage(message: string): Promise<void>;
+  switchChain?(chainId: number): Promise<void>;
   watchAsset?(asset: {
     address: string;
     image?: string;
@@ -55,17 +57,6 @@ export abstract class Connector<
   protected abstract onAccountsChanged(accounts: string[]): void;
   protected abstract onChainChanged(chain: number | string): void;
   protected abstract onDisconnect(error: Error): void;
-
-  // protected getBlockExplorerUrls(chain: Chain) {
-  //   const { default: blockExplorer, ...blockExplorers } =
-  //     chain.blockExplorers ?? {};
-  //   if (blockExplorer)
-  //     return [
-  //       blockExplorer.url,
-  //       ...Object.values(blockExplorers).map((x) => x.url),
-  //     ];
-  //   return [];
-  // }
 
   protected isChainUnsupported(chainId: number) {
     return !this.chains.some((x) => x.chainId === chainId);

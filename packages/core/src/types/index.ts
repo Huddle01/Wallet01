@@ -16,20 +16,11 @@ export type CustomChainConfig = {
   tickerName: string;
 };
 
-export type ChainProviderFn<
-  TProvider extends Provider = providers.BaseProvider,
-  TChain extends CustomChainConfig = CustomChainConfig
-> = (chain: TChain) => {
-  chain: TChain;
-  provider: () => ProviderWithFallbackConfig<TProvider>;
-} | null;
 
 export type FallbackProviderConfig = Omit<
   providers.FallbackProviderConfig,
   "provider"
 >;
-export type ProviderWithFallbackConfig<TProvider extends Provider = Provider> =
-  TProvider & FallbackProviderConfig;
 
 // export type Provider = providers.BaseProvider & { chains?: CustomChainConfig[] };
 export type WebSocketProvider = providers.WebSocketProvider & {
@@ -170,11 +161,6 @@ export interface Ethereum extends InjectedProviders {
   }): Promise<null>;
 }
 
-export interface Provider {
-  on?: (eventName: EventType, listener: Listener) => void;
-  removeListener?: (eventName: EventType, listener: Listener) => void;
-  request<T>(args: RequestArguments): Promise<T>;
-}
 
 declare global {
   interface Window {

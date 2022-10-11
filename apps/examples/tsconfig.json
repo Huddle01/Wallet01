@@ -1,0 +1,11 @@
+{
+  "extends": "tsconfig/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "incremental": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "include": ["next-env.d.ts", "src/**/*", "styles/globals.css"],
+  "exclude": ["node_modules"]
+}
