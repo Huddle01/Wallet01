@@ -8,7 +8,7 @@ import { useIsMounted } from 'usehooks-ts'
 
 export type CustomChainConfig = {
   chainNamespace: "eip155" | "solana" | "other";
-  chainId: number;
+  chainId: string;
   rpcTarget?: string;
   displayName: string;
   blockExplorer?: string;
@@ -18,7 +18,7 @@ export type CustomChainConfig = {
 
 const defaultChainConfig: CustomChainConfig = {
   chainNamespace: 'eip155',
-  chainId: 1,
+  chainId: '1',
   displayName: 'ethereum',
   ticker: 'ETH',
   tickerName: 'Ethereum'

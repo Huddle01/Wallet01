@@ -1,10 +1,19 @@
-import Client from './src/client'
-import { CustomChainConfig } from './src/types'
-import { InjectedConnector } from './src/connectors/injected'
+import { Wallet } from "./src/wallet";
+import { InjectedConnector } from "./src/connectors";
+import {
+    type CustomChainConfig,
+    type ClientConfig,
+    type ConnectedData,
+    BaseConnector
+} from './src/types'
+
 
 
 export {
-    Client,
+    Wallet,
     InjectedConnector,
-    // type CustomChainConfig
+    CustomChainConfig,
+    ClientConfig,
+    ConnectedData,
+    BaseConnector
 }
