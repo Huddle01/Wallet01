@@ -2,10 +2,10 @@ import { Web3Provider } from "@ethersproject/providers";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers, providers } from "ethers";
 import { hexValue } from "ethers/lib/utils";
-import { BaseConnector, ConnectedData } from "../types";
-import emitter from "../utils/emiter";
+import { BaseConnector, ConnectedData } from "../../types";
+import emitter from "../../utils/emiter";
 
-export class InjectedConnector extends BaseConnector {
+export class InjectedConnector extends BaseConnector<Web3Provider> {
     
     provider?: Web3Provider
     chain: string;
@@ -23,6 +23,7 @@ export class InjectedConnector extends BaseConnector {
   
         console.log('Ethereum successfully detected!')
         const _provider = new ethers.providers.Web3Provider(provider)
+        this.provider = _provider;
         return _provider
   
       } else {
@@ -48,12 +49,6 @@ export class InjectedConnector extends BaseConnector {
         return result
       }
       return ''
-    }
-  
-    async getSigner(): Promise<providers.JsonRpcSigner> {
-      const provider = await this.getProvider()
-      const signer = await provider.getSigner()
-      return signer
     }
   
     async switchChain(chainId: string): Promise<void> {
@@ -85,12 +80,12 @@ export class InjectedConnector extends BaseConnector {
         }
     
         let id = await this.getChainId()
-        // let unsupported = this.isChainUnsupported(id);
+
         if (chainId && id !== chainId) {
           await this.switchChain?.(chainId);
         }
   
-        const data: ConnectedData = {
+        const data: ConnectedData<Web3Provider> = {
           account: (await this.getAccount())[0],
           chainId: id,
           provider: this.provider
@@ -114,7 +109,8 @@ export class InjectedConnector extends BaseConnector {
     }
   
     async signMessage(message: string): Promise<void> {
-      const signer = await this.getSigner()
+      if (!this.provider) throw new Error("Connect a wallet!")
+      const signer = await this.provider.getSigner()
       await signer.signMessage(message)
     }
     

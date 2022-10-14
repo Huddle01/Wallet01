@@ -1,30 +1,25 @@
-import EventEmitter from "eventemitter3";
-
-import { Web3Provider } from '@ethersproject/providers';
-
-
-import { ClientConfig, ConnectedData, CustomChainConfig } from "./types";
-import { BaseConnector } from "./types/ConnectorTypes";
+import { ClientConfig, CustomChainConfig } from "./types";
+import { BaseConnector } from "./types/BaseConnector";
 import emitter from "./utils/emiter";
-
-export abstract class Wallet{
+export class Wallet<TProvider>{
 
     readonly chainConfig: CustomChainConfig;
-    abstract provider: Web3Provider | null;
-    abstract account: string;
-    abstract did: string | null;
-    readonly connector: BaseConnector;
+    provider!: TProvider | null;
+    account!: string;
+    did!: string | null;
+    readonly connector: BaseConnector<TProvider>;
     chainId: string;
 
-    constructor({ chainConfig, connector }: ClientConfig) {
+    constructor({ chainConfig, connector }: ClientConfig<TProvider>) {
         this.chainConfig = chainConfig;
         this.connector = connector
         this.chainId = chainConfig.chainId;
         
         if ( emitter ) {
-            emitter.on('connected', (data) => {
-                this.provider = data.provider
-                this.account = data.account
+            emitter.on('disconnected', () => {
+                this.provider = null
+                this.account = ''
+                this.did = null
             })
         }
     }
@@ -52,12 +47,12 @@ export abstract class Wallet{
     }
 
     async getDid() {
-        const did = await this.connector.resolveDid(this.account);
+        const did = await this.connector.resolveDid(await this.getAccount());
         this.did = did;
         return did;
     }
 
     async signMessage(message: string) {
-        await this.signMessage(message);
+        await this.connector.signMessage(message);
     }
 }

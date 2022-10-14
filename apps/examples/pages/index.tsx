@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import  {Client, InjectedConnector } from '@huddle01/wallets'
+import  { Wallet, InjectedConnector, WalletLinkProvider, CoinbaseConnector, Web3Provider } from '@huddle01/wallets'
 import { useIsMounted } from 'usehooks-ts'
 
 export type CustomChainConfig = {
@@ -29,31 +29,28 @@ const Home: NextPage = () => {
 
   const isMounted = useIsMounted()
   const [ account, setAccount ] = useState<string>()
-  const [ did, setDid ] = useState<string>()
+  const [ did, setDid ] = useState<string | null>(null)
 
-  let client = new Client({chainConfig: defaultChainConfig, connector:  new InjectedConnector()});
-
-
+  const wallet = new Wallet<Web3Provider>({chainConfig: defaultChainConfig, connector:  new InjectedConnector()});
 
   const connect = async () => {
     if (!isMounted) throw new Error('No Window mounted')
-    const data = await client.connect(1)
-    const account = await client.getAccount()
-    console.log(data, "ETH data")
+    await wallet.connect()
+    const account = await wallet.getAccount()
     setAccount(account)
   }
 
   const getDid = async () => {
     if (!account) throw new Error("No Account Found")
-    const name = await client.resolveDid('0x905040585A59C5B0E83Be2b247fC15a81FF4E533')
+    const name = await wallet.getDid()
+    console.log(name)
     setDid(name)
     return name
   }
 
   const signMessage = async () =>{
-    await client.signMessage("hello")
+    await wallet.signMessage("hello")
   }
-
 
   return (
     <div className={styles.container}>

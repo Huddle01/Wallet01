@@ -1,16 +1,16 @@
 import { Web3Provider } from "@ethersproject/providers";
 import { CustomChainConfig } from "./ChainConfig";
-import { BaseConnector } from "./ConnectorTypes";
+import { BaseConnector } from "./BaseConnector";
 
-type ClientConfig = {
+type ClientConfig<TProvider> = {
     chainConfig: CustomChainConfig;
-    connector: BaseConnector;
+    connector: BaseConnector<TProvider>;
 }
 
-type ConnectedData = {
+type ConnectedData<TProvider> = {
     account: string;
     chainId: string;
-    provider: Web3Provider
+    provider: TProvider;
 }
 
 export  {

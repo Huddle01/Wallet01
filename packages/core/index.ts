@@ -1,19 +1,23 @@
 import { Wallet } from "./src/wallet";
-import { InjectedConnector } from "./src/connectors";
+import { InjectedConnector, CoinbaseConnector } from "./src/connectors";
 import {
     type CustomChainConfig,
     type ClientConfig,
     type ConnectedData,
     BaseConnector
 } from './src/types'
-
+import { Web3Provider } from '@ethersproject/providers'
+import { WalletLinkProvider } from 'walletlink'
 
 
 export {
     Wallet,
     InjectedConnector,
-    CustomChainConfig,
-    ClientConfig,
-    ConnectedData,
-    BaseConnector
+    type CustomChainConfig,
+    type ClientConfig,
+    type ConnectedData,
+    BaseConnector,
+    CoinbaseConnector,
+    WalletLinkProvider,
+    Web3Provider,
 }

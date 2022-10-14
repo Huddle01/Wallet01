@@ -1,5 +1,7 @@
-import { InjectedConnector } from "./injected";
+import { InjectedConnector } from "./EVM/injected";
+import { CoinbaseConnector } from './EVM/coinbase'
 
 export {
-    InjectedConnector
+    InjectedConnector,
+    CoinbaseConnector
 }

@@ -1,10 +1,7 @@
-import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
-import { CustomChainConfig } from "./ChainConfig";
-
-export abstract class BaseConnector {
+export abstract class BaseConnector<TProvider> {
 
     readonly chain: string;
-    abstract provider?: Web3Provider;
+    abstract provider?: TProvider;
 
     constructor ( chain: string ) {
         this.chain = chain;
@@ -19,9 +16,7 @@ export abstract class BaseConnector {
 
     abstract getChainId(): Promise<string>;
 
-    abstract getProvider(): Promise<Web3Provider>;
-
-    abstract getSigner(config?: { chainId?: number }): Promise<JsonRpcSigner>;
+    abstract getProvider(): Promise<TProvider>;
 
     abstract resolveDid(address: string): Promise<string | null>;
 
