@@ -9,6 +9,7 @@
   "license": "ISC",
   "dependencies": {
     "@metamask/detect-provider": "^2.0.0",
+    "@walletconnect/ethereum-provider": "^1.8.0",
     "ethers": "^5.6.9",
     "eventemitter3": "^4.0.7",
     "walletlink": "^2.5.0",

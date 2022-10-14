@@ -82,12 +82,12 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
         let id = await this.getChainId()
 
         if (chainId && id !== chainId) {
-          await this.switchChain?.(chainId);
+          await this.switchChain(chainId);
         }
   
         const data: ConnectedData<Web3Provider> = {
           account: (await this.getAccount())[0],
-          chainId: id,
+          chainId: this.chain,
           provider: this.provider
         }
         

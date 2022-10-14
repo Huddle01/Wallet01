@@ -76,12 +76,12 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
             const id = await this.getChainId()
 
             if (chainId && id !== chainId) {
-                await this.switchChain?.(chainId);
+                await this.switchChain(chainId);
             }
 
             const data: ConnectedData<WalletLinkProvider> = {
                 account: (await this.getAccount())[0],
-                chainId: id,
+                chainId: this.chain,
                 provider: this.provider
             }
 
@@ -101,7 +101,6 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
         const provider = await this.getProvider()
         const _provider = new Web3Provider(<ExternalProvider>(<unknown>provider));
         const name = await _provider.lookupAddress(address);
-        console.log(name)
         return name;
     }
 
