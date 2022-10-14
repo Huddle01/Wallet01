@@ -8,6 +8,7 @@ import {
 } from './src/types'
 import { Web3Provider } from '@ethersproject/providers'
 import { WalletLinkProvider } from 'walletlink'
+import WalletConnectProvider from "@walletconnect/ethereum-provider";
 
 
 export {
@@ -20,4 +21,5 @@ export {
     CoinbaseConnector,
     WalletLinkProvider,
     Web3Provider,
+    WalletConnectProvider
 }
