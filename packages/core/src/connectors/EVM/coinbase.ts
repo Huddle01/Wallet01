@@ -111,7 +111,7 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
         signer.signMessage(message)
     }
 
-    protected onAccountsChanged(accounts: string[]): void {
+    protected onAccountsChanged(): void {
         console.log('Account Changed')
     }
 
@@ -119,7 +119,7 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
         console.log('Chain Changed')
     }
 
-    protected onDisconnect(error: Error): void {
+    protected onDisconnect(): void {
         console.log('Wallet disconnected')
     }
 }

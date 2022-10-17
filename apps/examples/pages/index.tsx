@@ -3,8 +3,10 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import  { Wallet, InjectedConnector, WalletLinkProvider, CoinbaseConnector, Web3Provider } from '@huddle01/wallets'
+import  { Wallet } from '@huddle01/wallets'
 import { useIsMounted } from 'usehooks-ts'
+import { SolflareConnector } from '@huddle01/wallets/src/connectors'
+import {SolflareProvider, SolanaProvider} from '@huddle01/wallets/src/providers'
 
 export type CustomChainConfig = {
   chainNamespace: "eip155" | "solana" | "other";
@@ -31,7 +33,7 @@ const Home: NextPage = () => {
   const [ account, setAccount ] = useState<string>()
   const [ did, setDid ] = useState<string | null>(null)
 
-  const wallet = new Wallet<Web3Provider>({chainConfig: defaultChainConfig, connector:  new InjectedConnector()});
+  const wallet = new Wallet<SolflareProvider>({chainConfig: defaultChainConfig, connector:  new SolflareConnector()});
 
   const connect = async () => {
     if (!isMounted) throw new Error('No Window mounted')

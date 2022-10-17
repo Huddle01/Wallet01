@@ -115,7 +115,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     }
     
   
-    protected onAccountsChanged(accounts: string[]): void {
+    protected onAccountsChanged(): void {
       console.log('Account Changed')
     }
   
@@ -123,7 +123,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       console.log('Chain Changed')
     }
   
-    protected onDisconnect(error: Error): void {
+    protected onDisconnect(): void {
       console.log('Wallet disconnected')
     }
 }

@@ -8,10 +8,13 @@
   "author": "deepso",
   "license": "ISC",
   "dependencies": {
+    "@bonfida/spl-name-service": "^0.1.51",
     "@metamask/detect-provider": "^2.0.0",
+    "@solana/web3.js": "^1.65.0",
     "@walletconnect/ethereum-provider": "^1.8.0",
     "ethers": "^5.6.9",
     "eventemitter3": "^4.0.7",
+    "tweetnacl": "^1.0.3",
     "walletlink": "^2.5.0",
     "zustand": "^4.1.2"
   }

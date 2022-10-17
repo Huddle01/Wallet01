@@ -24,8 +24,8 @@ export abstract class BaseConnector<TProvider> {
 
     switchChain?(chainId: string): Promise<void>;
 
-    protected abstract onAccountsChanged(accounts: string[]): void;
+    protected abstract onAccountsChanged(): void;
     protected abstract onChainChanged(chain: number | string): void;
-    protected abstract onDisconnect(error: Error): void;
+    protected abstract onDisconnect(): void;
 }
 

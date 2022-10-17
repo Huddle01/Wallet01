@@ -8,7 +8,7 @@ import emitter from "../../utils/emiter";
 
 export class WalletconnectConnector extends BaseConnector<WalletConnectProvider> {
 
-    provider?: WalletConnectProvider;
+    provider!: WalletConnectProvider;
     chain: string;
 
     constructor(chain: string = '1') {
@@ -113,7 +113,7 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
         signer.signMessage(message)
     }
 
-    protected onAccountsChanged(accounts: string[]): void {
+    protected onAccountsChanged(): void {
         console.log('Account Changed')
     }
 
@@ -121,7 +121,7 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
         console.log('Chain Changed')
     }
 
-    protected onDisconnect(error: Error): void {
+    protected onDisconnect(): void {
         console.log('Wallet disconnected')
     }
 

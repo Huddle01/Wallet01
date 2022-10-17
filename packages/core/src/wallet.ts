@@ -1,5 +1,5 @@
 import { ClientConfig, CustomChainConfig } from "./types";
-import { BaseConnector } from "./types/BaseConnector";
+import { BaseConnector } from "./types/baseConnector";
 import emitter from "./utils/emiter";
 export class Wallet<TProvider>{
 
