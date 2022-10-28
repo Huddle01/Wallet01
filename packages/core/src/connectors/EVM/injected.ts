@@ -1,6 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { ethers, providers } from 'ethers';
+import { ethers } from 'ethers';
 import { hexValue } from 'ethers/lib/utils';
 import { BaseConnector, ConnectedData } from '../../types';
 import emitter from '../../utils/emiter';

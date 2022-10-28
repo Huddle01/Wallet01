@@ -10,9 +10,6 @@ import {
   type ConnectedData,
   BaseConnector,
 } from './types';
-import { Web3Provider } from '@ethersproject/providers';
-import { WalletLinkProvider } from 'walletlink';
-import WalletConnectProvider from '@walletconnect/ethereum-provider';
 
 export {
   Wallet,
@@ -22,8 +19,5 @@ export {
   type ConnectedData,
   BaseConnector,
   CoinbaseConnector,
-  WalletLinkProvider,
   PhantomConnector,
-  Web3Provider,
-  WalletConnectProvider,
 };

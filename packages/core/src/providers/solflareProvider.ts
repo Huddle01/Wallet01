@@ -1,16 +1,11 @@
-import {
-  PublicKey,
-  SendOptions,
-  Transaction,
-  TransactionSignature,
-} from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import EventEmitter from 'eventemitter3';
 
-interface PhantomWalletEvents {
-  connect(...args: unknown[]): unknown;
-  disconnect(...args: unknown[]): unknown;
-  accountChanged(newPublicKey: PublicKey): unknown;
-}
+// interface PhantomWalletEvents {
+//   connect(...args: unknown[]): unknown;
+//   disconnect(...args: unknown[]): unknown;
+//   accountChanged(newPublicKey: PublicKey): unknown;
+// }
 
 export default interface SolflareProvider extends EventEmitter {
   isSolflare?: boolean;

@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "bundle": "tsup"
+    "clean": "rimraf dist/",
+    "bundle": "yarn clean && tsup"
   },
   "keywords": [],
   "author": "deepso",
@@ -22,6 +23,7 @@
     "zustand": "^4.1.2"
   },
   "devDependencies": {
+    "rimraf": "^3.0.2",
     "tsup": "^6.3.0"
   }
 }

@@ -109,7 +109,7 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
     console.log('Account Changed');
   }
 
-  protected onChainChanged(chain: string | number): void {
+  protected onChainChanged(_chain: string | number): void {
     console.log('Chain Changed');
   }
 
