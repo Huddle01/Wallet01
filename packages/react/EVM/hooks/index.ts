@@ -1,5 +1,3 @@
-import useWallet from "./useWallet";
+import useWallet from './useWallet';
 
-export {
-    useWallet
-}
+export { useWallet };

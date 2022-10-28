@@ -1,10 +1,9 @@
-import { default as EventEmitter } from "eventemitter3";
+import { default as EventEmitter } from 'eventemitter3';
 import { Web3Provider } from '@ethersproject/providers';
-
 
 export type ConnectorData<Provider = any> = {
   account?: string;
-  chain?: { id: number; };
+  chain?: { id: number };
   provider?: Provider;
 };
 
@@ -20,8 +19,6 @@ export abstract class Connector<
   Provider = any,
   Signer = any
 > extends EventEmitter<ConnectorEvents<Provider>> {
-
-
   abstract connect(chainId: number): Promise<ConnectorData<any> | undefined>;
   abstract disconnect(): Promise<void>;
   abstract getAccount(): Promise<string[]>;
@@ -31,7 +28,6 @@ export abstract class Connector<
   abstract resolveDid(address: string): Promise<string | null>;
   abstract signMessage(message: string): Promise<void>;
   switchChain?(chainId: number): Promise<void>;
-
 
   protected abstract onAccountsChanged(accounts: string[]): void;
   protected abstract onChainChanged(chain: number | string): void;

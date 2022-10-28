@@ -1,9 +1,9 @@
-import { Connection, PublicKey } from "@solana/web3.js";
-import { performReverseLookup, getAllDomains } from "@bonfida/spl-name-service";
+import { Connection, PublicKey } from '@solana/web3.js';
+import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
 
-import { BaseConnector, ConnectedData } from "../../types";
-import { SolflareProvider, SolanaWindow } from "../../providers";
-import emitter from "../../utils/emiter";
+import { BaseConnector, ConnectedData } from '../../types';
+import { SolflareProvider, SolanaWindow } from '../../providers';
+import emitter from '../../utils/emiter';
 
 declare const window: SolanaWindow;
 
@@ -11,7 +11,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
   provider!: SolflareProvider;
   chain: string;
 
-  constructor(chain: string = "") {
+  constructor(chain: string = '') {
     super(chain);
     this.chain = chain;
     this.getProvider();
@@ -19,7 +19,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
 
   async getProvider(): Promise<SolflareProvider> {
     if (
-      typeof window !== "undefined" &&
+      typeof window !== 'undefined' &&
       window.solflare &&
       window.solflare.isSolflare
     )
@@ -29,33 +29,33 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) throw new Error("Provider Undefined");
+    if (!this.provider) throw new Error('Provider Undefined');
     try {
       await this.provider.connect();
       const accounts = this.provider.publicKey;
       return [String(accounts)];
     } catch (error) {
       console.error(error);
-      throw new Error("Error in getting accounts");
+      throw new Error('Error in getting accounts');
     }
   }
 
   async getChainId(): Promise<string> {
-    throw new Error("This method is not supported in Solana Wallets");
+    throw new Error('This method is not supported in Solana Wallets');
   }
 
   async switchChain(chainId: string): Promise<void> {
-    throw new Error("This method is not supported in Solana Wallets");
+    throw new Error('This method is not supported in Solana Wallets');
   }
 
   async connect(chainId: string): Promise<void> {
     try {
       const provider = await this.getProvider();
-      if (!provider) throw new Error("Solflare is not installed");
+      if (!provider) throw new Error('Solflare is not installed');
 
       if (provider.on) {
-        provider.on("accountChanged", this.onAccountsChanged);
-        provider.on("disconnect", this.onDisconnect);
+        provider.on('accountChanged', this.onAccountsChanged);
+        provider.on('disconnect', this.onDisconnect);
       }
 
       this.provider.connect();
@@ -66,30 +66,30 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
         provider: this.provider,
       };
 
-      emitter.emit("connected", data);
+      emitter.emit('connected', data);
     } catch (error) {
       console.error(error);
-      throw new Error("Error in Connecting");
+      throw new Error('Error in Connecting');
     }
   }
 
   async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error("No wallet Conencted");
+    if (!this.provider) throw new Error('No wallet Conencted');
     this.provider.disconnect();
-    emitter.emit("disconnected");
+    emitter.emit('disconnected');
   }
 
   async resolveDid(address: string): Promise<string | null> {
-    if (!this.provider) throw new Error("No wallet Connected");
+    if (!this.provider) throw new Error('No wallet Connected');
     const connection = new Connection(
-      "https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc"
+      'https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc'
     );
 
     try {
       const ownerWallet = new PublicKey(address);
       const allDomainKeys = await getAllDomains(connection, ownerWallet);
       const allDomainNames = await Promise.all(
-        allDomainKeys.map((key) => {
+        allDomainKeys.map(key => {
           return performReverseLookup(connection, key);
         })
       );
@@ -97,29 +97,29 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
       return allDomainNames[0];
     } catch (error) {
       console.error(error);
-      throw new Error("Error in fetching names");
+      throw new Error('Error in fetching names');
     }
   }
 
   async signMessage(message: string): Promise<void> {
-    if (!this.provider) throw new Error("No wallet Connected");
+    if (!this.provider) throw new Error('No wallet Connected');
     try {
       const _message = new TextEncoder().encode(message);
-      await this.provider.signMessage(_message, "utf8");
+      await this.provider.signMessage(_message, 'utf8');
     } catch (err) {
       console.warn(err);
     }
   }
 
   protected onAccountsChanged(): void {
-    console.log("Account Changed");
+    console.log('Account Changed');
   }
 
   protected onChainChanged(chain: string | number): void {
-    console.log("Chain Changed");
+    console.log('Chain Changed');
   }
 
   protected onDisconnect(): void {
-    console.log("Wallet disconnected");
+    console.log('Wallet disconnected');
   }
 }

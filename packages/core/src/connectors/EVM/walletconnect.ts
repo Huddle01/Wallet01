@@ -1,15 +1,15 @@
-import { ExternalProvider } from "@ethersproject/providers";
-import WalletConnectProvider from "@walletconnect/ethereum-provider";
-import { hexValue } from "ethers/lib/utils";
-import { Web3Provider } from "@ethersproject/providers";
-import { BaseConnector, ConnectedData } from "../../types";
-import emitter from "../../utils/emiter";
+import { ExternalProvider } from '@ethersproject/providers';
+import WalletConnectProvider from '@walletconnect/ethereum-provider';
+import { hexValue } from 'ethers/lib/utils';
+import { Web3Provider } from '@ethersproject/providers';
+import { BaseConnector, ConnectedData } from '../../types';
+import emitter from '../../utils/emiter';
 
 export class WalletconnectConnector extends BaseConnector<WalletConnectProvider> {
   provider!: WalletConnectProvider;
   chain: string;
 
-  constructor(chain: string = "1") {
+  constructor(chain: string = '1') {
     super(chain);
     this.chain = chain;
     this.getProvider();
@@ -17,31 +17,31 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
 
   async getProvider(): Promise<WalletConnectProvider> {
     this.provider = new WalletConnectProvider({
-      infuraId: "0a7d1e04fd0845d5994516cfb80e0813",
+      infuraId: '0a7d1e04fd0845d5994516cfb80e0813',
     });
     return this.provider;
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) throw new Error("Provider Undefined");
+    if (!this.provider) throw new Error('Provider Undefined');
     try {
       const accounts = await this.provider.accounts;
       console.log(accounts);
       return accounts;
     } catch (error) {
       console.error(error);
-      throw new Error("Error in getting accouts");
+      throw new Error('Error in getting accouts');
     }
   }
 
   async getChainId(): Promise<string> {
-    if (!this.provider) throw new Error("Provider Undefined");
+    if (!this.provider) throw new Error('Provider Undefined');
     try {
       const id = <string>(<unknown>this.provider.chainId);
       return id;
     } catch (error) {
       console.error(error);
-      throw new Error("Error in getting ChainId");
+      throw new Error('Error in getting ChainId');
     }
   }
 
@@ -51,12 +51,12 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
     const id = hexValue(chainId);
     try {
       await provider.request({
-        method: "wallet_switchEthereumChain",
+        method: 'wallet_switchEthereumChain',
         params: [{ chainId: id }],
       });
     } catch (error) {
       console.error(error);
-      throw new Error("Error in switching chain");
+      throw new Error('Error in switching chain');
     }
   }
 
@@ -65,9 +65,9 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
       const provider = await this.getProvider();
       this.provider = provider;
 
-      provider.on("accountsChanged", this.onAccountsChanged);
-      provider.on("chainChanged", this.onChainChanged);
-      provider.on("disconnect", this.onDisconnect);
+      provider.on('accountsChanged', this.onAccountsChanged);
+      provider.on('chainChanged', this.onChainChanged);
+      provider.on('disconnect', this.onDisconnect);
 
       await provider.enable();
       const id = await this.getChainId();
@@ -82,20 +82,20 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
         provider: this.provider,
       };
 
-      emitter.emit("connected", data);
+      emitter.emit('connected', data);
     } catch (error) {
       console.error(error);
     }
   }
 
   async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error("No wallet connected");
+    if (!this.provider) throw new Error('No wallet connected');
     this.provider.disconnect();
-    emitter.emit("disconnected");
+    emitter.emit('disconnected');
   }
 
   async resolveDid(address: string): Promise<string | null> {
-    if (!this.provider) throw new Error("No wallet connected");
+    if (!this.provider) throw new Error('No wallet connected');
     const _provider = new Web3Provider(
       <ExternalProvider>(<unknown>this.provider)
     );
@@ -104,7 +104,7 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
   }
 
   async signMessage(message: string): Promise<void> {
-    if (!this.provider) throw new Error("Connect a Wallet");
+    if (!this.provider) throw new Error('Connect a Wallet');
     const _provider = new Web3Provider(
       <ExternalProvider>(<unknown>this.provider)
     );
@@ -113,14 +113,14 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
   }
 
   protected onAccountsChanged(): void {
-    console.log("Account Changed");
+    console.log('Account Changed');
   }
 
   protected onChainChanged(chain: string | number): void {
-    console.log("Chain Changed");
+    console.log('Chain Changed');
   }
 
   protected onDisconnect(): void {
-    console.log("Wallet disconnected");
+    console.log('Wallet disconnected');
   }
 }

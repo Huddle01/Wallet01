@@ -1,2 +1,1 @@
-export { type Keplr } from "@keplr-wallet/types";
-
+export { type Keplr } from '@keplr-wallet/types';
