@@ -1,11 +1,11 @@
-import { Wallet } from "./src/wallet";
-import { InjectedConnector, CoinbaseConnector, PhantomConnector } from "./src/connectors";
+import { Wallet } from "./wallet";
+import { InjectedConnector, CoinbaseConnector, PhantomConnector } from "./connectors";
 import {
     type CustomChainConfig,
     type ClientConfig,
     type ConnectedData,
     BaseConnector
-} from './src/types'
+} from './types'
 import { Web3Provider } from '@ethersproject/providers'
 import { WalletLinkProvider } from 'walletlink'
 import WalletConnectProvider from "@walletconnect/ethereum-provider";

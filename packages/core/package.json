@@ -2,8 +2,10 @@
   "name": "@huddle01-wallets/core",
   "version": "0.0.0",
   "description": "",
-  "main": "./index.ts",
-  "scripts": {},
+  "main": "src/index.ts",
+  "scripts": {
+    "bundle": "tsup"
+  },
   "keywords": [],
   "author": "deepso",
   "license": "ISC",
@@ -18,5 +20,8 @@
     "tweetnacl": "^1.0.3",
     "walletlink": "^2.5.0",
     "zustand": "^4.1.2"
+  },
+  "devDependencies": {
+    "tsup": "^6.3.0"
   }
 }
