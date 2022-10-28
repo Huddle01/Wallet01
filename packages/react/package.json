@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@huddle01/wallets": "*",
+    "@huddle01-wallets/core": "*",
     "react": "^18.2.0",
     "react-query": "^3.39.2"
   }

@@ -55,4 +55,9 @@ export class Wallet<TProvider>{
     async signMessage(message: string) {
         await this.connector.signMessage(message);
     }
+
+    async switchChain(chainId: string) {
+        if (!this.connector.switchChain) throw new Error("Switch chain Unsupported")
+        await this.connector.switchChain(chainId)
+    }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01/wallets",
+  "name": "@huddle01-wallets/core",
   "version": "0.0.0",
   "description": "",
   "main": "./index.ts",
@@ -9,6 +9,9 @@
   "license": "ISC",
   "dependencies": {
     "@bonfida/spl-name-service": "^0.1.51",
+    "@cosmjs/stargate": "^0.29.3",
+    "@keplr-wallet/provider": "^0.11.13",
+    "@keplr-wallet/types": "^0.11.13",
     "@metamask/detect-provider": "^2.0.0",
     "@solana/web3.js": "^1.65.0",
     "@walletconnect/ethereum-provider": "^1.8.0",

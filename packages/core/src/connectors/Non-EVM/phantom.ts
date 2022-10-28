@@ -5,14 +5,14 @@ import {
     performReverseLookup,
     getAllDomains,
 } from '@bonfida/spl-name-service';
-import { SolanaProvider, SolanaWindow } from '../../providers'
+import { PhantomProvider, SolanaWindow } from '../../providers'
 
 
 declare const window: SolanaWindow;
 
-export class PhantomConnector extends BaseConnector<SolanaProvider> {
+export class PhantomConnector extends BaseConnector<PhantomProvider> {
 
-    provider!: SolanaProvider;
+    provider!: PhantomProvider;
     chain: string;
 
     constructor(chain: string = '') {
@@ -21,13 +21,12 @@ export class PhantomConnector extends BaseConnector<SolanaProvider> {
         this.getProvider()
     }
 
-    async getProvider(): Promise<SolanaProvider> {
+    async getProvider(): Promise<PhantomProvider> {
         if (
             typeof window !== 'undefined' &&
-            window.solana &&
-            window.solana.isPhantom
+            window.phantom
         )
-            this.provider = window.solana;
+            this.provider = window.phantom;
 
         return this.provider;
     }
@@ -62,7 +61,7 @@ export class PhantomConnector extends BaseConnector<SolanaProvider> {
                 provider.on('disconnect', this.onDisconnect);
             }
 
-            const data: ConnectedData<SolanaProvider> = {
+            const data: ConnectedData<PhantomProvider> = {
                 account: (await this.getAccount())[0],
                 chainId: this.chain,
                 provider: this.provider

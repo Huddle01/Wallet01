@@ -3,10 +3,10 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import  { Wallet } from '@huddle01/wallets'
+import  { Wallet } from '@huddle01-wallets/core'
 import { useIsMounted } from 'usehooks-ts'
-import { SolflareConnector } from '@huddle01/wallets/src/connectors'
-import {SolflareProvider, SolanaProvider} from '@huddle01/wallets/src/providers'
+import { SolflareConnector, KeplrConnector } from '@huddle01-wallets/core/src/connectors'
+import {SolflareProvider, SolanaProvider, KeplrProvider} from '@huddle01-wallets/core/src/providers'
 
 export type CustomChainConfig = {
   chainNamespace: "eip155" | "solana" | "other";
@@ -20,7 +20,7 @@ export type CustomChainConfig = {
 
 const defaultChainConfig: CustomChainConfig = {
   chainNamespace: 'eip155',
-  chainId: '1',
+  chainId: 'secret-4',
   displayName: 'ethereum',
   ticker: 'ETH',
   tickerName: 'Ethereum'
@@ -33,7 +33,7 @@ const Home: NextPage = () => {
   const [ account, setAccount ] = useState<string>()
   const [ did, setDid ] = useState<string | null>(null)
 
-  const wallet = new Wallet<SolflareProvider>({chainConfig: defaultChainConfig, connector:  new SolflareConnector()});
+  const wallet = new Wallet<KeplrProvider>({chainConfig: defaultChainConfig, connector:  new KeplrConnector('secret-4')});
 
   const connect = async () => {
     if (!isMounted) throw new Error('No Window mounted')
@@ -54,6 +54,14 @@ const Home: NextPage = () => {
     await wallet.signMessage("hello")
   }
 
+  const switchChain = async () => {
+    await wallet.switchChain('chihuahua-1')
+  }
+
+  const getAccount = async () => {
+    setAccount(await wallet.getAccount())
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -67,6 +75,8 @@ const Home: NextPage = () => {
       <button onClick={getDid}>GetDID</button>
       <span>{did}</span>
       <button onClick={signMessage}>Sign Message</button>
+      <button onClick={() => switchChain()}>Switch Chain</button>
+      <button onClick={() => getAccount()}>Get Address</button>
         
     </div>
   )

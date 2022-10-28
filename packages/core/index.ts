@@ -4,7 +4,6 @@ import {
     type CustomChainConfig,
     type ClientConfig,
     type ConnectedData,
-    PhantomProvider,
     BaseConnector
 } from './src/types'
 import { Web3Provider } from '@ethersproject/providers'
@@ -23,6 +22,5 @@ export {
     WalletLinkProvider,
     PhantomConnector,
     Web3Provider,
-    type PhantomProvider,
     WalletConnectProvider
 }
