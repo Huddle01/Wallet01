@@ -1,15 +1,16 @@
 import { ClientConfig, CustomChainConfig } from './types';
 import { BaseConnector } from './types/baseConnector';
+import { TProvider } from './types/TProvider';
 import emitter from './utils/emiter';
-export class Wallet<TProvider> {
+export class Wallet<P extends TProvider> {
   readonly chainConfig: CustomChainConfig;
-  provider!: TProvider | null;
+  provider!: P | null;
   account!: string;
   did!: string | null;
-  readonly connector: BaseConnector<TProvider>;
+  readonly connector: BaseConnector<P>;
   chainId: string;
 
-  constructor({ chainConfig, connector }: ClientConfig<TProvider>) {
+  constructor({ chainConfig, connector }: ClientConfig<P>) {
     this.chainConfig = chainConfig;
     this.connector = connector;
     this.chainId = chainConfig.chainId;
