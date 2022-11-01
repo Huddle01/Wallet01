@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { BaseConnector, Wallet } from '@huddle01-wallets/core/src';
 import { useIsMounted } from 'usehooks-ts';
+// import { connect } from '../../../packages/multichain/dist';
+// import { InjectedConnector } from '@huddle01-wallets/evm'
 
-// import { InjectedConnector } from '@huddle01-wallets/evm';
-import { KeplrProvider, KeplrConnector } from '@huddle01-wallets/cosmos/src'
+// import { connect } from '@huddle01-wallets/multichain'
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';
@@ -32,37 +31,7 @@ const Home: NextPage = () => {
   const [account, setAccount] = useState<string>();
   const [did, setDid] = useState<string | null>(null);
 
-  const wallet = new Wallet<KeplrProvider>({
-    chainConfig: defaultChainConfig,
-    connector: new KeplrConnector('secret-4') as unknown as BaseConnector<KeplrProvider>,
-  });
-
-  const connect = async () => {
-    if (!isMounted) throw new Error('No Window mounted');
-    await wallet.connect();
-    const account = await wallet.getAccount();
-    setAccount(account);
-  };
-
-  const getDid = async () => {
-    if (!account) throw new Error('No Account Found');
-    const name = await wallet.getDid();
-    console.log(name);
-    setDid(name);
-    return name;
-  };
-
-  const signMessage = async () => {
-    await wallet.signMessage('hello');
-  };
-
-  const switchChain = async () => {
-    await wallet.switchChain('chihuahua-1');
-  };
-
-  const getAccount = async () => {
-    setAccount(await wallet.getAccount());
-  };
+  
 
   return (
     <div className={styles.container}>
@@ -72,13 +41,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <button onClick={connect}>Connect Wallet</button>
-      <span>{account}</span>
-      <button onClick={getDid}>GetDID</button>
-      <span>{did}</span>
-      <button onClick={signMessage}>Sign Message</button>
-      <button onClick={() => switchChain()}>Switch Chain</button>
-      <button onClick={() => getAccount()}>Get Address</button>
+      <button onClick={() => connect("injected")}>Metamask</button>
+      <button onClick={() => connect("solflare")}>Solflare</button>
+      <button onClick={() => connect("phantom")}>Phantom</button>
+      <button onClick={() => connect("keplr")}>Keplr</button>
+      
     </div>
   );
 };

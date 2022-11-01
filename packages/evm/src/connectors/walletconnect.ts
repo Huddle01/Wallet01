@@ -113,15 +113,15 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
     signer.signMessage(message);
   }
 
-  protected onAccountsChanged(): void {
+  onAccountsChanged(): void {
     console.log('Account Changed');
   }
 
-  protected onChainChanged(_chain: string | number): void {
+  onChainChanged(_chain: string | number): void {
     console.log('Chain Changed');
   }
 
-  protected onDisconnect(): void {
+  onDisconnect(): void {
     console.log('Wallet disconnected');
   }
 }

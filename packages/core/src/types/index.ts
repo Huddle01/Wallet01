@@ -1,15 +1,16 @@
 import { CustomChainConfig } from './chainConfig';
 import { BaseConnector } from './baseConnector';
+import { TProvider } from './TProvider';
 
-type ClientConfig<TProvider> = {
+type ClientConfig<P extends TProvider> = {
   chainConfig: CustomChainConfig;
-  connector: BaseConnector<TProvider>;
+  connector: BaseConnector<P>;
 };
 
-type ConnectedData<TProvider> = {
+type ConnectedData<T extends TProvider> = {
   account: string;
   chainId: string;
-  provider: TProvider;
+  provider: T;
 };
 
 export {
@@ -17,4 +18,5 @@ export {
   type ClientConfig,
   type ConnectedData,
   BaseConnector,
+  TProvider
 };

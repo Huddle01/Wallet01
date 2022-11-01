@@ -12,6 +12,8 @@
     "@huddle01-wallets/core": "*",
     "@huddle01-wallets/evm": "*",
     "@huddle01-wallets/cosmos": "*",
+    "@huddle01-wallets/solana": "*",
+    "@huddle01-wallets/multichain": "*",
     "ethers": "^5.7.2",
     "next": "12.3.1",
     "next-transpile-modules": "^9.0.0",

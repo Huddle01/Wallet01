@@ -9,7 +9,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
   provider!: KeplrProvider;
   chain: string;
 
-  constructor(chain: string) {
+  constructor(chain: string = 'secret-4') {
     super(chain);
     this.chain = chain;
     this.getProvider();
@@ -51,10 +51,12 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
     }
   }
 
-  async connect(_chainId: string): Promise<void> {
+  async connect(chainId: string): Promise<void> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Keplr not installed');
+
+      await this.provider.enable(chainId)
 
       const data: ConnectedData<KeplrProvider> = {
         account: (await this.getAccount())[0],

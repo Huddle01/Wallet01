@@ -6,11 +6,12 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { BaseConnector, ConnectedData } from '../types';
 import emitter from '../utils/emiter';
 
-export class InjectedConnector implements BaseConnector<Web3Provider> {
+export class InjectedConnector extends BaseConnector<Web3Provider> {
   provider?: Web3Provider;
   chain: string;
 
   constructor(chain: string = '1') {
+    super(chain)
     this.chain = chain;
     this.getProvider();
   }
@@ -22,7 +23,7 @@ export class InjectedConnector implements BaseConnector<Web3Provider> {
       console.log('Ethereum successfully detected!');
       const _provider = new ethers.providers.Web3Provider(provider);
       this.provider = _provider;
-      return _provider;
+      return this.provider;
     } else {
       throw new Error('Please install a Browser Wallet');
     }
@@ -105,15 +106,15 @@ export class InjectedConnector implements BaseConnector<Web3Provider> {
     await signer.signMessage(message);
   }
 
-  onAccountsChanged(): void {
+  protected onAccountsChanged(): void {
     console.log('Account Changed');
   }
 
-  onChainChanged(_chain: string): void {
+  protected onChainChanged(_chain: string): void {
     console.log('Chain Changed');
   }
 
-  onDisconnect(): void {
+  protected onDisconnect(): void {
     console.log('Wallet disconnected');
   }
 }
