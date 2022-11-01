@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "bundle": "yarn clean && tsup --format cjs"
+    "build": "yarn clean && tsup --format cjs",
+    "dev": "pnpm build --watch"
   },
   "dependencies": {
     "@huddle01-wallets/core": "*",

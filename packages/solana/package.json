@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "bundle": "yarn clean && tsup --format cjs"
+    "build": "yarn clean && tsup --format cjs"
   },
   "dependencies": {
     "@bonfida/spl-name-service": "^0.1.55",

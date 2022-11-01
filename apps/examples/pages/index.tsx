@@ -6,7 +6,7 @@ import { useIsMounted } from 'usehooks-ts';
 // import { connect } from '../../../packages/multichain/dist';
 // import { InjectedConnector } from '@huddle01-wallets/evm'
 
-// import { connect } from '@huddle01-wallets/multichain'
+import { connect } from '@huddle01-wallets/multichain'
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';

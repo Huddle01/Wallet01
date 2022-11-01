@@ -7,7 +7,7 @@
   "typings": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "bundle": "yarn clean && tsup --format cjs"
+    "build": "yarn clean && tsup --format cjs"
   },
   "license": "MIT",
   "dependencies": {
