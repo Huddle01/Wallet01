@@ -8,7 +8,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format cjs"
+    "build": "yarn clean && tsup --format esm --dts"
   },
   "keywords": [],
   "author": "thevatsal.eth",
