@@ -1,0 +1,23 @@
+{
+  "name": "@huddle01-wallets/solana",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "bundle": "yarn clean && tsup --format cjs"
+  },
+  "dependencies": {
+    "@bonfida/spl-name-service": "^0.1.55",
+    "@keplr-wallet/types": "^0.11.13",
+    "@solana/web3.js": "^1.66.2",
+    "eventemitter3": "^4.0.7"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "tsup": "^6.3.0"
+  }
+}

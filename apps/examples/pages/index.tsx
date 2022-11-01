@@ -3,17 +3,11 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { Wallet } from '@huddle01-wallets/core';
+import { BaseConnector, Wallet } from '@huddle01-wallets/core/src';
 import { useIsMounted } from 'usehooks-ts';
-import {
-  SolflareConnector,
-  KeplrConnector,
-} from '@huddle01-wallets/core/src/connectors';
-import {
-  SolflareProvider,
-  SolanaProvider,
-  KeplrProvider,
-} from '@huddle01-wallets/core/src/providers';
+
+// import { InjectedConnector } from '@huddle01-wallets/evm';
+import { KeplrProvider, KeplrConnector } from '@huddle01-wallets/cosmos/src'
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';
@@ -27,7 +21,7 @@ export type CustomChainConfig = {
 
 const defaultChainConfig: CustomChainConfig = {
   chainNamespace: 'eip155',
-  chainId: 'secret-4',
+  chainId: '1',
   displayName: 'ethereum',
   ticker: 'ETH',
   tickerName: 'Ethereum',
@@ -40,7 +34,7 @@ const Home: NextPage = () => {
 
   const wallet = new Wallet<KeplrProvider>({
     chainConfig: defaultChainConfig,
-    connector: new KeplrConnector('secret-4'),
+    connector: new KeplrConnector('secret-4') as unknown as BaseConnector<KeplrProvider>,
   });
 
   const connect = async () => {

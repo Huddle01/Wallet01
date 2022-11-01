@@ -2,13 +2,16 @@
   "name": "@huddle01-wallets/core",
   "version": "0.0.0",
   "description": "",
-  "main": "src/index.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "bundle": "yarn clean && tsup"
+    "bundle": "yarn clean && tsup --format cjs"
   },
   "keywords": [],
-  "author": "deepso",
+  "author": "thevatsal.eth",
   "license": "ISC",
   "dependencies": {
     "@bonfida/spl-name-service": "^0.1.51",

@@ -1,0 +1,23 @@
+{
+  "name": "@huddle01-wallets/evm",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "bundle": "yarn clean && tsup --format cjs"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@metamask/detect-provider": "^2.0.0",
+    "@walletconnect/ethereum-provider": "^2.1.0",
+    "ethers": "^5.7.2",
+    "walletlink": "^2.5.0"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "tsup": "^6.3.0"
+  }
+}
