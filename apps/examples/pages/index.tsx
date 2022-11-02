@@ -6,32 +6,36 @@ import { useIsMounted } from 'usehooks-ts';
 // import { connect } from '../../../packages/multichain/dist';
 // import { InjectedConnector } from '@huddle01-wallets/evm'
 
-import { connect } from '@huddle01-wallets/multichain'
+import { connect, connectorName } from '@huddle01-wallets/multichain'
 
-export type CustomChainConfig = {
-  chainNamespace: 'eip155' | 'solana' | 'other';
-  chainId: string;
-  rpcTarget?: string;
-  displayName: string;
-  blockExplorer?: string;
-  ticker: string;
-  tickerName: string;
-};
+// export type CustomChainConfig = {
+//   chainNamespace: 'eip155' | 'solana' | 'other';
+//   chainId: string;
+//   rpcTarget?: string;
+//   displayName: string;
+//   blockExplorer?: string;
+//   ticker: string;
+//   tickerName: string;
+// };
 
-const defaultChainConfig: CustomChainConfig = {
-  chainNamespace: 'eip155',
-  chainId: '1',
-  displayName: 'ethereum',
-  ticker: 'ETH',
-  tickerName: 'Ethereum',
-};
+// const defaultChainConfig: CustomChainConfig = {
+//   chainNamespace: 'eip155',
+//   chainId: '1',
+//   displayName: 'ethereum',
+//   ticker: 'ETH',
+//   tickerName: 'Ethereum',
+// };
 
 const Home: NextPage = () => {
   const isMounted = useIsMounted();
   const [account, setAccount] = useState<string>();
   const [did, setDid] = useState<string | null>(null);
 
-  
+  const handleClick = (name: connectorName) => {
+    if (isMounted()) {
+      connect(name)
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -41,11 +45,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <button onClick={() => connect("injected")}>Metamask</button>
-      <button onClick={() => connect("solflare")}>Solflare</button>
-      <button onClick={() => connect("phantom")}>Phantom</button>
-      <button onClick={() => connect("keplr")}>Keplr</button>
-      
+      <button onClick={() => handleClick("injected")}>Metamask</button>
+      <button onClick={() => handleClick("solflare")}>Solflare</button>
+      <button onClick={() => handleClick("phantom")}>Phantom</button>
+      <button onClick={() => handleClick("keplr")}>Keplr</button>
+
     </div>
   );
 };

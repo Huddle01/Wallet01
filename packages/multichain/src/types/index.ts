@@ -33,14 +33,8 @@ export type ConnectorMethods = keyof BaseConnector<TProvider>
 export type ConnectorInput = connectorName
 
 export const connectorObj: ConnectorObj = {
-    "injected": () => {
-        const connector = new InjectedConnector()
-        return connector;
-    },
-    "walletConnect": () => {
-        const connector = new WalletconnectConnector()
-        return connector
-    },
+    "injected": () => new InjectedConnector(),
+    "walletConnect": () => new WalletconnectConnector(),
     "coinbase": () => {
         const connector = new CoinbaseConnector()
         return connector;

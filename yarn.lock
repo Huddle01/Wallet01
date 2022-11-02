@@ -6056,6 +6056,11 @@ jmespath@^0.15.0:
   resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
   integrity sha512-+kHj8HXArPfpPEKGLZ+kB5ONRTCiGQXo8RQYL0hH8t6pWXUBBK5KkkQmTNOwKK4LEsd0yTsgtjJVm4UBSZea4w==
 
+jotai@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.9.1.tgz#3a204cc7f8f72584dee61e28cceea9fc360c7407"
+  integrity sha512-rDmmDL6owX4Kg5fAV0arjGVJmT1VYnkROwAx/PgpMkYCzvHEtABm8qnq/Ki5o5/GFGbvdfE11VNP1brDWP7+9w==
+
 joycon@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/joycon/-/joycon-2.2.5.tgz#8d4cf4cbb2544d7b7583c216fcdfec19f6be1615"

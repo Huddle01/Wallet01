@@ -4,12 +4,12 @@
   "type": "module",
   "main": "./dist/index.js",
   "module": "dist/index.js",
-  "typings": "./dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
     "build": "yarn clean && tsup --format esm --dts",
-    "dev": "pnpm build --watch"
+    "dev": "yarn build --watch"
   },
   "dependencies": {
     "@huddle01-wallets/core": "*",

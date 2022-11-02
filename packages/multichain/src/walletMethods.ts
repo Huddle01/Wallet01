@@ -12,8 +12,17 @@ export interface baseMethods {
     switchChain?(chainId: string): Promise<void>;
 }
 
-export const connect = async (connector: ConnectorInput, chain: string = '1'): Promise<void> => {
-    await connectorObj[connector]().connect(chain)
+export const connect = async (connector: ConnectorInput, _chain?: string): Promise<void> => {
+    console.log("FIrst")
+    const obj = await connectorObj[connector]()
+    if (connector === 'keplr' && !_chain) {
+        obj.connect('secret-4')
+    }
+    else if (connector === 'injected' && !_chain)
+        obj.connect("1")
+    else {
+        obj.connect("")
+    }
 }
 
 export const disconnect = async (connector: ConnectorInput): Promise<void> => {
@@ -25,7 +34,7 @@ export const getAccount = async (connector: ConnectorInput): Promise<string[]> =
     return accounts
 }
 
-export const getChainId = async (connector : ConnectorInput): Promise<string> => {
+export const getChainId = async (connector: ConnectorInput): Promise<string> => {
     const chainId = await connectorObj[connector]().getChainId()
     return chainId
 }
@@ -35,15 +44,15 @@ export const getChainId = async (connector : ConnectorInput): Promise<string> =>
 //     return provider
 // }
 
-export const resolveDid = async (connector: ConnectorInput ,address : string): Promise<string | null> => {
+export const resolveDid = async (connector: ConnectorInput, address: string): Promise<string | null> => {
     const did = await connectorObj[connector]().resolveDid(address)
     return did
 }
 
-export const signMessage = async (connector : ConnectorInput, message: string): Promise<void> => {
+export const signMessage = async (connector: ConnectorInput, message: string): Promise<void> => {
     await connectorObj[connector]().signMessage(message)
 }
 
-export const switchChain = async (connector : ConnectorInput, chainId: string): Promise<void> => {
+export const switchChain = async (connector: ConnectorInput, chainId: string): Promise<void> => {
     await connectorObj[connector]().switchChain(chainId)
 }

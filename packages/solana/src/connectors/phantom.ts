@@ -1,13 +1,15 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
 
-import { BaseConnector, ConnectedData } from '../types';
+import { BaseConnector } from '../types';
 import { PhantomProvider } from '../providers/phantomProvider';
 import emitter from '../utils/emiter';
 
-declare const window: {
-  phantom: PhantomProvider;
-};
+interface PhantomWindow extends Window {
+  solana?: PhantomProvider;
+}
+
+declare const window: PhantomWindow
 
 export class PhantomConnector extends BaseConnector<PhantomProvider> {
   provider!: PhantomProvider;
@@ -15,13 +17,17 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
 
   constructor(chain: string = '') {
     super(chain);
-    this.chain = chain;
+    this.chain = chain
     this.getProvider();
   }
 
   async getProvider(): Promise<PhantomProvider> {
-    if (typeof window !== 'undefined' && window.phantom)
-      this.provider = window.phantom;
+    if (
+      typeof window !== 'undefined' &&
+      window.solana &&
+      window.solana.isPhantom
+    )
+      this.provider = window.solana;
 
     return this.provider;
   }
@@ -29,7 +35,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
   async getAccount(): Promise<string[]> {
     if (!this.provider) throw new Error('Provider Undefined');
     try {
-      await this.provider.connect();
+      await this.connect("");
       const accounts = this.provider.publicKey;
       return [String(accounts)];
     } catch (error) {
@@ -50,19 +56,22 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Phantom is not installed');
+      if (provider.isPhantom)
+        console.log("phantom detected")
+      await this.provider.connect()
 
       if (provider.on) {
         provider.on('accountChanged', this.onAccountsChanged);
         provider.on('disconnect', this.onDisconnect);
       }
 
-      const data: ConnectedData<PhantomProvider> = {
-        account: (await this.getAccount())[0],
-        chainId: this.chain,
-        provider: this.provider,
-      };
+      // const data: ConnectedData<PhantomProvider> = {
+      //   account: (await this.getAccount())[0],
+      //   chainId: this.chain,
+      //   provider: this.provider,
+      // };
 
-      emitter.emit('connected', data);
+      emitter.emit('connected');
     } catch (error) {
       console.error(error);
       throw new Error('Error in Connecting');

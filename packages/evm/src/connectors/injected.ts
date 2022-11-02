@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
-import { hexValue } from 'ethers/lib/utils';
-import { Web3Provider } from '@ethersproject/providers';
+import {  hexValue } from 'ethers/lib/utils';
+import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
 import { BaseConnector, ConnectedData } from '../types';
@@ -20,9 +20,10 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     const provider = await detectEthereumProvider();
 
     if (provider) {
+      const _provider = new ethers.providers.Web3Provider(<ExternalProvider>(<unknown>provider));
       console.log('Ethereum successfully detected!');
-      const _provider = new ethers.providers.Web3Provider(provider);
       this.provider = _provider;
+      console.log(this.provider)
       return this.provider;
     } else {
       throw new Error('Please install a Browser Wallet');
@@ -52,7 +53,8 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   async switchChain(chainId: string): Promise<void> {
     const provider = await this.getProvider();
 
-    const id = hexValue(chainId);
+    const id = hexValue(Number(chainId));
+    console.log({id})
     try {
       await provider?.send('wallet_switchEthereumChain', [{ chainId: id }]);
     } catch (error) {
@@ -72,10 +74,17 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       }
 
       let id = await this.getChainId();
-
-      if (chainId && id !== chainId) {
-        await this.switchChain(chainId);
+      console.log(id)
+      
+      try {
+        if (chainId && id !== chainId) {
+          await this.switchChain(chainId);
+        }
+      } catch (error) {
+        console.error(error, "inside connect funcion")
       }
+
+      
 
       const data: ConnectedData<Web3Provider> = {
         account: (await this.getAccount())[0],
@@ -85,7 +94,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
       emitter.emit('connected', data);
     } catch (error) {
-      console.error(error);
+      console.error(error, "in connect");
     }
   }
 

@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
     "build": "yarn clean && tsup --format esm --dts"
