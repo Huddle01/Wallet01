@@ -3,7 +3,7 @@ import {  hexValue } from 'ethers/lib/utils';
 import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-import { BaseConnector, ConnectedData } from '../types';
+import { BaseConnector } from '../types';
 import emitter from '../utils/emiter';
 
 export class InjectedConnector extends BaseConnector<Web3Provider> {
@@ -21,9 +21,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
     if (provider) {
       const _provider = new ethers.providers.Web3Provider(<ExternalProvider>(<unknown>provider));
-      console.log('Ethereum successfully detected!');
       this.provider = _provider;
-      console.log(this.provider)
       return this.provider;
     } else {
       throw new Error('Please install a Browser Wallet');
@@ -31,10 +29,10 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) throw new Error('Provider Undefined!');
+    if (!this.provider) await this.getProvider()
     try {
+      if (!this.provider) throw new Error("No Provider Found!")
       const result = await this.provider.send('eth_requestAccounts', []);
-      console.log({ result });
       return result;
     } catch (err) {
       console.error(err);
@@ -84,15 +82,8 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
         console.error(error, "inside connect funcion")
       }
 
-      
 
-      const data: ConnectedData<Web3Provider> = {
-        account: (await this.getAccount())[0],
-        chainId: this.chain,
-        provider: this.provider,
-      };
-
-      emitter.emit('connected', data);
+      emitter.emit('connected');
     } catch (error) {
       console.error(error, "in connect");
     }

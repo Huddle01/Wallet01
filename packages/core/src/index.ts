@@ -14,5 +14,5 @@ export {
   type ClientConfig,
   type ConnectedData,
   BaseConnector,
-  TProvider
+  type TProvider
 };

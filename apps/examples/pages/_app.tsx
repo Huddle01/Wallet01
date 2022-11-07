@@ -1,9 +1,8 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { WalletConfig } from '../../../packages/react/src/hooks/context';
-// import { InjectedConnector } from '@huddle01-wallets/evm';
-import { Web3Provider } from '@ethersproject/providers'
 import React from 'react';
+
+import Wallet01 from '@huddle01-wallets/react';
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';
@@ -25,11 +24,10 @@ const defaultChainConfig: CustomChainConfig = {
 
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // const connector = new InjectedConnector()
   return (
-    // <WalletConfig provider={Web3Provider} chainConfig={defaultChainConfig} connector={connector}>
+    <Wallet01>
       <Component {...pageProps} />
-    // </WalletConfig>
+    </Wallet01>
   )
 }
 

@@ -3,9 +3,20 @@ import { KeplrProvider } from '@huddle01-wallets/cosmos/src'
 
 import { Web3Provider } from '@ethersproject/providers';
 import { WalletLinkProvider } from 'walletlink';
+import EthereumProvider from '@walletconnect/ethereum-provider'
+// import WalletConnectProvider from '@walletconnect/ethereum-provider';
 
-export type TProvider =
+// export type TProvider =
+//   | Web3Provider
+//   | EthereumProvider
+//   | WalletLinkProvider
+//   | PhantomProvider
+//   | SolflareProvider
+//   | KeplrProvider
+
+  export type TProvider =
   | Web3Provider
+  | EthereumProvider
   | WalletLinkProvider
   | PhantomProvider
   | SolflareProvider

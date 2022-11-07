@@ -1,54 +1,22 @@
-import { TProvider } from '@huddle01-wallets/core/src'
-import { BaseConnector } from '@huddle01-wallets/cosmos/src/types'
 import { InjectedConnector, WalletconnectConnector, CoinbaseConnector } from '@huddle01-wallets/evm'
 import { KeplrConnector } from '@huddle01-wallets/cosmos/src'
 import { SolflareConnector, PhantomConnector } from '@huddle01-wallets/solana'
 
-export type TConnector = InjectedConnector
-    | WalletconnectConnector
-    | CoinbaseConnector
-    | KeplrConnector
-    | SolflareConnector
-    | PhantomConnector
+export type TConnector = InjectedConnector| WalletconnectConnector | CoinbaseConnector | KeplrConnector | SolflareConnector | PhantomConnector
 
 export type connectorName = "injected" | "walletConnect" | "coinbase" | "keplr" | "solflare" | "phantom"
 
 export type ConnectorObj = {
-    [key in connectorName]: () => TConnector
+    [key in connectorName]: (_chainId?: string) => TConnector
 }
-
-export interface baseMethods {
-    connect(chainId: string): Promise<void>;
-    disconnect(): Promise<void>;
-    getAccount(): Promise<string[]>;
-    getChainId(): Promise<string>;
-    getProvider(): Promise<TProvider>;
-    resolveDid(address: string): Promise<string | null>;
-    signMessage(message: string): Promise<void>;
-    switchChain?(chainId: string): Promise<void>;
-}
-
-export type ConnectorMethods = keyof BaseConnector<TProvider>
 
 export type ConnectorInput = connectorName
 
 export const connectorObj: ConnectorObj = {
-    "injected": () => new InjectedConnector(),
-    "walletConnect": () => new WalletconnectConnector(),
-    "coinbase": () => {
-        const connector = new CoinbaseConnector()
-        return connector;
-    },
-    "keplr": () => {
-        const connector = new KeplrConnector()
-        return connector
-    },
-    "solflare": () => {
-        const connector = new SolflareConnector()
-        return connector
-    },
-    "phantom": () => {
-        const connector = new PhantomConnector()
-        return connector
-    }
+    "injected": (_chainId?: string) => new InjectedConnector(_chainId),
+    "walletConnect": (_chainId?: string) => new WalletconnectConnector(_chainId),
+    "coinbase": (_chainId?: string) => new CoinbaseConnector(_chainId),
+    "keplr": (_chainId?: string) => new KeplrConnector(_chainId),
+    "solflare": (_chainId?: string) => new SolflareConnector(_chainId),
+    "phantom": (_chainId?: string) => new PhantomConnector(_chainId) 
 }

@@ -1,13 +1,13 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { hexValue } from 'ethers/lib/utils';
 import { ExternalProvider } from '@ethersproject/providers';
-import WalletConnectProvider from '@walletconnect/ethereum-provider';
+import EthereumProvider from '@walletconnect/ethereum-provider';
 
 import { BaseConnector, ConnectedData } from "../types"
 import emitter from '../utils/emiter';
 
-export class WalletconnectConnector extends BaseConnector<WalletConnectProvider> {
-  provider!: WalletConnectProvider;
+export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
+  provider!: EthereumProvider;
   chain: string;
 
   constructor(chain: string = '1') {
@@ -16,8 +16,8 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
     this.getProvider();
   }
 
-  async getProvider(): Promise<WalletConnectProvider> {
-    this.provider = new WalletConnectProvider({
+  async getProvider(): Promise<EthereumProvider> {
+    this.provider = new EthereumProvider({
       chainId: Number(this.chain),
     });
     return this.provider;
@@ -77,7 +77,7 @@ export class WalletconnectConnector extends BaseConnector<WalletConnectProvider>
         await this.switchChain(chainId);
       }
 
-      const data: ConnectedData<WalletConnectProvider> = {
+      const data: ConnectedData<EthereumProvider> = {
         account: (await this.getAccount())[0],
         chainId: this.chain,
         provider: this.provider,

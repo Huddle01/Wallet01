@@ -1,4 +1,4 @@
-import { connect, disconnect, getAccount, getChainId, resolveDid } from "./walletMethods";
+import { connect, disconnect, getAccount, getChainId, resolveDid, signMessage, switchChain } from "./walletMethods";
 import { connectorName } from './types'
 
 export { 
@@ -7,5 +7,7 @@ export {
     getAccount,
     getChainId,
     resolveDid,
-    connectorName
+    signMessage,
+    switchChain,
+    type connectorName
 }
