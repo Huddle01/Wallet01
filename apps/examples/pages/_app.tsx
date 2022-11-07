@@ -24,7 +24,11 @@ const defaultChainConfig: CustomChainConfig = {
 
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <Wallet01>
+      <Component {...pageProps} />
+    </Wallet01>
+  )
 }
 
 export default MyApp;
