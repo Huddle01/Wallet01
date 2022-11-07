@@ -1,8 +1,5 @@
 import React from 'react';
 import type { NextPage } from 'next';
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import { useIsMounted } from 'usehooks-ts';
 import { useConnect } from "@huddle01-wallets/react"
 
 const Home: NextPage = () => {

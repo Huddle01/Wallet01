@@ -2,10 +2,9 @@
   "name": "@huddle01-wallets/core",
   "version": "0.0.0",
   "description": "",
-  "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
     "build": "yarn clean && tsup --format esm --dts"

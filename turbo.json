@@ -5,23 +5,17 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "@huddle01-wallets/core": {
-      "dependsOn": ["^build"]
+    "@huddle01-wallets/core#build": {
+      "dependsOn": ["@huddle01-wallets/evm#build", "@huddle01-wallets/solana#build", "@huddle01-wallets/cosmos#build"],
+      "outputs": []
     },
-    "@huddle01-wallets/evm": {
-      "dependsOn": ["^build"]
+    "@huddle01-wallets/multichain#build": {
+      "dependsOn": ["@huddle01-wallets/core#build"],
+      "outputs": []
     },
-    "@huddle01-wallets/solana": {
-      "dependsOn": ["^build"]
-    },
-    "@huddle01-wallets/cosmos": {
-      "dependsOn": ["^build"]
-    },
-    "@huddle01-wallets/multichain": {
-      "dependsOn": ["^build"]
-    },
-    "@huddle01-wallets/react": {
-      "dependsOn": ["^build"]
+    "@huddle01-wallets/react#build": {
+      "dependsOn": ["@huddle01-wallets/multichain#build"],
+      "outputs": []
     },
     "examples": {
       "dependsOn": ["^build"]

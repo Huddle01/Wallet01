@@ -1,7 +1,7 @@
 import { connectorName, connect as _connect, getAccount, resolveDid, disconnect } from "@huddle01-wallets/multichain";
 import { useAtom } from "jotai";
 import { account, did, connected, chainId } from "../store/atoms"
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 export const useConnect = () => {
     const [isActive, setIsActive] = useAtom(connected)

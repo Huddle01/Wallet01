@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { connectorName, connect as _connect, signMessage as _sign } from "@huddle01-wallets/multichain";
 
 

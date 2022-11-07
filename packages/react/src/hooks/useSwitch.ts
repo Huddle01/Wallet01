@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 import { account, did, connected, chainId } from "../store/atoms"
 import { connectorName, getAccount, getChainId, resolveDid, switchChain } from "@huddle01-wallets/multichain";
 
