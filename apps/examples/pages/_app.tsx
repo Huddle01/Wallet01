@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import React from 'react';
 
-import Wallet01 from '@huddle01-wallets/react';
+import { Wallet01 } from '@huddle01-wallets/react';
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';

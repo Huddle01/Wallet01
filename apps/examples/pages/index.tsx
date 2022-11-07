@@ -11,7 +11,7 @@ const Home: NextPage = () => {
   return (
     <div className="flex flex-col justify-center items-center gap-4">
       <h1 className='text-4xl font-bold w-fit'>Metamask</h1>
-      <button className='p-3 bg-blue-500 text-white text-xl font-semibold rounded-lg' onClick={() => connect({ connector: "injected", _chainId: "8001" })}>
+      <button className='p-3 bg-blue-500 text-white text-xl font-semibold rounded-lg' onClick={() => connect({ connector: "solflare", _chainId: "" })}>
         {
           isActive && !isLoading ? address : "Connect Wallet"
         }

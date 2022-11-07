@@ -8,8 +8,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format esm --dts",
-    "dev": "yarn build --watch"
+    "build": "yarn clean && tsup --format esm --dts"
   },
   "dependencies": {
     "@huddle01-wallets/core": "*",
