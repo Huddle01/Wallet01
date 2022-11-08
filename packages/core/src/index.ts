@@ -5,6 +5,7 @@ import {
   type ClientConfig,
   type ConnectedData,
   BaseConnector,
+  TProvider
 } from './types';
 
 export {
@@ -13,4 +14,5 @@ export {
   type ClientConfig,
   type ConnectedData,
   BaseConnector,
+  type TProvider
 };

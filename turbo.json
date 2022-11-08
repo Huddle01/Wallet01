@@ -5,6 +5,21 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "@huddle01-wallets/core#build": {
+      "dependsOn": ["@huddle01-wallets/evm#build", "@huddle01-wallets/solana#build", "@huddle01-wallets/cosmos#build"],
+      "outputs": []
+    },
+    "@huddle01-wallets/multichain#build": {
+      "dependsOn": ["@huddle01-wallets/core#build"],
+      "outputs": []
+    },
+    "@huddle01-wallets/react#build": {
+      "dependsOn": ["@huddle01-wallets/multichain#build"],
+      "outputs": []
+    },
+    "examples": {
+      "dependsOn": ["^build"]
+    },
     "lint": {
       "outputs": []
     },

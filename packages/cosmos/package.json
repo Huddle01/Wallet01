@@ -2,12 +2,12 @@
   "name": "@huddle01-wallets/cosmos",
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "bundle": "yarn clean && tsup --format cjs"
+    "build": "yarn clean && tsup --format esm --dts"
   },
   "license": "MIT",
   "dependencies": {

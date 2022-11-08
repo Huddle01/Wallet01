@@ -1,6 +1,6 @@
 import { Window as KeplrWindow } from '@keplr-wallet/types';
 import { KeplrProvider } from '../providers/keplrProvider';
-import { BaseConnector, ConnectedData } from '../types';
+import { BaseConnector } from '../types';
 import emitter from '../utils/emiter';
 
 declare const window: KeplrWindow;
@@ -9,7 +9,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
   provider!: KeplrProvider;
   chain: string;
 
-  constructor(chain: string) {
+  constructor(chain: string = 'secret-4') {
     super(chain);
     this.chain = chain;
     this.getProvider();
@@ -51,18 +51,24 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
     }
   }
 
-  async connect(_chainId: string): Promise<void> {
+  async connect(chainId: string): Promise<void> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Keplr not installed');
 
-      const data: ConnectedData<KeplrProvider> = {
-        account: (await this.getAccount())[0],
-        chainId: this.chain,
-        provider: this.provider,
-      };
+      try {
+        await this.provider.enable(chainId)
+      } catch (err) {
+        console.error("Error in enable", err)
+      }
 
-      emitter.emit('connected', data);
+      // const data: ConnectedData<KeplrProvider> = {
+      //   account: (await this.getAccount())[0],
+      //   chainId: this.chain,
+      //   provider: this.provider,
+      // };
+
+      emitter.emit('connected');
     } catch (error) {
       console.error(error);
       throw new Error('Error in Connecting');
@@ -74,7 +80,8 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
   }
 
   async resolveDid(_address: string): Promise<string | null> {
-    throw new Error("Cosmos Ecosystem doesn't support DIDs as of now");
+    console.error("Cosmos Ecosystem doesn't support DIDs as of now")
+    return null
   }
 
   async signMessage(message: string): Promise<void> {

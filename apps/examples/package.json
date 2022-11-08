@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@huddle01-wallets/core": "*",
-    "@huddle01-wallets/evm": "*",
     "@huddle01-wallets/cosmos": "*",
+    "@huddle01-wallets/evm": "*",
+    "@huddle01-wallets/multichain": "*",
+    "@huddle01-wallets/react": "*",
+    "@huddle01-wallets/solana": "*",
     "ethers": "^5.7.2",
     "next": "12.3.1",
     "next-transpile-modules": "^9.0.0",
@@ -21,10 +24,13 @@
   },
   "devDependencies": {
     "@types/node": "18.8.3",
-    "@types/react": "18.0.21",
+    "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
+    "autoprefixer": "^10.4.13",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
+    "postcss": "^8.4.18",
+    "tailwindcss": "^3.2.1",
     "typescript": "4.8.4"
   }
 }

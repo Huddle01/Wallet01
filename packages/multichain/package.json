@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01-wallets/solana",
+  "name": "@huddle01-wallets/multichain",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,10 +11,10 @@
     "build": "yarn clean && tsup --format esm --dts"
   },
   "dependencies": {
-    "@bonfida/spl-name-service": "^0.1.55",
-    "@keplr-wallet/types": "^0.11.13",
-    "@solana/web3.js": "^1.66.2",
-    "eventemitter3": "^4.0.7"
+    "@huddle01-wallets/core": "*",
+    "@huddle01-wallets/evm": "*",
+    "@huddle01-wallets/solana": "*",
+    "@huddle01-wallets/cosmos": "*"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",

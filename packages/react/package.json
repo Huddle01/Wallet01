@@ -1,11 +1,25 @@
 {
-  "name": "react",
+  "name": "@huddle01-wallets/react",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "yarn clean && tsup --format esm --dts"
+  },
   "dependencies": {
     "@huddle01-wallets/core": "*",
-    "react": "^18.2.0",
-    "react-query": "^3.39.2"
+    "@huddle01-wallets/multichain": "*",
+    "@tanstack/react-query": "^4.14.5",
+    "jotai": "^1.9.1",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "rimraf": "^3.0.2",
+    "tsup": "^6.4.0"
   }
 }
