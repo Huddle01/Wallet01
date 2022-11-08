@@ -2,6 +2,7 @@ import { ClientConfig, CustomChainConfig } from './types';
 import { BaseConnector } from './types/baseConnector';
 import { TProvider } from './types/TProvider';
 import emitter from './utils/emiter';
+
 export class Wallet<P extends TProvider> {
   readonly chainConfig: CustomChainConfig;
   provider!: P | null;

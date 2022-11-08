@@ -1,10 +1,11 @@
 {
-  "name": "huddle01-wallets",
+  "name": "wallet01",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "configs/*"
   ],
   "scripts": {
     "build": "turbo run build --parallel",
