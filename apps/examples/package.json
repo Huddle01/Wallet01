@@ -9,12 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@huddle01-wallets/core": "*",
-    "@huddle01-wallets/cosmos": "*",
-    "@huddle01-wallets/evm": "*",
-    "@huddle01-wallets/multichain": "*",
-    "@huddle01-wallets/react": "*",
-    "@huddle01-wallets/solana": "*",
+    "@wallet01/core": "*",
+    "@wallet01/cosmos": "*",
+    "@wallet01/evm": "*",
+    "@wallet01/multichain": "*",
+    "@wallet01/react": "*",
+    "@wallet01/solana": "*",
     "ethers": "^5.7.2",
     "next": "12.3.1",
     "next-transpile-modules": "^9.0.0",

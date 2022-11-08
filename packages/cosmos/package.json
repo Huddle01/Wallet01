@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01-wallets/cosmos",
+  "name": "@wallet01/cosmos",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.js",

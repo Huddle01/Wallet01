@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01-wallets/react",
+  "name": "@wallet01/react",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,8 +11,8 @@
     "build": "yarn clean && tsup --format esm --dts"
   },
   "dependencies": {
-    "@huddle01-wallets/core": "*",
-    "@huddle01-wallets/multichain": "*",
+    "@wallet01/core": "*",
+    "@wallet01/multichain": "*",
     "@tanstack/react-query": "^4.14.5",
     "jotai": "^1.9.1",
     "react": "^18.2.0"

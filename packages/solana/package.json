@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01-wallets/solana",
+  "name": "@wallet01/solana",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.js",

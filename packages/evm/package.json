@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01-wallets/evm",
+  "name": "@wallet01/evm",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.js",

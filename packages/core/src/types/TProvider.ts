@@ -1,14 +1,14 @@
-import { PhantomProvider, SolflareProvider } from '@huddle01-wallets/solana'
-import { KeplrProvider } from '@huddle01-wallets/cosmos/src'
+import { PhantomProvider, SolflareProvider } from '@wallet01/solana';
+import { KeplrProvider } from '@wallet01/cosmos/src';
 
 import { Web3Provider } from '@ethersproject/providers';
 import { WalletLinkProvider } from 'walletlink';
-import EthereumProvider from '@walletconnect/ethereum-provider'
+import EthereumProvider from '@walletconnect/ethereum-provider';
 
-  export type TProvider =
+export type TProvider =
   | Web3Provider
   | EthereumProvider
   | WalletLinkProvider
   | PhantomProvider
   | SolflareProvider
-  | KeplrProvider
+  | KeplrProvider;

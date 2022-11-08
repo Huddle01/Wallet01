@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import React from 'react';
 
-import { Wallet01 } from '@huddle01-wallets/react';
+import { Wallet01 } from '@wallet01/react';
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';
@@ -22,13 +22,12 @@ const defaultChainConfig: CustomChainConfig = {
   tickerName: 'Ethereum',
 };
 
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Wallet01>
       <Component {...pageProps} />
     </Wallet01>
-  )
+  );
 }
 
 export default MyApp;

@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01-wallets/core",
+  "name": "@wallet01/core",
   "version": "0.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -13,9 +13,9 @@
   "author": "thevatsal.eth",
   "license": "ISC",
   "dependencies": {
-    "@huddle01-wallets/evm": "*",
-    "@huddle01-wallets/solana": "*",
-    "@huddle01-wallets/cosmos": "*",
+    "@wallet01/evm": "*",
+    "@wallet01/solana": "*",
+    "@wallet01/cosmos": "*",
     "@bonfida/spl-name-service": "^0.1.51",
     "@keplr-wallet/types": "^0.11.13",
     "@metamask/detect-provider": "^2.0.0",

@@ -1,5 +1,5 @@
 {
-  "name": "@huddle01-wallets/multichain",
+  "name": "@wallet01/multichain",
   "version": "0.0.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -11,10 +11,10 @@
     "build": "yarn clean && tsup --format esm --dts"
   },
   "dependencies": {
-    "@huddle01-wallets/core": "*",
-    "@huddle01-wallets/evm": "*",
-    "@huddle01-wallets/solana": "*",
-    "@huddle01-wallets/cosmos": "*"
+    "@wallet01/core": "*",
+    "@wallet01/evm": "*",
+    "@wallet01/solana": "*",
+    "@wallet01/cosmos": "*"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
