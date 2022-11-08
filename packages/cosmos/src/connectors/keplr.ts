@@ -57,9 +57,9 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
       if (!provider) throw new Error('Keplr not installed');
 
       try {
-        await this.provider.enable(chainId)
+        await this.provider.enable(chainId);
       } catch (err) {
-        console.error("Error in enable", err)
+        console.error('Error in enable', err);
       }
 
       // const data: ConnectedData<KeplrProvider> = {
@@ -80,8 +80,8 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
   }
 
   async resolveDid(_address: string): Promise<string | null> {
-    console.error("Cosmos Ecosystem doesn't support DIDs as of now")
-    return null
+    console.error("Cosmos Ecosystem doesn't support DIDs as of now");
+    return null;
   }
 
   async signMessage(message: string): Promise<void> {

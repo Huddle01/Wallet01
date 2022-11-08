@@ -5,6 +5,7 @@ import { useConnect } from '@wallet01/react';
 const Home: NextPage = () => {
   const { connect, isActive, name, address, isLoading, isError, disconnect } =
     useConnect();
+
   return (
     <div className="flex flex-col justify-center items-center gap-4">
       <h1 className="text-4xl font-bold w-fit">Metamask</h1>

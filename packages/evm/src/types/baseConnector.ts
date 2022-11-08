@@ -1,4 +1,3 @@
-
 export abstract class BaseConnector<TProvider = any> {
   readonly chain: string;
   abstract provider?: TProvider;

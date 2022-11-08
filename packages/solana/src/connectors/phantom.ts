@@ -9,7 +9,7 @@ interface PhantomWindow extends Window {
   solana?: PhantomProvider;
 }
 
-declare const window: PhantomWindow
+declare const window: PhantomWindow;
 
 export class PhantomConnector extends BaseConnector<PhantomProvider> {
   provider!: PhantomProvider;
@@ -17,7 +17,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
 
   constructor(chain: string = '') {
     super(chain);
-    this.chain = chain
+    this.chain = chain;
     this.getProvider();
   }
 
@@ -35,7 +35,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
   async getAccount(): Promise<string[]> {
     if (!this.provider) throw new Error('Provider Undefined');
     try {
-      await this.connect("");
+      await this.connect('');
       const accounts = this.provider.publicKey;
       return [String(accounts)];
     } catch (error) {
@@ -56,9 +56,8 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Phantom is not installed');
-      if (provider.isPhantom)
-        console.log("phantom detected")
-      await this.provider.connect()
+      if (provider.isPhantom) console.log('phantom detected');
+      await this.provider.connect();
 
       if (provider.on) {
         provider.on('accountChanged', this.onAccountsChanged);

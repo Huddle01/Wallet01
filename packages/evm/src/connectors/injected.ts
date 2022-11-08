@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import {  hexValue } from 'ethers/lib/utils';
+import { hexValue } from 'ethers/lib/utils';
 import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
@@ -11,7 +11,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   chain: string;
 
   constructor(chain: string = '1') {
-    super(chain)
+    super(chain);
     this.chain = chain;
     this.getProvider();
   }
@@ -20,7 +20,9 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     const provider = await detectEthereumProvider();
 
     if (provider) {
-      const _provider = new ethers.providers.Web3Provider(<ExternalProvider>(<unknown>provider));
+      const _provider = new ethers.providers.Web3Provider(
+        <ExternalProvider>(<unknown>provider)
+      );
       this.provider = _provider;
       return this.provider;
     } else {
@@ -29,9 +31,9 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) await this.getProvider()
+    if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("No Provider Found!")
+      if (!this.provider) throw new Error('No Provider Found!');
       const result = await this.provider.send('eth_requestAccounts', []);
       return result;
     } catch (err) {
@@ -52,7 +54,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     const provider = await this.getProvider();
 
     const id = hexValue(Number(chainId));
-    console.log({id})
+    console.log({ id });
     try {
       await provider?.send('wallet_switchEthereumChain', [{ chainId: id }]);
     } catch (error) {
@@ -72,20 +74,19 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       }
 
       let id = await this.getChainId();
-      console.log(id)
-      
+      console.log(id);
+
       try {
         if (chainId && id !== chainId) {
           await this.switchChain(chainId);
         }
       } catch (error) {
-        console.error(error, "inside connect funcion")
+        console.error(error, 'inside connect funcion');
       }
-
 
       emitter.emit('connected');
     } catch (error) {
-      console.error(error, "in connect");
+      console.error(error, 'in connect');
     }
   }
 

@@ -6,7 +6,7 @@ import { SolflareProvider } from '../providers/solflareProvider';
 import emitter from '../utils/emiter';
 
 declare const window: {
-  solflare: SolflareProvider
+  solflare: SolflareProvider;
 };
 
 export class SolflareConnector extends BaseConnector<SolflareProvider> {
