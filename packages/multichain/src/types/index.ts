@@ -26,8 +26,12 @@ export type ConnectorObj = {
   [key in connectorName]: (_chainId?: string) => TConnector;
 };
 
-export type ConnectorInput = connectorName;
 
+/**
+ * @const 
+ * @name connectorObj
+ * @description An object containing all the available connectors,
+ */
 export const connectorObj: ConnectorObj = {
   injected: (_chainId?: string) => new InjectedConnector(_chainId),
   walletConnect: (_chainId?: string) => new WalletconnectConnector(_chainId),

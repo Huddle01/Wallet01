@@ -5,6 +5,10 @@ interface Props {
   children: JSX.Element;
 }
 
+/**
+ * @description A context that wraps your app under wallet01 states and providers
+*/
+
 const Wallet01: FunctionComponent<Props> = ({ children }) => {
   const queryClient = new QueryClient();
 

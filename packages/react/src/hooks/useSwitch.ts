@@ -9,13 +9,21 @@ import {
   switchChain,
 } from '@wallet01/multichain';
 
+/**
+ * @description This hooks will return switchChain function that will help chain in your desired wallet.
+ * @params Accepts an object with properties connector and chainId
+ * @returns isActive, isLoading, isError, error, switchChain().
+ * 
+ * For more details visit {@link}
+ */
+
 export const useSwitch = () => {
   const [, setAddress] = useAtom(account);
   const [, setName] = useAtom(did);
   const [, setIsActive] = useAtom(connected);
-  const [activeChain, setActiveChainId] = useAtom(chainId);
+  const [, setActiveChainId] = useAtom(chainId);
 
-  const { isLoading, isError, mutate } = useMutation(
+  const { isLoading, isError, error, mutate } = useMutation(
     async ({
       connector,
       _chainId,
@@ -39,9 +47,9 @@ export const useSwitch = () => {
   );
 
   return {
-    activeChain,
     isLoading,
     isError,
+    error,
     switchChain: ({
       connector,
       _chainId,
