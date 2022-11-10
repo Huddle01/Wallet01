@@ -1,5 +1,5 @@
 import { CustomChainConfig } from './chainConfig';
-import { BaseConnector } from './baseConnector';
+import { BaseConnector } from '@wallet01/core';
 
 type ClientConfig<TProvider> = {
   chainConfig: CustomChainConfig;

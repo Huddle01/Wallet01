@@ -19,7 +19,7 @@ export class Client {
     connectors,
   }: {
     autoConnect: boolean;
-    connectors: (() => BaseConnector<any>[]) | BaseConnector<any>[];
+    connectors: (() => BaseConnector[]) | BaseConnector[];
   }) {
     this.autoConnect = autoConnect;
     this.connectors = connectors;

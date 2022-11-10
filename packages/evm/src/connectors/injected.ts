@@ -3,7 +3,8 @@ import { hexValue } from 'ethers/lib/utils';
 import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-import { BaseConnector } from '../types';
+import { BaseConnector } from '@wallet01/core';
+
 import emitter from '../utils/emiter';
 
 export class InjectedConnector extends BaseConnector<Web3Provider> {

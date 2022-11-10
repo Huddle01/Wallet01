@@ -1,8 +1,6 @@
-// import { TProvider } from './TProvider';
-
-export abstract class BaseConnector<P = any> {
+export abstract class BaseConnector<Provider = any> {
   readonly chain: string;
-  abstract provider?: P;
+  abstract provider?: Provider;
 
   constructor(chain: string) {
     this.chain = chain;
@@ -17,7 +15,7 @@ export abstract class BaseConnector<P = any> {
 
   abstract getChainId(): Promise<string>;
 
-  abstract getProvider(): Promise<P>;
+  abstract getProvider(): Promise<Provider>;
 
   abstract resolveDid(address: string): Promise<string | null>;
 

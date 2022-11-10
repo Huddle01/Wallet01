@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import React from 'react';
 
 import { Wallet01, Client } from '@wallet01/react';
+import { InjectedConnector } from '@wallet01/evm';
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';
@@ -27,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     () =>
       new Client({
         autoConnect: true,
-        connectors: [],
+        connectors: [new InjectedConnector()],
       })
   );
 

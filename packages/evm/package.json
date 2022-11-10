@@ -14,7 +14,8 @@
     "@metamask/detect-provider": "^2.0.0",
     "@walletconnect/ethereum-provider": "^2.1.0",
     "ethers": "^5.7.2",
-    "walletlink": "^2.5.0"
+    "walletlink": "^2.5.0",
+    "@wallet01/core": "*"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
