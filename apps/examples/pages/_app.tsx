@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import React from 'react';
 
-import { Wallet01 } from '@wallet01/react';
+import { Wallet01, Client } from '@wallet01/react';
 
 export type CustomChainConfig = {
   chainNamespace: 'eip155' | 'solana' | 'other';
@@ -23,8 +23,16 @@ const defaultChainConfig: CustomChainConfig = {
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [client] = React.useState(
+    () =>
+      new Client({
+        autoConnect: true,
+        connectors: [],
+      })
+  );
+
   return (
-    <Wallet01>
+    <Wallet01 client={client}>
       <Component {...pageProps} />
     </Wallet01>
   );

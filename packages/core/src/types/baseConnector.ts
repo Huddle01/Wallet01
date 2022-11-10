@@ -1,6 +1,6 @@
-import { TProvider } from './TProvider';
+// import { TProvider } from './TProvider';
 
-export abstract class BaseConnector<P extends TProvider> {
+export abstract class BaseConnector<P = any> {
   readonly chain: string;
   abstract provider?: P;
 
