@@ -1,7 +1,6 @@
 import { Wallet } from './wallet';
 
 import {
-  type CustomChainConfig,
   type ClientConfig,
   type ConnectedData,
   BaseConnector,
@@ -10,7 +9,6 @@ import {
 
 export {
   Wallet,
-  type CustomChainConfig,
   type ClientConfig,
   type ConnectedData,
   BaseConnector,
