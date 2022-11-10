@@ -8,15 +8,16 @@ import {
 import { useAtom } from 'jotai';
 import { account, did, connected, chainId } from '../store/atoms';
 import { useMutation } from '@tanstack/react-query';
+import { clientAtom } from '../store/client';
+import { BaseConnector } from '@wallet01/core';
 
 /**
  * @description This hooks will return essential states and two function for connecting and disconnecting the desired wallet.
  * @params Accepts an object with properties connector and chainId
  * @returns isActive, isLoading, isError, error, address, name (ex: theVatsal.eth), activeChain, connect() and disconnect()
- * 
+ *
  * For more details visit {@link}
  */
-
 export const useConnect = () => {
   const [isActive, setIsActive] = useAtom(connected);
   const [address, setAddress] = useAtom(account);
@@ -61,4 +62,22 @@ export const useConnect = () => {
   };
 };
 
+type ConnectArgs = {
+  connector: BaseConnector;
+};
 
+export const useC = ({ connector }: ConnectArgs) => {
+  const [client] = useAtom(clientAtom);
+
+  const {} = useMutation({
+    mutationFn: async () => {
+      if (!client) throw new Error('Client not initialised');
+
+      if (!client.connectors.includes(connector))
+        throw new Error('Connector not found');
+
+      // CHAIN ID SHOULD BE CONDITIONAL
+      await connector.connect('1');
+    },
+  });
+};

@@ -1,11 +1,10 @@
-import { atom, useAtom } from 'jotai';
+import { atom } from 'jotai';
 import { loadable } from 'jotai/utils';
 import {
   connectorName,
   connect,
   getAccount,
   resolveDid,
-  disconnect,
 } from '@wallet01/multichain';
 
 const connected = atom<boolean>(false);

@@ -11,7 +11,8 @@ export const clientAtom = atom<Client | null>(null);
 
 export class Client {
   autoConnect: boolean;
-  connectors: (() => BaseConnector[]) | BaseConnector[];
+  // connectors: (() => BaseConnector[]) | BaseConnector[];
+  connectors: BaseConnector[];
   connected: boolean;
 
   constructor({
@@ -19,7 +20,7 @@ export class Client {
     connectors,
   }: {
     autoConnect: boolean;
-    connectors: (() => BaseConnector[]) | BaseConnector[];
+    connectors: BaseConnector[];
   }) {
     this.autoConnect = autoConnect;
     this.connectors = connectors;
