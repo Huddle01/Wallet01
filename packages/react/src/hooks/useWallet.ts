@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai';
-import { connected, account, did, chainId } from 'src/store/atoms';
-import { clientAtom } from 'src/store/client';
+
+import { connected, account, did, chainId } from '../store/atoms';
+import { clientAtom } from '../store/client';
 
 export const useWallet = () => {
   const [isConnected] = useAtom(connected);
