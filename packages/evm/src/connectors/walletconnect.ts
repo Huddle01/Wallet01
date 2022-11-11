@@ -2,8 +2,9 @@ import { Web3Provider } from '@ethersproject/providers';
 import { hexValue } from 'ethers/lib/utils';
 import { ExternalProvider } from '@ethersproject/providers';
 import EthereumProvider from '@walletconnect/ethereum-provider';
+import { BaseConnector } from '@wallet01/core';
 
-import { BaseConnector, ConnectedData } from '../types';
+import { ConnectedData } from '../types';
 import emitter from '../utils/emiter';
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {

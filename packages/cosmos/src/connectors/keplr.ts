@@ -1,6 +1,6 @@
 import { Window as KeplrWindow } from '@keplr-wallet/types';
 import { KeplrProvider } from '../providers/keplrProvider';
-import { BaseConnector } from '../types';
+import { BaseConnector } from '@wallet01/core';
 import emitter from '../utils/emiter';
 
 declare const window: KeplrWindow;

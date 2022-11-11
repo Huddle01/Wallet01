@@ -1,7 +1,7 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
 
-import { BaseConnector } from '../types';
+import { BaseConnector } from '@wallet01/core';
 import { PhantomProvider } from '../providers/phantomProvider';
 import emitter from '../utils/emiter';
 

@@ -1,7 +1,8 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
+import { BaseConnector } from '@wallet01/core';
 
-import { BaseConnector, ConnectedData } from '../types';
+import { ConnectedData } from '../types';
 import { SolflareProvider } from '../providers/solflareProvider';
 import emitter from '../utils/emiter';
 

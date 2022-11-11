@@ -1,5 +1,5 @@
+import { BaseConnector } from '@wallet01/core';
 import { CustomChainConfig } from './chainConfig';
-import { BaseConnector } from './baseConnector';
 
 type ClientConfig<TProvider> = {
   chainConfig: CustomChainConfig;
@@ -12,9 +12,4 @@ type ConnectedData<TProvider> = {
   provider: TProvider;
 };
 
-export {
-  type CustomChainConfig,
-  type ClientConfig,
-  type ConnectedData,
-  BaseConnector,
-};
+export { type CustomChainConfig, type ClientConfig, type ConnectedData };

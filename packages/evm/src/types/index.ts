@@ -12,9 +12,4 @@ type ConnectedData<TProvider> = {
   provider: TProvider;
 };
 
-export {
-  type CustomChainConfig,
-  type ClientConfig,
-  type ConnectedData,
-  BaseConnector,
-};
+export { type CustomChainConfig, type ClientConfig, type ConnectedData };
