@@ -16,11 +16,6 @@
     "eventemitter3": "^4.0.7"
   },
   "devDependencies": {
-    "@wallet01/cosmos": "*",
-    "@wallet01/evm": "*",
-    "@wallet01/solana": "*",
-    "@walletconnect/ethereum-provider": "^2.1.0",
-    "walletlink": "^2.5.0",
     "@types/node": "^18.11.9",
     "rimraf": "^3.0.2",
     "tsconfig": "*",

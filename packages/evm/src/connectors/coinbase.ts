@@ -2,9 +2,10 @@ import { Web3Provider } from '@ethersproject/providers';
 import { ExternalProvider } from '@ethersproject/providers';
 import WalletLink, { WalletLinkProvider } from 'walletlink';
 import { hexValue } from 'ethers/lib/utils';
+import { BaseConnector } from '@wallet01/core';
 
 import emitter from '../utils/emiter';
-import { BaseConnector, ConnectedData } from '../types';
+import { ConnectedData } from '../types';
 
 export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
   provider?: WalletLinkProvider;

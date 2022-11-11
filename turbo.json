@@ -5,16 +5,22 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "@wallet01/core#build": {
-      "dependsOn": [
-        "@wallet01/evm#build",
-        "@wallet01/solana#build",
-        "@wallet01/cosmos#build"
-      ],
-      "outputs": []
+    "@wallet01/cosmos#build": {
+      "dependsOn": ["@wallet01/core#build"]
+    },
+    "@wallet01/solana#build": {
+      "dependsOn": ["@wallet01/core#build"]
+    },
+    "@wallet01/evm#build": {
+      "dependsOn": ["@wallet01/core#build"]
     },
     "@wallet01/multichain#build": {
-      "dependsOn": ["@wallet01/core#build"],
+      "dependsOn": [
+        "@wallet01/core#build",
+        "@wallet01/evm#build",
+        "@wallet01/cosmos#build",
+        "@wallet01/solana#build"
+      ],
       "outputs": []
     },
     "@wallet01/react#build": {
@@ -22,7 +28,7 @@
       "outputs": []
     },
     "examples": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["@wallet01/core#build"]
     },
     "lint": {
       "outputs": []

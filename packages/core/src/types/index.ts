@@ -1,20 +1,15 @@
 import { BaseConnector } from './baseConnector';
 import { TProvider } from './TProvider';
 
-type ClientConfig<P extends TProvider> = {
+type ClientConfig<TProvider> = {
   chainId: string;
-  connector: BaseConnector<P>;
+  connector: BaseConnector<TProvider>;
 };
 
-type ConnectedData<T extends TProvider> = {
+type ConnectedData<TProvider> = {
   account: string;
   chainId: string;
-  provider: T;
+  provider: TProvider;
 };
 
-export {
-  type ClientConfig,
-  type ConnectedData,
-  BaseConnector,
-  type TProvider,
-};
+export { type ClientConfig, type ConnectedData, BaseConnector, type TProvider };
