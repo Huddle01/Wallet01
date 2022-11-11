@@ -51,7 +51,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
     }
   }
 
-  async connect(chainId: string): Promise<void> {
+  async connect({ chainId = 'secret-4' }): Promise<void> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Keplr not installed');

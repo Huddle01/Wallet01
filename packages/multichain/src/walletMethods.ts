@@ -1,7 +1,6 @@
 import { TProvider } from '@wallet01/core';
 import { connectorName, connectorObj } from './types';
 
-
 /**
  * @function connect
  * @param connector "injected" | "walletConnect" | "coinbase" | "keplr" | "solflare" | "phantom"
@@ -11,15 +10,8 @@ export const connect = async (
   connector: connectorName,
   _chain?: string
 ): Promise<void> => {
-  const obj = await connectorObj[connector](_chain);
-  if (connector === 'keplr' && !_chain) {
-    obj.connect('secret-4');
-  } else if (connector === 'injected' && !_chain) obj.connect('1');
-  else {
-    obj.connect('');
-  }
+  await connectorObj[connector](_chain).connect({ chainId: _chain });
 };
-
 
 /**
  * @function disconnect
@@ -28,7 +20,6 @@ export const connect = async (
 export const disconnect = async (connector: connectorName): Promise<void> => {
   await connectorObj[connector]().disconnect();
 };
-
 
 /**
  * @function getAccount
@@ -42,19 +33,15 @@ export const getAccount = async (
   return accounts;
 };
 
-
 /**
  * @function getChainId
- * @param connector 
+ * @param connector
  * @returns ChainId of the connected chain as string
  */
-export const getChainId = async (
-  connector: connectorName
-): Promise<string> => {
+export const getChainId = async (connector: connectorName): Promise<string> => {
   const chainId = await connectorObj[connector]().getChainId();
   return chainId;
 };
-
 
 /**
  * @function getProvider
@@ -67,7 +54,6 @@ export const getProvider = async (
   const provider = await connectorObj[connector]().getProvider();
   return provider;
 };
-
 
 /**
  * @function resolveDid
@@ -83,7 +69,6 @@ export const resolveDid = async (
   return did;
 };
 
-
 /**
  * @function signMessage
  * @param connector "injected" | "walletConnect" | "coinbase" | "keplr" | "solflare" | "phantom"
@@ -95,7 +80,6 @@ export const signMessage = async (
 ): Promise<void> => {
   await connectorObj[connector]().signMessage(message);
 };
-
 
 /**
  * @function switchChain

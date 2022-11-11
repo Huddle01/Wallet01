@@ -6,7 +6,11 @@ export abstract class BaseConnector<Provider = any> {
     this.chain = chain;
   }
 
-  abstract connect(chainId: string): Promise<void>;
+  abstract connect({
+    chainId,
+  }: {
+    chainId?: string | undefined;
+  }): Promise<void>;
 
   // DISCUSSION: We might wanna have the disconnect method only in the client as there is no specific function in wallets
   abstract disconnect(): Promise<void>;

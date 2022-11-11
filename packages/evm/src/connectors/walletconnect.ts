@@ -62,7 +62,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
     }
   }
 
-  async connect(chainId: string): Promise<void> {
+  async connect({ chainId = '1' }): Promise<void> {
     try {
       const provider = await this.getProvider();
       this.provider = provider;

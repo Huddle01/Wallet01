@@ -59,7 +59,7 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
     }
   }
 
-  async connect(chainId: string) {
+  async connect({ chainId = '1' }) {
     try {
       const provider = await this.getProvider();
       this.provider = provider;

@@ -1,61 +1,48 @@
 import { useAtom } from 'jotai';
+import { BaseConnector } from '@wallet01/core';
 import { useMutation } from '@tanstack/react-query';
-import { account, did, connected, chainId } from '../store/atoms';
-import {
-  connectorName,
-  getAccount,
-  getChainId,
-  resolveDid,
-  switchChain,
-} from '@wallet01/multichain';
+import { clientAtom } from 'src/store/client';
+import { account, connected } from '../store/atoms';
 
 /**
  * @description This hooks will return switchChain function that will help chain in your desired wallet.
  * @params Accepts an object with properties connector and chainId
  * @returns isActive, isLoading, isError, error, switchChain().
- * 
+ *
  * For more details visit {@link}
  */
 
-export const useSwitch = () => {
+interface ChainSwitchArgs {
+  connector: BaseConnector;
+  chainId: string;
+}
+
+export const useSwitch = ({ connector, chainId }: ChainSwitchArgs) => {
+  const [client] = useAtom(clientAtom);
   const [, setAddress] = useAtom(account);
-  const [, setName] = useAtom(did);
   const [, setIsActive] = useAtom(connected);
-  const [, setActiveChainId] = useAtom(chainId);
 
-  const { isLoading, isError, error, mutate } = useMutation(
-    async ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => {
-      await switchChain(connector, _chainId);
+  const { isLoading, isError, error, mutate } = useMutation({
+    mutationFn: async () => {
+      if (!client) throw new Error('Client not Initialised');
 
-      const _address = await getAccount(connector);
-      setAddress(_address[0]);
+      if (!client.connectors.includes(connector)) {
+        throw new Error('Connector not found');
+      }
 
-      const _name = await resolveDid(connector, _address[0]);
-      setName(_name);
-
-      const _id = await getChainId(connector);
-      setActiveChainId(_id);
-
+      if (!connector.switchChain)
+        throw new Error('Function not supported by wallet');
+      setIsActive(false);
+      await connector.switchChain(chainId);
+      setAddress((await connector.getAccount())[0]);
       setIsActive(true);
-    }
-  );
+    },
+  });
 
   return {
     isLoading,
     isError,
     error,
-    switchChain: ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => mutate({ connector, _chainId }),
+    switchChain: mutate,
   };
 };

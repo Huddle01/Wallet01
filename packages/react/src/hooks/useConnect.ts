@@ -1,12 +1,5 @@
-import {
-  connectorName,
-  connect as _connect,
-  getAccount,
-  resolveDid,
-  disconnect,
-} from '@wallet01/multichain';
 import { useAtom } from 'jotai';
-import { account, did, connected, chainId } from '../store/atoms';
+import { account, connected } from '../store/atoms';
 import { useMutation } from '@tanstack/react-query';
 import { clientAtom } from '../store/client';
 import { BaseConnector } from '@wallet01/core';
@@ -18,66 +11,35 @@ import { BaseConnector } from '@wallet01/core';
  *
  * For more details visit {@link}
  */
-export const useConnect = () => {
-  const [isActive, setIsActive] = useAtom(connected);
-  const [address, setAddress] = useAtom(account);
-  const [name, setName] = useAtom(did);
-  const [activeChain] = useAtom(chainId);
-
-  const { isLoading, isError, mutate, error } = useMutation(
-    async ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => {
-      await _connect(connector, _chainId);
-      setIsActive(true);
-
-      const _account = await getAccount(connector);
-      setAddress(_account[0]);
-
-      const _did = await resolveDid(connector, _account[0]);
-      setName(_did);
-    }
-  );
-
-  return {
-    isActive,
-    address,
-    name,
-    activeChain,
-    isLoading,
-    isError,
-    error,
-    connect: ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => mutate({ connector, _chainId }),
-    disconnect,
-  };
-};
 
 type ConnectArgs = {
   connector: BaseConnector;
+  chainId?: string;
 };
 
-export const useC = ({ connector }: ConnectArgs) => {
+export const useConnect = ({ connector, chainId }: ConnectArgs) => {
   const [client] = useAtom(clientAtom);
+  const [, setAccount] = useAtom(account);
+  const [, isActive] = useAtom(connected);
 
-  const {} = useMutation({
+  const { mutate, isLoading, isError, error } = useMutation({
     mutationFn: async () => {
       if (!client) throw new Error('Client not initialised');
 
       if (!client.connectors.includes(connector))
         throw new Error('Connector not found');
 
-      // CHAIN ID SHOULD BE CONDITIONAL
-      await connector.connect('1');
+      await connector.connect({ chainId: chainId });
+      const accounts = await connector.getAccount();
+      setAccount(accounts[0]);
+      isActive(true);
     },
   });
+
+  return {
+    connect: mutate,
+    isLoading,
+    isError,
+    error,
+  };
 };
