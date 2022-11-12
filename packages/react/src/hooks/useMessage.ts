@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { BaseConnector } from '@wallet01/core';
 import { useAtom } from 'jotai';
-import { clientAtom } from 'src/store/client';
+import { connectorAtom } from '../store/atoms';
+import { clientAtom } from '../store/client';
 
 /**
  * @description This hooks will return signMessage function that helps sign messages from desired wallet.
@@ -12,16 +12,18 @@ import { clientAtom } from 'src/store/client';
  */
 
 interface SignMessageArgs {
-  connector: BaseConnector;
   message: string;
 }
 
-export const useMessage = ({ connector, message }: SignMessageArgs) => {
+export const useMessage = ({ message }: SignMessageArgs) => {
   const [client] = useAtom(clientAtom);
+  const [connector] = useAtom(connectorAtom);
 
   const { isLoading, isError, mutate, error } = useMutation({
     mutationFn: async () => {
       if (!client) throw new Error('Client not Initialised');
+
+      if (!connector) throw new Error('Wallet not connected');
 
       if (!client.connectors.includes(connector)) {
         throw new Error('Connector not found');

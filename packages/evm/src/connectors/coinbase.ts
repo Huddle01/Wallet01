@@ -10,10 +10,12 @@ import { ConnectedData } from '../types';
 export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
   provider?: WalletLinkProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '1') {
     super(chain);
     this.chain = chain;
+    this.name = 'Coinbase';
     this.getProvider();
   }
 

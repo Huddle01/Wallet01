@@ -13,10 +13,12 @@ declare const window: {
 export class SolflareConnector extends BaseConnector<SolflareProvider> {
   provider!: SolflareProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '') {
     super(chain);
     this.chain = chain;
+    this.name = 'Solflare';
     this.getProvider();
   }
 

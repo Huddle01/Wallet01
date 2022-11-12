@@ -1,5 +1,6 @@
 export abstract class BaseConnector<Provider = any> {
   readonly chain: string;
+  readonly name: string;
   abstract provider?: Provider;
 
   constructor(chain: string) {

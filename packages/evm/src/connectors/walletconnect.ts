@@ -10,10 +10,12 @@ import emitter from '../utils/emiter';
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider!: EthereumProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '1') {
     super(chain);
     this.chain = chain;
+    this.name = 'WalletConnect';
     this.getProvider();
   }
 

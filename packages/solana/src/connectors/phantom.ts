@@ -14,10 +14,12 @@ declare const window: PhantomWindow;
 export class PhantomConnector extends BaseConnector<PhantomProvider> {
   provider!: PhantomProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '') {
     super(chain);
     this.chain = chain;
+    this.name = 'Phantom';
     this.getProvider();
   }
 

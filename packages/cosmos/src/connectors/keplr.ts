@@ -8,10 +8,12 @@ declare const window: KeplrWindow;
 export class KeplrConnector extends BaseConnector<KeplrProvider> {
   provider!: KeplrProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = 'secret-4') {
     super(chain);
     this.chain = chain;
+    this.name = 'Keplr';
     this.getProvider();
   }
 
