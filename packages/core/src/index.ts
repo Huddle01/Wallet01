@@ -11,6 +11,6 @@ export {
   Wallet,
   type ClientConfig,
   type ConnectedData,
-  type BaseConnector,
   type TProvider,
+  BaseConnector,
 };

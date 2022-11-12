@@ -2,12 +2,12 @@
   "name": "@wallet01/core",
   "version": "0.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "import": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format esm --dts"
+    "build": "yarn clean && tsup"
   },
   "keywords": [],
   "author": "thevatsal.eth",
