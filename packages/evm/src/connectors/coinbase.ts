@@ -1,6 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ExternalProvider } from '@ethersproject/providers';
-import WalletLink, { WalletLinkProvider } from 'walletlink';
+import { WalletLinkProvider, WalletLink } from 'walletlink';
 import { hexValue } from 'ethers/lib/utils';
 import { BaseConnector } from '@wallet01/core';
 
