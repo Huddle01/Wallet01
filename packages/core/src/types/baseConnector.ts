@@ -18,7 +18,7 @@ export abstract class BaseConnector<Provider = any> {
 
   abstract getAccount(): Promise<string[]>;
 
-  abstract getChainId(): Promise<string>;
+  getChainId?(): Promise<string>;
 
   abstract getProvider(): Promise<Provider>;
 

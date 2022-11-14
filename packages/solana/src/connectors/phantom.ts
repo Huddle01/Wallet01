@@ -46,14 +46,6 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     }
   }
 
-  async getChainId(): Promise<string> {
-    throw new Error('This method is not supported in Solana Wallets');
-  }
-
-  async switchChain(_chainId: string): Promise<void> {
-    throw new Error('This method is not supported in Solana Wallets');
-  }
-
   async connect({}): Promise<void> {
     try {
       const provider = await this.getProvider();

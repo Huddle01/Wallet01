@@ -53,7 +53,9 @@ export const useConnect = ({
 
       setName(await connector.resolveDid(accounts[0]));
 
-      setChainId(await connector.getChainId());
+      if (connector.getChainId) {
+        setChainId(await connector.getChainId());
+      }
 
       isActive(true);
     },

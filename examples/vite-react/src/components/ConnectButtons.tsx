@@ -1,4 +1,3 @@
-import React from 'react';
 import { useClient, useConnect, useWallet } from '@wallet01/react';
 
 const ConnectButtons = () => {
@@ -6,17 +5,19 @@ const ConnectButtons = () => {
   const { activeConnector, isConnected, name, address } = useWallet();
   const { connect, isLoading, isError, error } = useConnect();
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2 items-center w-fit justify-center">
       <span className="text-2xl font-bold">Connection Buttons</span>
 
       {connectors?.map(connector => (
         <button
           key={connector.name}
-          disabled={connector !== activeConnector}
+          disabled={isConnected && connector !== activeConnector}
           onClick={() => connect({ connector: connector })}
+          className="p-3 text-lg w-full rounded-lg font-bold bg-blue-300"
         >
-          {connector.name}
-          {(isConnected && connector == activeConnector) ?? name}
+          {isConnected && connector === activeConnector
+            ? name ?? address
+            : connector.name}
         </button>
       ))}
     </div>

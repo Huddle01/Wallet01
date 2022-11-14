@@ -4,7 +4,7 @@ import { Wallet01, Client } from '@wallet01/react';
 import {
   InjectedConnector,
   CoinbaseConnector,
-  WalletconnectConnector,
+  // WalletconnectConnector,
 } from '@wallet01/evm';
 import { KeplrConnector } from '@wallet01/cosmos';
 import { PhantomConnector, SolflareConnector } from '@wallet01/solana';
@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
         connectors: [
           new InjectedConnector(),
           new CoinbaseConnector(),
-          new WalletconnectConnector(),
+          // new WalletconnectConnector(),
           new KeplrConnector(),
           new PhantomConnector(),
           new SolflareConnector(),

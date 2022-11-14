@@ -38,10 +38,10 @@ export const getAccount = async (
  * @param connector
  * @returns ChainId of the connected chain as string
  */
-export const getChainId = async (connector: connectorName): Promise<string> => {
-  const chainId = await connectorObj[connector]().getChainId();
-  return chainId;
-};
+// export const getChainId = async (connector: connectorName): Promise<string> => {
+//   const chainId = await connectorObj[connector]().getChainId();
+//   return chainId;
+// };
 
 /**
  * @function getProvider
@@ -86,9 +86,11 @@ export const signMessage = async (
  * @param connector "injected" | "walletConnect" | "coinbase" | "keplr" | "solflare" | "phantom"
  * @param chainId ID of the chain to be switched to.
  */
-export const switchChain = async (
-  connector: connectorName,
-  chainId: string
-): Promise<void> => {
-  await connectorObj[connector]().switchChain(chainId);
-};
+// export const switchChain = async (
+//   connector: connectorName,
+//   chainId: string
+// ): Promise<void> => {
+//   if (connectorObj[connector]().switchChain) {
+//     await connectorObj[connector]().switchChain(chainId);
+//   }
+// };
