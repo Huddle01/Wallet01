@@ -1,3 +1,5 @@
+// Not needed anymore
+
 import { atom } from 'jotai';
 import { BaseConnector } from '@wallet01/core';
 

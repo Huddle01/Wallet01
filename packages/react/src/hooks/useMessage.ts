@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useAtom } from 'jotai';
-import { connectorAtom } from '../store/atoms';
-import { clientAtom } from '../store/client';
+import { connectorAtom } from '../store/clientStore';
+import { clientAtom } from '../store/clientStore';
 
 /**
  * @description This hooks will return signMessage function that helps sign messages from desired wallet.

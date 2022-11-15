@@ -2,18 +2,18 @@ import { useAtom } from 'jotai';
 
 import {
   connectedAtom,
-  accountAtom,
+  addressAtom,
   didAtom,
-  chainIdAtom,
+  chainAtom,
   connectorAtom,
-} from '../store/atoms';
-import { clientAtom } from '../store/client';
+} from '../store/clientStore';
+import { clientAtom } from '../store/clientStore';
 
 export const useWallet = () => {
   const [isConnected] = useAtom(connectedAtom);
-  const [address] = useAtom(accountAtom);
+  const [address] = useAtom(addressAtom);
   const [name] = useAtom(didAtom);
-  const [chain] = useAtom(chainIdAtom);
+  const [chain] = useAtom(chainAtom);
   const [activeConnector] = useAtom(connectorAtom);
   const [client] = useAtom(clientAtom);
   if (!client) throw new Error('Client not initialised');

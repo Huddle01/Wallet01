@@ -3,7 +3,11 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import { Wallet01, Client } from '@wallet01/react';
-import { InjectedConnector, CoinbaseConnector } from '@wallet01/evm';
+import {
+  InjectedConnector,
+  CoinbaseConnector,
+  WalletconnectConnector,
+} from '@wallet01/evm';
 import { PhantomConnector, SolflareConnector } from '@wallet01/solana';
 import { KeplrConnector } from '@wallet01/cosmos';
 
@@ -12,6 +16,7 @@ const client = new Client({
   connectors: [
     new InjectedConnector(),
     new CoinbaseConnector(),
+    new WalletconnectConnector(),
     new PhantomConnector(),
     new SolflareConnector(),
     new KeplrConnector(),

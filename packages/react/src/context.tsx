@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Provider } from 'jotai';
-import { Client, clientAtom } from './store/client';
+import { Client, clientAtom } from './store/clientStore';
 
 interface Props {
   client: Client;

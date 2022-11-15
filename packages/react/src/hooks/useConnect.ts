@@ -4,13 +4,13 @@ import { BaseConnector } from '@wallet01/core';
 import { useMutation } from '@tanstack/react-query';
 
 import {
-  accountAtom,
-  chainIdAtom,
+  addressAtom,
+  chainAtom,
   connectedAtom,
   connectorAtom,
   didAtom,
-} from '../store/atoms';
-import { clientAtom } from '../store/client';
+} from '../store/clientStore';
+import { clientAtom } from '../store/clientStore';
 
 type ConnectArgs = {
   connector: BaseConnector | undefined;
@@ -32,15 +32,16 @@ export const useConnect = ({
   const [, setConnector] = useAtom(connectorAtom);
 
   const [, isActive] = useAtom(connectedAtom);
-  const [, setAccount] = useAtom(accountAtom);
+  const [, setAccount] = useAtom(addressAtom);
   const [, setName] = useAtom(didAtom);
-  const [, setChainId] = useAtom(chainIdAtom);
+  const [, setChainId] = useAtom(chainAtom);
 
   const { mutate, isLoading, isError, error } = useMutation({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      if (!client) throw new Error('Client not initialised');
+      if (client.connectors.length === 0)
+        throw new Error('Client not initialised');
 
-      if (!connector) throw new Error('Conenctor required to connect');
+      if (!connector) throw new Error('Connector required to connect');
       setConnector(connector);
 
       if (!client.connectors.includes(connector))

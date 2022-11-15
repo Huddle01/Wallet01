@@ -5,7 +5,7 @@ import {
   useClient,
   useWallet,
 } from './hooks';
-import { Client } from './store/client';
+import { Client } from './store/clientStore';
 import Wallet01 from './context';
 
 export {
