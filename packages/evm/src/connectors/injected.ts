@@ -3,7 +3,7 @@ import { hexValue } from 'ethers/lib/utils';
 import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-import { BaseConnector } from '@wallet01/core';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
 import emitter from '../utils/emiter';
 
@@ -83,6 +83,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
         if (chainId && id !== chainId) {
           await this.switchChain(chainId);
         }
+        setLastUsedConnector(this.name);
       } catch (error) {
         console.error(error, 'inside connect funcion');
       }

@@ -1,6 +1,6 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
-import { BaseConnector } from '@wallet01/core';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
 import { ConnectedData } from '../types';
 import { SolflareProvider } from '../providers/solflareProvider';
@@ -55,7 +55,8 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
         provider.on('disconnect', this.onDisconnect);
       }
 
-      this.provider.connect();
+      await this.provider.connect();
+      setLastUsedConnector(this.name);
 
       const data: ConnectedData<SolflareProvider> = {
         account: (await this.getAccount())[0],

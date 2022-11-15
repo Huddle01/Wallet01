@@ -1,7 +1,7 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
 
-import { BaseConnector } from '@wallet01/core';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 import { PhantomProvider } from '../providers/phantomProvider';
 import emitter from '../utils/emiter';
 
@@ -52,6 +52,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
       if (!provider) throw new Error('Phantom is not installed');
       if (provider.isPhantom) console.log('phantom detected');
       await this.provider.connect();
+      setLastUsedConnector(this.name);
 
       if (provider.on) {
         provider.on('accountChanged', this.onAccountsChanged);

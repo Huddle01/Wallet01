@@ -1,6 +1,6 @@
 import { Window as KeplrWindow } from '@keplr-wallet/types';
 import { KeplrProvider } from '../providers/keplrProvider';
-import { BaseConnector } from '@wallet01/core';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 import emitter from '../utils/emiter';
 
 declare const window: KeplrWindow;
@@ -60,6 +60,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
 
       try {
         await this.provider.enable(chainId);
+        setLastUsedConnector(this.name);
       } catch (err) {
         console.error('Error in enable', err);
       }
