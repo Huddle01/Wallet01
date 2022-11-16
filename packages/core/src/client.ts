@@ -11,7 +11,7 @@ interface ClientEventEmitter {
   disconnect: () => void;
 }
 
-class Client extends EventEmitter<ClientEventEmitter> {
+export class Client extends EventEmitter<ClientEventEmitter> {
   autoConnect: boolean;
   lastUsedConnector: BaseConnector | null;
 
