@@ -1,6 +1,17 @@
+import EventEmitter from 'eventemitter3';
 import { BaseConnector } from './types';
 
-export class Client {
+type Config = {
+  autoConnect?: boolean;
+  connectors: BaseConnector[];
+};
+
+interface ClientEventEmitter {
+  connect: () => void;
+  disconnect: () => void;
+}
+
+class Client extends EventEmitter<ClientEventEmitter> {
   autoConnect: boolean;
   lastUsedConnector: BaseConnector | null;
 
@@ -11,13 +22,9 @@ export class Client {
   chainId: string | null;
   activeConnector: BaseConnector | null;
 
-  constructor({
-    autoConnect = false,
-    connectors,
-  }: {
-    autoConnect?: boolean;
-    connectors: BaseConnector[];
-  }) {
+  constructor({ autoConnect = false, connectors }: Config) {
+    super();
+
     this.autoConnect = autoConnect;
     this.connectors = connectors;
     this.connected = false;
