@@ -4,6 +4,7 @@ const ConnectButtons = () => {
   const { connectors } = useClient();
   const { activeConnector, isConnected, name, address } = useWallet();
   const { connect, isLoading, isError, error } = useConnect();
+
   return (
     <div className="flex flex-col gap-2 items-center w-fit justify-center">
       <span className="text-2xl font-bold">Connection Buttons</span>
