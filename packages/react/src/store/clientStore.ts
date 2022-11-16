@@ -1,25 +1,33 @@
 import { atom } from 'jotai';
 import { focusAtom } from 'jotai/optics';
 import { atomWithStorage } from 'jotai/utils';
-import { Client, createClient as init, BaseConnector } from '@wallet01/core';
+import { Client, BaseConnector } from '@wallet01/core';
 
-const clientAtom = atom<Client>(
-  new Client({ autoConnect: false, connectors: [] })
+const clientAtom = atom<Client | undefined>(undefined);
+
+const auto = focusAtom(clientAtom, optic =>
+  optic.valueOr({} as { autoConnect: undefined }).prop('autoConnect')
 );
-
-const auto = focusAtom(clientAtom, optic => optic.prop('autoConnect'));
 const autoConnectedAtom = atomWithStorage('autoConnect', auto.read);
 
-const connectedAtom = focusAtom(clientAtom, optic => optic.prop('connected'));
+const connectedAtom = focusAtom(clientAtom, optic =>
+  optic.valueOr({} as { connected: undefined }).prop('connected')
+);
 
-const addressAtom = focusAtom(clientAtom, optic => optic.prop('address'));
+const addressAtom = focusAtom(clientAtom, optic =>
+  optic.valueOr({} as { address: undefined }).prop('address')
+);
 
-const didAtom = focusAtom(clientAtom, optic => optic.prop('name'));
+const didAtom = focusAtom(clientAtom, optic =>
+  optic.valueOr({} as { name: undefined }).prop('name')
+);
 
-const chainAtom = focusAtom(clientAtom, optic => optic.prop('chainId'));
+const chainAtom = focusAtom(clientAtom, optic =>
+  optic.valueOr({} as { chainId: undefined }).prop('chainId')
+);
 
 const connectorAtom = focusAtom(clientAtom, optic =>
-  optic.prop('activeConnector')
+  optic.valueOr({} as { activeConnector: undefined }).prop('activeConnector')
 );
 
 const createClient = ({
@@ -29,7 +37,7 @@ const createClient = ({
   autoConnect: boolean;
   connectors: BaseConnector[];
 }) => {
-  const client = init({ autoConnect: autoConnect, connectors: connectors });
+  const client = new Client({ autoConnect, connectors });
   return client;
 };
 

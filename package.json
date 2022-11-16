@@ -11,6 +11,7 @@
   "scripts": {
     "build": "turbo run build --filter=./packages/*",
     "dev": "turbo run dev --parallel",
+    "dev:packages": "turbo run dev --parallel --filter=./packages/*",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "postinstall": "turbo run build --filter=./packages/*"

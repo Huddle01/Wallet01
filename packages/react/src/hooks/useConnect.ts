@@ -38,13 +38,13 @@ export const useConnect = ({
 
   const { mutate, isLoading, isError, error } = useMutation({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      if (client.connectors.length === 0)
+      if (client?.connectors.length === 0)
         throw new Error('Client not initialised');
 
       if (!connector) throw new Error('Connector required to connect');
       setConnector(connector);
 
-      if (!client.connectors.includes(connector))
+      if (!client?.connectors.includes(connector))
         throw new Error('Connector not found');
 
       await connector.connect({ chainId: chainId });
