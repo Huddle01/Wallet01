@@ -2,17 +2,20 @@ import { Web3Provider } from '@ethersproject/providers';
 import { hexValue } from 'ethers/lib/utils';
 import { ExternalProvider } from '@ethersproject/providers';
 import EthereumProvider from '@walletconnect/ethereum-provider';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
-import { BaseConnector, ConnectedData } from '../types';
+import { ConnectedData } from '../types';
 import emitter from '../utils/emiter';
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider!: EthereumProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '1') {
     super(chain);
     this.chain = chain;
+    this.name = 'WalletConnect';
     this.getProvider();
   }
 
@@ -61,7 +64,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
     }
   }
 
-  async connect(chainId: string): Promise<void> {
+  async connect({ chainId = '1' }): Promise<void> {
     try {
       const provider = await this.getProvider();
       this.provider = provider;
@@ -76,6 +79,8 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
       if (chainId && id !== chainId) {
         await this.switchChain(chainId);
       }
+
+      setLastUsedConnector(this.name);
 
       const data: ConnectedData<EthereumProvider> = {
         account: (await this.getAccount())[0],

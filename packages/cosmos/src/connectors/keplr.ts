@@ -1,6 +1,6 @@
 import { Window as KeplrWindow } from '@keplr-wallet/types';
 import { KeplrProvider } from '../providers/keplrProvider';
-import { BaseConnector } from '../types';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 import emitter from '../utils/emiter';
 
 declare const window: KeplrWindow;
@@ -8,10 +8,12 @@ declare const window: KeplrWindow;
 export class KeplrConnector extends BaseConnector<KeplrProvider> {
   provider!: KeplrProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = 'secret-4') {
     super(chain);
     this.chain = chain;
+    this.name = 'Keplr';
     this.getProvider();
   }
 
@@ -51,13 +53,14 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
     }
   }
 
-  async connect(chainId: string): Promise<void> {
+  async connect({ chainId = 'secret-4' }): Promise<void> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Keplr not installed');
 
       try {
         await this.provider.enable(chainId);
+        setLastUsedConnector(this.name);
       } catch (err) {
         console.error('Error in enable', err);
       }

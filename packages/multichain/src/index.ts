@@ -2,10 +2,10 @@ import {
   connect,
   disconnect,
   getAccount,
-  getChainId,
+  // getChainId,
   resolveDid,
   signMessage,
-  switchChain,
+  // switchChain,
 } from './walletMethods';
 import { connectorName } from './types';
 
@@ -13,9 +13,9 @@ export {
   connect,
   disconnect,
   getAccount,
-  getChainId,
+  // getChainId,
   resolveDid,
   signMessage,
-  switchChain,
+  // switchChain,
   type connectorName,
 };

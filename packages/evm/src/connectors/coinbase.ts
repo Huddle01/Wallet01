@@ -1,18 +1,21 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ExternalProvider } from '@ethersproject/providers';
-import WalletLink, { WalletLinkProvider } from 'walletlink';
+import { WalletLinkProvider, WalletLink } from 'walletlink';
 import { hexValue } from 'ethers/lib/utils';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
 import emitter from '../utils/emiter';
-import { BaseConnector, ConnectedData } from '../types';
+import { ConnectedData } from '../types';
 
 export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
   provider?: WalletLinkProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '1') {
     super(chain);
     this.chain = chain;
+    this.name = 'Coinbase';
     this.getProvider();
   }
 
@@ -58,7 +61,7 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
     }
   }
 
-  async connect(chainId: string) {
+  async connect({ chainId = '1' }) {
     try {
       const provider = await this.getProvider();
       this.provider = provider;
@@ -72,6 +75,8 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
       if (chainId && id !== chainId) {
         await this.switchChain(chainId);
       }
+
+      setLastUsedConnector(this.name);
 
       const data: ConnectedData<WalletLinkProvider> = {
         account: (await this.getAccount())[0],

@@ -1,16 +1,16 @@
 {
   "name": "@wallet01/cosmos",
   "version": "0.0.0",
-  "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
     "build": "yarn clean && tsup --format esm --dts"
   },
   "license": "MIT",
   "dependencies": {
+    "@wallet01/core": "*",
     "@keplr-wallet/types": "^0.11.13"
   },
   "devDependencies": {

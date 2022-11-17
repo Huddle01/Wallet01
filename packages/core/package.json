@@ -2,30 +2,19 @@
   "name": "@wallet01/core",
   "version": "0.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "import": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format esm --dts"
+    "build": "yarn clean && tsup",
+    "dev": "tsup --watch"
   },
   "keywords": [],
   "author": "thevatsal.eth",
   "license": "ISC",
   "dependencies": {
-    "@bonfida/spl-name-service": "^0.1.51",
-    "@keplr-wallet/types": "^0.11.13",
-    "@metamask/detect-provider": "^2.0.0",
-    "@solana/web3.js": "^1.65.0",
-    "@wallet01/cosmos": "*",
-    "@wallet01/evm": "*",
-    "@wallet01/solana": "*",
-    "@walletconnect/ethereum-provider": "^2.1.0",
-    "ethers": "^5.6.9",
-    "eventemitter3": "^4.0.7",
-    "tweetnacl": "^1.0.3",
-    "walletlink": "^2.5.0",
-    "zustand": "^4.1.2"
+    "eventemitter3": "^4.0.7"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

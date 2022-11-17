@@ -1,8 +1,4 @@
-const withTM = require('next-transpile-modules')([
-  '@wallet01/core',
-  '@wallet01/react',
-  '@wallet01/cosmos',
-]);
+const withTM = require('next-transpile-modules')(['@wallet01/react']);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withTM({

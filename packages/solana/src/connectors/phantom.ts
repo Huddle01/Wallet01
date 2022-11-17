@@ -1,7 +1,7 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
 
-import { BaseConnector } from '../types';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 import { PhantomProvider } from '../providers/phantomProvider';
 import emitter from '../utils/emiter';
 
@@ -14,10 +14,12 @@ declare const window: PhantomWindow;
 export class PhantomConnector extends BaseConnector<PhantomProvider> {
   provider!: PhantomProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '') {
     super(chain);
     this.chain = chain;
+    this.name = 'Phantom';
     this.getProvider();
   }
 
@@ -44,20 +46,13 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     }
   }
 
-  async getChainId(): Promise<string> {
-    throw new Error('This method is not supported in Solana Wallets');
-  }
-
-  async switchChain(_chainId: string): Promise<void> {
-    throw new Error('This method is not supported in Solana Wallets');
-  }
-
-  async connect(_chainId: string): Promise<void> {
+  async connect({}): Promise<void> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Phantom is not installed');
       if (provider.isPhantom) console.log('phantom detected');
       await this.provider.connect();
+      setLastUsedConnector(this.name);
 
       if (provider.on) {
         provider.on('accountChanged', this.onAccountsChanged);

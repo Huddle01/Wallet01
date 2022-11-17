@@ -1,18 +1,18 @@
 {
   "name": "@wallet01/evm",
   "version": "0.0.0",
-  "type": "module",
-  "main": "./dist/index.js",
-  "module": "dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format esm --dts"
+    "build": "yarn clean && tsup"
   },
   "license": "MIT",
   "dependencies": {
+    "@wallet01/core": "*",
     "@metamask/detect-provider": "^2.0.0",
-    "@walletconnect/ethereum-provider": "^2.1.0",
+    "@walletconnect/ethereum-provider": "^2.1.2",
     "ethers": "^5.7.2",
     "walletlink": "^2.5.0"
   },

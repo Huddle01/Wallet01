@@ -1,7 +1,8 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
-import { BaseConnector, ConnectedData } from '../types';
+import { ConnectedData } from '../types';
 import { SolflareProvider } from '../providers/solflareProvider';
 import emitter from '../utils/emiter';
 
@@ -12,10 +13,12 @@ declare const window: {
 export class SolflareConnector extends BaseConnector<SolflareProvider> {
   provider!: SolflareProvider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '') {
     super(chain);
     this.chain = chain;
+    this.name = 'Solflare';
     this.getProvider();
   }
 
@@ -42,15 +45,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
     }
   }
 
-  async getChainId(): Promise<string> {
-    throw new Error('This method is not supported in Solana Wallets');
-  }
-
-  async switchChain(_chainId: string): Promise<void> {
-    throw new Error('This method is not supported in Solana Wallets');
-  }
-
-  async connect(_chainId: string): Promise<void> {
+  async connect({}): Promise<void> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Solflare is not installed');
@@ -60,7 +55,8 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
         provider.on('disconnect', this.onDisconnect);
       }
 
-      this.provider.connect();
+      await this.provider.connect();
+      setLastUsedConnector(this.name);
 
       const data: ConnectedData<SolflareProvider> = {
         account: (await this.getAccount())[0],

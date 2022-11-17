@@ -1,64 +1,81 @@
-import {
-  connectorName,
-  connect as _connect,
-  getAccount,
-  resolveDid,
-  disconnect,
-} from '@wallet01/multichain';
+import React from 'react';
 import { useAtom } from 'jotai';
-import { account, did, connected, chainId } from '../store/atoms';
+import { BaseConnector } from '@wallet01/core';
 import { useMutation } from '@tanstack/react-query';
+
+import {
+  addressAtom,
+  chainAtom,
+  connectedAtom,
+  connectorAtom,
+  didAtom,
+} from '../store/clientStore';
+import { clientAtom } from '../store/clientStore';
+
+type ConnectArgs = {
+  connector: BaseConnector | undefined;
+  chainId?: string;
+};
 
 /**
  * @description This hooks will return essential states and two function for connecting and disconnecting the desired wallet.
  * @params Accepts an object with properties connector and chainId
  * @returns isActive, isLoading, isError, error, address, name (ex: theVatsal.eth), activeChain, connect() and disconnect()
- * 
+ *
  * For more details visit {@link}
  */
+export const useConnect = ({
+  connector,
+  chainId,
+}: Partial<ConnectArgs> = {}) => {
+  const [client] = useAtom(clientAtom);
+  const [, setConnector] = useAtom(connectorAtom);
 
-export const useConnect = () => {
-  const [isActive, setIsActive] = useAtom(connected);
-  const [address, setAddress] = useAtom(account);
-  const [name, setName] = useAtom(did);
-  const [activeChain] = useAtom(chainId);
+  const [, isActive] = useAtom(connectedAtom);
+  const [, setAccount] = useAtom(addressAtom);
+  const [, setName] = useAtom(didAtom);
+  const [, setChainId] = useAtom(chainAtom);
 
-  const { isLoading, isError, mutate, error } = useMutation(
-    async ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => {
-      await _connect(connector, _chainId);
-      setIsActive(true);
+  const { mutate, isLoading, isError, error } = useMutation({
+    mutationFn: async ({ connector, chainId }: ConnectArgs) => {
+      if (client?.connectors.length === 0)
+        throw new Error('Client not initialised');
 
-      const _account = await getAccount(connector);
-      setAddress(_account[0]);
+      if (!connector) throw new Error('Connector required to connect');
+      setConnector(connector);
 
-      const _did = await resolveDid(connector, _account[0]);
-      setName(_did);
-    }
+      if (!client?.connectors.includes(connector))
+        throw new Error('Connector not found');
+
+      await connector.connect({ chainId: chainId });
+
+      const accounts = await connector.getAccount();
+      setAccount(accounts[0]);
+
+      setName(await connector.resolveDid(accounts[0]));
+
+      if (connector.getChainId) {
+        setChainId(await connector.getChainId());
+      }
+
+      isActive(true);
+    },
+  });
+
+  const connect = React.useCallback(
+    (args?: Partial<ConnectArgs>) => {
+      return mutate({
+        chainId: args?.chainId ?? chainId,
+        connector: args?.connector ?? connector,
+      });
+    },
+    [chainId, connector, mutate]
   );
 
   return {
-    isActive,
-    address,
-    name,
-    activeChain,
+    connect,
     isLoading,
     isError,
     error,
-    connect: ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => mutate({ connector, _chainId }),
-    disconnect,
   };
 };
-
-

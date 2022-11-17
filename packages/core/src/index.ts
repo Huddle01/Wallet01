@@ -1,4 +1,4 @@
-import { Wallet } from './wallet';
+import { Client, createClient } from './client';
 
 import {
   type ClientConfig,
@@ -7,10 +7,14 @@ import {
   TProvider,
 } from './types';
 
+import setLastUsedConnector from './utils/util';
+
 export {
-  Wallet,
+  Client,
+  createClient,
   type ClientConfig,
   type ConnectedData,
-  BaseConnector,
   type TProvider,
+  BaseConnector,
+  setLastUsedConnector,
 };

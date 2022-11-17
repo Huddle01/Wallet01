@@ -1,20 +1,19 @@
 {
   "name": "@wallet01/react",
   "version": "1.0.0",
-  "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format esm --dts"
+    "build": "yarn clean && tsup --format esm --dts",
+    "dev": "yarn build --watch"
   },
   "dependencies": {
-    "@wallet01/core": "*",
-    "@wallet01/multichain": "*",
     "@tanstack/react-query": "^4.14.5",
+    "@wallet01/multichain": "*",
     "jotai": "^1.9.1",
+    "optics-ts": "^2.4.0",
     "react": "^18.2.0"
   },
   "devDependencies": {

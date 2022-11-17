@@ -3,16 +3,19 @@ import { hexValue } from 'ethers/lib/utils';
 import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
-import { BaseConnector } from '../types';
+import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
+
 import emitter from '../utils/emiter';
 
 export class InjectedConnector extends BaseConnector<Web3Provider> {
   provider?: Web3Provider;
   chain: string;
+  name: string;
 
   constructor(chain: string = '1') {
     super(chain);
     this.chain = chain;
+    this.name = 'Injected';
     this.getProvider();
   }
 
@@ -62,7 +65,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     }
   }
 
-  async connect(chainId: string) {
+  async connect({ chainId = '1' }) {
     try {
       const provider = await this.getProvider();
       this.provider = provider;
@@ -80,6 +83,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
         if (chainId && id !== chainId) {
           await this.switchChain(chainId);
         }
+        setLastUsedConnector(this.name);
       } catch (error) {
         console.error(error, 'inside connect funcion');
       }

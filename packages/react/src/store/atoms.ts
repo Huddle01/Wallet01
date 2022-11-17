@@ -1,39 +1,16 @@
-import { atom, useAtom } from 'jotai';
-import { loadable } from 'jotai/utils';
-import {
-  connectorName,
-  connect,
-  getAccount,
-  resolveDid,
-  disconnect,
-} from '@wallet01/multichain';
+// Not needed anymore
 
-const connected = atom<boolean>(false);
+import { atom } from 'jotai';
+import { BaseConnector } from '@wallet01/core';
 
-const account = atom<string | null>(null);
+const connectedAtom = atom<boolean>(false);
 
-const did = atom<string | null>(null);
+const accountAtom = atom<string | null>(null);
 
-const chainId = atom<string | null>(null);
+const didAtom = atom<string | null>(null);
 
-const connectLoadable = loadable(
-  atom(
-    null,
-    async (
-      _,
-      set,
-      { connector, _chainId }: { connector: connectorName; _chainId: string }
-    ) => {
-      await connect(connector, _chainId);
+const chainIdAtom = atom<string | null>(null);
 
-      const _account = await getAccount(connector);
-      set(account, _account[0]);
+const connectorAtom = atom<BaseConnector | null>(null);
 
-      const _did = await resolveDid(connector, _account[0]);
-      set(did, _did);
-      set(connected, true);
-    }
-  )
-);
-
-export { connected, account, did, chainId, connectLoadable };
+export { connectedAtom, accountAtom, didAtom, chainIdAtom, connectorAtom };

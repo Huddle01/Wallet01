@@ -4,13 +4,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 interface Props {
   children: JSX.Element;
 }
-
 /**
  * @description A context that wraps your app under wallet01 states and providers
-*/
-
+ */
 const Wallet01: FunctionComponent<Props> = ({ children }) => {
-  const queryClient = new QueryClient();
+  if (typeof window === 'undefined') <>{children}</>;
+  const [queryClient] = React.useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

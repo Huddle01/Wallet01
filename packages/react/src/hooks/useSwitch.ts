@@ -1,61 +1,54 @@
 import { useAtom } from 'jotai';
 import { useMutation } from '@tanstack/react-query';
-import { account, did, connected, chainId } from '../store/atoms';
+import { clientAtom } from '../store/clientStore';
 import {
-  connectorName,
-  getAccount,
-  getChainId,
-  resolveDid,
-  switchChain,
-} from '@wallet01/multichain';
+  addressAtom,
+  connectedAtom,
+  connectorAtom,
+} from '../store/clientStore';
 
 /**
  * @description This hooks will return switchChain function that will help chain in your desired wallet.
  * @params Accepts an object with properties connector and chainId
  * @returns isActive, isLoading, isError, error, switchChain().
- * 
+ *
  * For more details visit {@link}
  */
 
-export const useSwitch = () => {
-  const [, setAddress] = useAtom(account);
-  const [, setName] = useAtom(did);
-  const [, setIsActive] = useAtom(connected);
-  const [, setActiveChainId] = useAtom(chainId);
+interface ChainSwitchArgs {
+  chainId: string;
+}
 
-  const { isLoading, isError, error, mutate } = useMutation(
-    async ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => {
-      await switchChain(connector, _chainId);
+export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
+  const [client] = useAtom(clientAtom);
+  const [connector] = useAtom(connectorAtom);
 
-      const _address = await getAccount(connector);
-      setAddress(_address[0]);
+  const [, setAddress] = useAtom(addressAtom);
+  const [, setIsActive] = useAtom(connectedAtom);
 
-      const _name = await resolveDid(connector, _address[0]);
-      setName(_name);
+  const { isLoading, isError, error, mutate } = useMutation({
+    mutationFn: async () => {
+      if (!client) throw new Error('Client not Initialised');
 
-      const _id = await getChainId(connector);
-      setActiveChainId(_id);
+      if (!connector) throw new Error('Wallet not connected');
 
+      if (!client.connectors.includes(connector)) {
+        throw new Error('Connector not found');
+      }
+
+      if (!connector.switchChain)
+        throw new Error('Function not supported by wallet');
+      setIsActive(false);
+      await connector.switchChain(chainId);
+      setAddress((await connector.getAccount())[0]);
       setIsActive(true);
-    }
-  );
+    },
+  });
 
   return {
     isLoading,
     isError,
     error,
-    switchChain: ({
-      connector,
-      _chainId,
-    }: {
-      connector: connectorName;
-      _chainId: string;
-    }) => mutate({ connector, _chainId }),
+    switchChain: mutate,
   };
 };

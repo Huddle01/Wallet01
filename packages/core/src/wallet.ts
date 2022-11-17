@@ -3,25 +3,20 @@ import { BaseConnector } from './types/baseConnector';
 import { TProvider } from './types/TProvider';
 import emitter from './utils/emiter';
 
-
 /**
  * @class A central wallet object to maintain a connection and its states
  * @params ChainId and Connector Class (ex: new InjectedConnector())
  */
 export class Wallet<P extends TProvider> {
-
-
   /**
    * @prop stores the wallet provider that the wallet uses.
    */
   provider!: P | null;
 
-
   /**
    * @prop Stores the account address that app is connected to.
    */
   account!: string;
-
 
   /**
    * @props Stores the DID (ex: theVatsal.eth) that we are connected to.
@@ -29,18 +24,15 @@ export class Wallet<P extends TProvider> {
    */
   did!: string | null;
 
-
   /**
    * @prop Stores an instance of the active connector for interaction between the wallet and app.
    */
   readonly connector: BaseConnector<P>;
 
-
   /**
    * @prop Stores the chainId of the connected chain.
    */
   chainId: string;
-
 
   /**
    * @constructor
@@ -58,7 +50,6 @@ export class Wallet<P extends TProvider> {
     }
   }
 
-
   /**
    * @method getProvider()
    * @description Gets the available provider, invoked by the connector
@@ -69,7 +60,6 @@ export class Wallet<P extends TProvider> {
     this.provider = provider;
     return provider;
   }
-
 
   /**
    * @method getAccount()
@@ -82,15 +72,13 @@ export class Wallet<P extends TProvider> {
     return this.account;
   }
 
-
   /**
    * @method connect()
    * @description Connects the app to the wallet, invoked by the connector
    */
   async connect() {
-    await this.connector.connect(this.chainId);
+    await this.connector.connect({ chainId: this.chainId });
   }
-
 
   /**
    * @method disconnect()
@@ -101,7 +89,6 @@ export class Wallet<P extends TProvider> {
     this.did = '';
     this.provider = null;
   }
-
 
   /**
    * @method getDid()
@@ -114,16 +101,14 @@ export class Wallet<P extends TProvider> {
     return did;
   }
 
-
   /**
    * @method signMessage()
-   * @param message 
+   * @param message
    * @description Prompts sign message dialog from the wallet.
    */
   async signMessage(message: string) {
     await this.connector.signMessage(message);
   }
-
 
   /**
    * @method switchChain()

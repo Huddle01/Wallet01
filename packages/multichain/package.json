@@ -1,7 +1,6 @@
 {
   "name": "@wallet01/multichain",
   "version": "0.0.0",
-  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,7 +10,6 @@
     "build": "yarn clean && tsup --format esm --dts"
   },
   "dependencies": {
-    "@wallet01/core": "*",
     "@wallet01/evm": "*",
     "@wallet01/solana": "*",
     "@wallet01/cosmos": "*"
