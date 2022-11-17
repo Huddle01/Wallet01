@@ -1,9 +1,18 @@
 import { atom } from 'jotai';
 import { focusAtom } from 'jotai/optics';
 import { atomWithStorage } from 'jotai/utils';
-import { Client, BaseConnector } from '@wallet01/core';
+
+import Client, { Config } from '../client';
 
 const clientAtom = atom<Client | undefined>(undefined);
+
+const initClientAtom = atom(null, (get, set, config: Config) => {
+  if (get(clientAtom)) return;
+
+  const client = new Client(config, get, set);
+
+  set(clientAtom, client);
+});
 
 const auto = focusAtom(clientAtom, optic =>
   optic.valueOr({} as { autoConnect: undefined }).prop('autoConnect')
@@ -30,17 +39,6 @@ const connectorAtom = focusAtom(clientAtom, optic =>
   optic.valueOr({} as { activeConnector: undefined }).prop('activeConnector')
 );
 
-const createClient = ({
-  autoConnect,
-  connectors,
-}: {
-  autoConnect: boolean;
-  connectors: BaseConnector[];
-}) => {
-  const client = new Client({ autoConnect, connectors });
-  return client;
-};
-
 export {
   autoConnectedAtom,
   connectedAtom,
@@ -49,5 +47,5 @@ export {
   chainAtom,
   connectorAtom,
   clientAtom,
-  createClient,
+  initClientAtom,
 };
