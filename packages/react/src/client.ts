@@ -3,8 +3,8 @@ import { Getter, Setter } from 'jotai';
 import { addressAtom, connectedAtom } from './store/clientStore';
 
 export type Config = {
-  autoConnect?: Client['autoConnect'];
-  connectors: Client['connectors'];
+  autoConnect?: C['autoConnect'];
+  connectors: C['connectors'];
 };
 
 class Client extends C {
