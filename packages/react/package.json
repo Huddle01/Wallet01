@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.14.5",
-    "@wallet01/multichain": "*",
     "jotai": "^1.9.1",
     "optics-ts": "^2.4.0",
     "react": "^18.2.0"
