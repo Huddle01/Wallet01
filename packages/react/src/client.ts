@@ -1,13 +1,13 @@
-import { Client as C } from '@wallet01/core';
+import { Client } from '@wallet01/core';
 import { Getter, Setter } from 'jotai';
 import { addressAtom, connectedAtom } from './store/clientStore';
 
 export type Config = {
-  autoConnect?: C['autoConnect'];
-  connectors: C['connectors'];
+  autoConnect?: Client['autoConnect'];
+  connectors: Client['connectors'];
 };
 
-class Client extends C {
+class ReactClient extends Client {
   get: Getter;
   set: Setter;
 
@@ -27,4 +27,4 @@ class Client extends C {
   }
 }
 
-export default Client;
+export default ReactClient;
