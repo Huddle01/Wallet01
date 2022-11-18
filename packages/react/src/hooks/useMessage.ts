@@ -19,7 +19,12 @@ export const useMessage = ({ message }: SignMessageArgs) => {
   const [client] = useAtom(clientAtom);
   const [connector] = useAtom(connectorAtom);
 
-  const { isLoading, isError, mutate, error } = useMutation({
+  const { isLoading, isError, mutate, error } = useMutation<
+    void,
+    Error,
+    void,
+    unknown
+  >({
     mutationFn: async () => {
       if (!client) throw new Error('Client not Initialised');
 
@@ -36,7 +41,7 @@ export const useMessage = ({ message }: SignMessageArgs) => {
   return {
     isLoading,
     isError,
-    error,
+    error: error?.message,
     signMessage: mutate,
   };
 };

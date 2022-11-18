@@ -17,7 +17,7 @@ const initClientAtom = atom(null, (get, set, config: Config) => {
 const auto = focusAtom(clientAtom, optic =>
   optic.valueOr({} as { autoConnect: undefined }).prop('autoConnect')
 );
-const autoConnectedAtom = atomWithStorage('autoConnect', auto.read);
+const autoConnectedAtom = atomWithStorage('autoConnect', auto.read(atom));
 
 const connectedAtom = focusAtom(clientAtom, optic =>
   optic.valueOr({} as { connected: undefined }).prop('connected')

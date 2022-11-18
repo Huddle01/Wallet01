@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { BaseConnector } from '@wallet01/core';
 import { useMutation } from '@tanstack/react-query';
 
@@ -29,12 +29,12 @@ export const useConnect = ({
   chainId,
 }: Partial<ConnectArgs> = {}) => {
   const [client] = useAtom(clientAtom);
-  const [, setConnector] = useAtom(connectorAtom);
+  const setConnector = useSetAtom(connectorAtom);
 
-  const [, isActive] = useAtom(connectedAtom);
-  const [, setAccount] = useAtom(addressAtom);
-  const [, setName] = useAtom(didAtom);
-  const [, setChainId] = useAtom(chainAtom);
+  const isActive = useSetAtom(connectedAtom);
+  const setAccount = useSetAtom(addressAtom);
+  const setName = useSetAtom(didAtom);
+  const setChainId = useSetAtom(chainAtom);
 
   const { mutate, isLoading, isError, error } = useMutation({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {

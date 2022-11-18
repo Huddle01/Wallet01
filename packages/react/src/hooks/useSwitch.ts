@@ -26,7 +26,12 @@ export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
   const [, setAddress] = useAtom(addressAtom);
   const [, setIsActive] = useAtom(connectedAtom);
 
-  const { isLoading, isError, error, mutate } = useMutation({
+  const { isLoading, isError, error, mutate } = useMutation<
+    void,
+    Error,
+    void,
+    unknown
+  >({
     mutationFn: async () => {
       if (!client) throw new Error('Client not Initialised');
 

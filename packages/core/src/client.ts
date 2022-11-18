@@ -71,8 +71,9 @@ export class Client extends EventEmitter<ClientEventEmitter> {
     this.lastUsedConnector.connect({});
     this.activeConnector = this.lastUsedConnector;
 
-    const [address, chainId, did] = await Promise.all([
-      this.getAddress(),
+    const address = await this.getAddress();
+
+    const [chainId, did] = await Promise.all([
       this.getChainId(),
       this.resolveDid(),
     ]);
@@ -102,7 +103,10 @@ export class Client extends EventEmitter<ClientEventEmitter> {
 
   async resolveDid() {
     if (!(this.activeConnector && this.activeConnector.resolveDid)) return null;
-    if (!this.address) return null;
+    if (!this.address) {
+      console.log('No Address', this.address);
+      return null;
+    }
     const name = await this.activeConnector.resolveDid(this.address);
     this.name = name;
     return name;
