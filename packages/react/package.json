@@ -1,6 +1,6 @@
 {
   "name": "@wallet01/react",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "license": "MIT",
