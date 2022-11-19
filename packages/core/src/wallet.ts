@@ -1,7 +1,6 @@
 import { ClientConfig } from './types';
 import { BaseConnector } from './types/baseConnector';
 import { TProvider } from './types/TProvider';
-import emitter from './utils/emiter';
 
 /**
  * @class A central wallet object to maintain a connection and its states
@@ -40,14 +39,6 @@ export class Wallet<P extends TProvider> {
   constructor({ chainId, connector }: ClientConfig<P>) {
     this.connector = connector;
     this.chainId = chainId;
-
-    if (emitter) {
-      emitter.on('disconnected', () => {
-        this.provider = null;
-        this.account = '';
-        this.did = null;
-      });
-    }
   }
 
   /**

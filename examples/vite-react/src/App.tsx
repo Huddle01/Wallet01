@@ -9,6 +9,7 @@ import { KeplrConnector } from '@wallet01/cosmos';
 
 import ConnectButtons from './components/ConnectButtons';
 import { useEffect } from 'react';
+import Wrapper from './components/Wrapper';
 
 function App() {
   const init = useInitClient();
@@ -29,10 +30,7 @@ function App() {
 
   return (
     <Wallet01>
-      <div className="flex h-screen w-screen gap-5 justify-center items-center">
-        <ConnectButtons />
-        <h1>Hello World</h1>
-      </div>
+      <Wrapper />
     </Wallet01>
   );
 }

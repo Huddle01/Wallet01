@@ -2,14 +2,14 @@ import { atom } from 'jotai';
 import { focusAtom } from 'jotai/optics';
 import { atomWithStorage } from 'jotai/utils';
 
-import Client, { Config } from '../client';
+import ReactClient, { Config } from '../client';
 
-const clientAtom = atom<Client | undefined>(undefined);
+const clientAtom = atom<ReactClient | undefined>(undefined);
 
 const initClientAtom = atom(null, (get, set, config: Config) => {
   if (get(clientAtom)) return;
 
-  const client = new Client(config, get, set);
+  const client = new ReactClient(config, get, set);
 
   set(clientAtom, client);
 });
@@ -17,7 +17,7 @@ const initClientAtom = atom(null, (get, set, config: Config) => {
 const auto = focusAtom(clientAtom, optic =>
   optic.valueOr({} as { autoConnect: undefined }).prop('autoConnect')
 );
-const autoConnectedAtom = atomWithStorage('autoConnect', auto.read);
+const autoConnectedAtom = atomWithStorage('autoConnect', auto.read(atom));
 
 const connectedAtom = focusAtom(clientAtom, optic =>
   optic.valueOr({} as { connected: undefined }).prop('connected')

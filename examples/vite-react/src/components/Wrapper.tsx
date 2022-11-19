@@ -1,13 +1,15 @@
 import { useWallet } from '@wallet01/react';
-import ConnectButtons from '../components/ConnectButtons';
-import ConnectedModal from '../components/ConnectedModal';
+import React from 'react';
+import ConnectButtons from './ConnectButtons';
+import ConnectedModal from './ConnectedModal';
 
-export default function Home() {
+const Wrapper = () => {
   const { isConnected } = useWallet();
-
   return (
     <div className="flex justify-center items-center">
       {isConnected ? <ConnectedModal /> : <ConnectButtons />}
     </div>
   );
-}
+};
+
+export default Wrapper;
