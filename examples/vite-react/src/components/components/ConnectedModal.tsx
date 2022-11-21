@@ -1,6 +1,6 @@
 import { useConnect, useMessage, useSwitch, useWallet } from '@wallet01/react';
 import React, { useState } from 'react';
-import WalletIcons from './assets/WalletIcons';
+import WalletIcons from '../assets/WalletIcons';
 
 const ConnectedModal = () => {
   const [message, setMessage] = useState<string>('');
