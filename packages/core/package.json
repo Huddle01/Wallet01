@@ -22,5 +22,8 @@
     "tsconfig": "*",
     "tsup": "^6.3.0",
     "typescript": "^4.8.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

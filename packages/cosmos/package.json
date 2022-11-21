@@ -17,5 +17,8 @@
     "rimraf": "^3.0.2",
     "tsup": "^6.3.0",
     "tsconfig": "*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
