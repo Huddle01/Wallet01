@@ -100,15 +100,15 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     }
   }
 
-  async signMessage(message: string): Promise<void> {
+  async signMessage(message: string): Promise<string> {
     if (!this.provider) throw new Error('No wallet Connected');
     try {
       const _message = new TextEncoder().encode(message);
-      if (this.provider.signMessage && this.provider.publicKey) {
-        await this.provider.signMessage(_message);
-      }
+      const { signature } = await this.provider.signMessage(_message);
+      return new TextDecoder('utf-8').decode(signature);
     } catch (err) {
       console.warn(err);
+      throw new Error(err);
     }
   }
 

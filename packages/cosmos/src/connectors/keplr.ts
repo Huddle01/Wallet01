@@ -87,19 +87,21 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
     return null;
   }
 
-  async signMessage(message: string): Promise<void> {
+  async signMessage(message: string): Promise<string> {
     if (!this.provider) throw new Error('Provider Undefined');
     try {
       console.log(this.chain, (await this.getAccount())[0]);
-      await this.provider.signArbitrary(
+      const { signature } = await this.provider.signArbitrary(
         this.chain,
         (
           await this.getAccount()
         )[0],
         message
       );
+      return signature;
     } catch (error) {
       console.warn(error);
+      throw new Error(error);
     }
   }
 

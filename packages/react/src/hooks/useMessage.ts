@@ -19,8 +19,8 @@ export const useMessage = ({ message }: SignMessageArgs) => {
   const [client] = useAtom(clientAtom);
   const [connector] = useAtom(connectorAtom);
 
-  const { isLoading, isError, mutate, error } = useMutation<
-    void,
+  const { data, isLoading, isError, mutate, error } = useMutation<
+    string,
     Error,
     void,
     unknown
@@ -34,11 +34,13 @@ export const useMessage = ({ message }: SignMessageArgs) => {
         throw new Error('Connector not found');
       }
 
-      await connector.signMessage(message);
+      const hash = await connector.signMessage(message);
+      return hash;
     },
   });
 
   return {
+    hash: data,
     isLoading,
     isError,
     error: error?.message,

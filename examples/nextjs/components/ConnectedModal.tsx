@@ -7,8 +7,10 @@ const ConnectedModal = () => {
   const [chainId, setChainId] = useState<string>('');
   const { isConnected, name, activeConnector, address, chain, disconnect } =
     useWallet();
-  const { signMessage } = useMessage({ message });
+  const { signMessage, hash } = useMessage({ message });
   const { switchChain } = useSwitch({ chainId });
+
+  console.log(hash);
 
   return (
     <div className="flex flex-col">
@@ -41,7 +43,7 @@ const ConnectedModal = () => {
           </button>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4">
+          <div className="flex gap-4 max-w-full">
             <div className="flex flex-col gap-2 justify-between">
               <span className="font-bold text-lg">Message:</span>
               <button
@@ -51,12 +53,19 @@ const ConnectedModal = () => {
                 Sign Message
               </button>
             </div>
-            <textarea
-              className="p-2 bg-transparent rounded-lg w-full text-white border border-slate-600"
-              value={message}
-              placeholder="Enter message"
-              onChange={e => setMessage(e.target.value)}
-            />
+            <div className="w-full h-fit">
+              <textarea
+                className="p-2 bg-transparent rounded-lg w-full h-full text-white border border-slate-600"
+                value={message}
+                placeholder="Enter message"
+                onChange={e => setMessage(e.target.value)}
+              />
+              {hash ? (
+                <span className="font-mono break-all w-fit max-w-full ">
+                  {hash}
+                </span>
+              ) : null}
+            </div>
           </div>
 
           <div>
@@ -64,7 +73,7 @@ const ConnectedModal = () => {
             <div className="flex gap-2 mt-2">
               <input
                 className="p-2 bg-transparent rounded-lg w-full text-white border border-slate-600"
-                value={message}
+                value={chainId}
                 placeholder="Enter Desired ChainId"
                 onChange={e => setChainId(e.target.value)}
               />

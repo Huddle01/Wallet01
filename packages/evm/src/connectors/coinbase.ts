@@ -102,13 +102,14 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
     return name;
   }
 
-  async signMessage(message: string): Promise<void> {
+  async signMessage(message: string): Promise<string> {
     if (!this.provider) throw new Error('Connect a Wallet');
     const _provider = new Web3Provider(
       <ExternalProvider>(<unknown>this.provider)
     );
     const signer = await _provider.getSigner();
-    signer.signMessage(message);
+    const hash = await signer.signMessage(message);
+    return hash;
   }
 
   onAccountsChanged(): void {

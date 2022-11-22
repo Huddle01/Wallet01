@@ -99,13 +99,18 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
     }
   }
 
-  async signMessage(message: string): Promise<void> {
+  async signMessage(message: string): Promise<string> {
+    console.log({ message });
     if (!this.provider) throw new Error('No wallet Connected');
     try {
       const _message = new TextEncoder().encode(message);
-      await this.provider.signMessage(_message, 'utf8');
+      console.log({ _message });
+      const hash = await this.provider.signMessage(_message, 'utf8');
+      console.log(hash, 'Hash');
+      return new TextDecoder('utf-8').decode(hash);
     } catch (err) {
       console.warn(err);
+      throw new Error(err);
     }
   }
 
