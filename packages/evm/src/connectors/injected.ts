@@ -105,10 +105,11 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     return name;
   }
 
-  async signMessage(message: string): Promise<void> {
+  async signMessage(message: string): Promise<string> {
     if (!this.provider) throw new Error('Connect a wallet!');
     const signer = await this.provider.getSigner();
-    await signer.signMessage(message);
+    const hash = await signer.signMessage(message);
+    return hash;
   }
 
   protected onAccountsChanged(): void {

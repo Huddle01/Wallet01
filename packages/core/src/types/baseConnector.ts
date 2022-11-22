@@ -24,7 +24,7 @@ export abstract class BaseConnector<Provider = any> {
 
   abstract resolveDid(address: string): Promise<string | null>;
 
-  abstract signMessage(message: string): Promise<void>;
+  abstract signMessage(message: string): Promise<string>;
 
   switchChain?(chainId: string): Promise<void>;
 

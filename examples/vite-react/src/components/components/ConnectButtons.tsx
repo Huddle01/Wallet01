@@ -1,5 +1,6 @@
 import { useClient, useConnect, useWallet } from '@wallet01/react';
-import WalletIcons from './assets/WalletIcons';
+import WalletIcons from '../assets/WalletIcons';
+import React from 'react';
 
 const ConnectButtons = () => {
   const { connectors } = useClient();

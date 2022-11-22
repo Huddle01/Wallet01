@@ -10,6 +10,7 @@ import { KeplrConnector } from '@wallet01/cosmos';
 import ConnectButtons from './components/ConnectButtons';
 import { useEffect } from 'react';
 import Wrapper from './components/Wrapper';
+import Layout from './components/layout';
 
 function App() {
   const init = useInitClient();
@@ -20,7 +21,6 @@ function App() {
       connectors: [
         new InjectedConnector(),
         new CoinbaseConnector(),
-        new WalletconnectConnector(),
         new PhantomConnector(),
         new SolflareConnector(),
         new KeplrConnector(),
@@ -30,7 +30,9 @@ function App() {
 
   return (
     <Wallet01>
-      <Wrapper />
+      <Layout>
+        <Wrapper />
+      </Layout>
     </Wallet01>
   );
 }

@@ -1,11 +1,12 @@
-import { useMessage, useSwitch, useWallet } from '@wallet01/react';
+import { useConnect, useMessage, useSwitch, useWallet } from '@wallet01/react';
 import React, { useState } from 'react';
-import WalletIcons from './assets/WalletIcons';
+import WalletIcons from '../assets/WalletIcons';
 
 const ConnectedModal = () => {
   const [message, setMessage] = useState<string>('');
   const [chainId, setChainId] = useState<string>('');
-  const { name, activeConnector, address, disconnect } = useWallet();
+  const { isConnected, name, activeConnector, address, chain, disconnect } =
+    useWallet();
   const { signMessage } = useMessage({ message });
   const { switchChain } = useSwitch({ chainId });
 
