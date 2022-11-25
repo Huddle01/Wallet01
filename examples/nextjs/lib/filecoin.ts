@@ -10,7 +10,7 @@ export class FilecoinConnector extends BaseConnector<Web3Provider> {
   chain: string;
   name: string;
 
-  constructor(chain: string = '1') {
+  constructor(chain: string = '3141') {
     super(chain);
     this.chain = chain;
     this.name = 'Filecoin';

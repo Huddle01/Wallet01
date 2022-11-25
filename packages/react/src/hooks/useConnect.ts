@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { BaseConnector } from '@wallet01/core';
 import { useMutation } from '@tanstack/react-query';
@@ -24,10 +23,7 @@ type ConnectArgs = {
  *
  * For more details visit {@link}
  */
-export const useConnect = ({
-  connector,
-  chainId,
-}: Partial<ConnectArgs> = {}) => {
+export const useConnect = () => {
   const [client] = useAtom(clientAtom);
   const setConnector = useSetAtom(connectorAtom);
 
@@ -46,8 +42,12 @@ export const useConnect = ({
 
       if (!client?.connectors.includes(connector))
         throw new Error('Connector not found');
-
-      await connector.connect({ chainId: chainId });
+      console.log(chainId, 'inUseConnect');
+      if (chainId) {
+        await connector.connect({ chainId: chainId });
+      } else {
+        await connector.connect({});
+      }
 
       const accounts = await connector.getAccount();
       setAccount(accounts[0]);
@@ -62,18 +62,8 @@ export const useConnect = ({
     },
   });
 
-  const connect = React.useCallback(
-    (args?: Partial<ConnectArgs>) => {
-      return mutate({
-        chainId: args?.chainId ?? chainId,
-        connector: args?.connector ?? connector,
-      });
-    },
-    [chainId, connector, mutate]
-  );
-
   return {
-    connect,
+    connect: mutate,
     isLoading,
     isError,
     error,

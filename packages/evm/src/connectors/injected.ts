@@ -63,14 +63,13 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       await provider?.send('wallet_switchEthereumChain', [{ chainId: id }]);
     } catch (error) {
       console.log('error in switching chain', error);
-      this.provider?.send(
-        'wallet_addEthereumChain',
-        chainData[chainId] ? [chainData[chainId]] : ['']
-      );
+      if (chainData[chainId]) {
+        this.provider?.send('wallet_addEthereumChain', [chainData[chainId]]);
+      }
     }
   }
 
-  async connect({ chainId = '1' }) {
+  async connect({ chainId }: { chainId: string }) {
     try {
       const provider = await this.getProvider();
       this.provider = provider;
@@ -82,11 +81,12 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       }
 
       let id = await this.getChainId();
-      console.log(id);
+      console.log({ id, chainId }, 'getChainid');
 
       if (chainId && id !== chainId) {
         await this.switchChain(chainId);
       }
+
       setLastUsedConnector(this.name);
 
       emitter.emit('connected');
@@ -101,9 +101,14 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   }
 
   async resolveDid(address: string): Promise<string | null> {
-    const provider = await this.getProvider();
-    const name = await provider.lookupAddress(address);
-    return name;
+    try {
+      const provider = await this.getProvider();
+      const name = await provider.lookupAddress(address);
+      return name;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 
   async signMessage(message: string): Promise<string> {
