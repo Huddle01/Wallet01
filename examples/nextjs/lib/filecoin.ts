@@ -5,10 +5,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
-import emitter from '../utils/emiter';
-import { chainData } from '../utils/chains';
-
-export class InjectedConnector extends BaseConnector<Web3Provider> {
+export class FilecoinConnector extends BaseConnector<Web3Provider> {
   provider?: Web3Provider;
   chain: string;
   name: string;
@@ -16,7 +13,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   constructor(chain: string = '1') {
     super(chain);
     this.chain = chain;
-    this.name = 'Injected';
+    this.name = 'Filecoin';
     this.getProvider();
   }
 
@@ -63,14 +60,10 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       await provider?.send('wallet_switchEthereumChain', [{ chainId: id }]);
     } catch (error) {
       console.log('error in switching chain', error);
-      this.provider?.send(
-        'wallet_addEthereumChain',
-        chainData[chainId] ? [chainData[chainId]] : ['']
-      );
     }
   }
 
-  async connect({ chainId = '1' }) {
+  async connect({ chainId = '3141' }) {
     try {
       const provider = await this.getProvider();
       this.provider = provider;
@@ -88,8 +81,6 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
         await this.switchChain(chainId);
       }
       setLastUsedConnector(this.name);
-
-      emitter.emit('connected');
     } catch (error) {
       console.error(error, 'in connect');
     }
@@ -97,13 +88,10 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
   async disconnect(): Promise<void> {
     this.provider = undefined;
-    emitter.emit('disconnected');
   }
 
   async resolveDid(address: string): Promise<string | null> {
-    const provider = await this.getProvider();
-    const name = await provider.lookupAddress(address);
-    return name;
+    return null;
   }
 
   async signMessage(message: string): Promise<string> {

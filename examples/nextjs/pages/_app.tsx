@@ -5,6 +5,7 @@ import { InjectedConnector, CoinbaseConnector } from '@wallet01/evm';
 import { KeplrConnector } from '@wallet01/cosmos';
 import { PhantomConnector, SolflareConnector } from '@wallet01/solana';
 import { useEffect } from 'react';
+import { FilecoinConnector } from '../lib/filecoin';
 
 export default function App({ Component, pageProps }: AppProps) {
   const init = useInitClient();
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
     init({
       autoConnect: true,
       connectors: [
+        new FilecoinConnector(),
         new InjectedConnector(),
         new CoinbaseConnector(),
         new PhantomConnector(),

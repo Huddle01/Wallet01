@@ -63,7 +63,7 @@ const ConnectedModal = () => {
             <div className="flex gap-2 mt-2">
               <input
                 className="p-2 bg-transparent rounded-lg w-full text-white border border-slate-600"
-                value={message}
+                value={chainId}
                 placeholder="Enter Desired ChainId"
                 onChange={e => setChainId(e.target.value)}
               />
