@@ -1,7 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { ExternalProvider } from '@ethersproject/providers';
 import { WalletLinkProvider, WalletLink } from 'walletlink';
-import { hexValue } from 'ethers/lib/utils';
+import { hexValue } from 'ethers/lib/utils.js';
 import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
 import emitter from '../utils/emiter';

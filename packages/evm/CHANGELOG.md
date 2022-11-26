@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.3.0
+
+### Minor Changes
+
+- fix ethers dependancies bug
+
 ## 0.2.0
 
 ### Minor Changes
