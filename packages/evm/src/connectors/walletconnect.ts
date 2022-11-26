@@ -1,5 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers';
-import { hexValue } from 'ethers/lib/utils';
+import { hexValue } from 'ethers/lib/utils.js';
 import { ExternalProvider } from '@ethersproject/providers';
 import EthereumProvider from '@walletconnect/ethereum-provider';
 import { BaseConnector, setLastUsedConnector } from '@wallet01/core';

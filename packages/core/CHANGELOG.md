@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.2.0
+
+### Minor Changes
+
+- Update dependancies
+
 ## 0.1.0
 
 ### Minor Changes

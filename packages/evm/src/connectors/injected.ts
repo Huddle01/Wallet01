@@ -1,5 +1,4 @@
-import { ethers } from 'ethers';
-import { hexValue } from 'ethers/lib/utils';
+import { hexValue } from 'ethers/lib/utils.js';
 import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
 import detectEthereumProvider from '@metamask/detect-provider';
 
@@ -24,9 +23,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     const provider = await detectEthereumProvider();
 
     if (provider) {
-      const _provider = new ethers.providers.Web3Provider(
-        <ExternalProvider>(<unknown>provider)
-      );
+      const _provider = new Web3Provider(<ExternalProvider>(<unknown>provider));
       this.provider = _provider;
       return this.provider;
     } else {

@@ -1,22 +1,23 @@
 {
   "name": "@wallet01/cosmos",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format esm --dts"
+    "build": "pnpm clean && tsup"
   },
   "license": "MIT",
   "dependencies": {
-    "@wallet01/core": "*",
+    "eventemitter3": "^4.0.7",
+    "@wallet01/core": "workspace:*",
     "@keplr-wallet/types": "^0.11.13"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
     "tsup": "^6.3.0",
-    "tsconfig": "*"
+    "tsconfig": "workspace:*"
   },
   "publishConfig": {
     "access": "public"

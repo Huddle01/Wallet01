@@ -1,7 +1,7 @@
 {
   "name": "vite-react",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@wallet01/react": "*",
-    "@wallet01/cosmos": "*",
-    "@wallet01/solana": "*",
-    "@wallet01/evm": "*",
+    "@wallet01/react": "workspace:*",
+    "@wallet01/cosmos": "workspace:*",
+    "@wallet01/solana": "workspace:*",
+    "@wallet01/evm": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

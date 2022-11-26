@@ -1,13 +1,13 @@
 {
   "name": "@wallet01/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "main": "dist/index.mjs",
   "import": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup",
+    "build": "pnpm clean && tsup",
     "dev": "tsup --watch"
   },
   "keywords": [],
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/node": "^18.11.9",
     "rimraf": "^3.0.2",
-    "tsconfig": "*",
+    "tsconfig": "workspace:*",
     "tsup": "^6.3.0",
     "typescript": "^4.8.4"
   },
