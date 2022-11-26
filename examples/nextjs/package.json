@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@wallet01/react": "*",
-    "@wallet01/core": "*",
-    "@wallet01/evm": "*",
-    "@wallet01/solana": "*",
-    "@wallet01/cosmos": "*",
+    "@wallet01/react": "workspace:*",
+    "@wallet01/core": "workspace:*",
+    "@wallet01/evm": "workspace:*",
+    "@wallet01/solana": "workspace:*",
+    "@wallet01/cosmos": "workspace:*",
     "next": "13.0.3",
     "next-transpile-modules": "^10.0.0",
     "react": "18.2.0",

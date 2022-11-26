@@ -2,6 +2,7 @@
 next-env.d.ts
 node_modules
 yarn.lock
+pnpm-lock.yaml
 package-lock.json
 public
 dist

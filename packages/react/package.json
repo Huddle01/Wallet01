@@ -7,20 +7,22 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "yarn clean && tsup --format esm --dts",
-    "dev": "yarn build --watch"
+    "build": "pnpm clean && tsup",
+    "dev": "pnpm build --watch"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.14.5",
+    "@wallet01/core": "workspace:*",
     "jotai": "^1.9.1",
+    "jotai-optics": "^0.2.0",
     "optics-ts": "^2.4.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
     "rimraf": "^3.0.2",
-    "tsup": "^6.4.0",
-    "tsconfig": "*"
+    "tsconfig": "workspace:*",
+    "tsup": "^6.4.0"
   },
   "publishConfig": {
     "access": "public"
