@@ -9,15 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@wallet01/react": "workspace:*",
+    "@ethersproject/providers": "^5.7.2",
+    "@metamask/detect-provider": "^2.0.0",
     "@wallet01/core": "workspace:*",
-    "@wallet01/evm": "workspace:*",
-    "@wallet01/solana": "workspace:*",
     "@wallet01/cosmos": "workspace:*",
+    "@wallet01/evm": "workspace:*",
+    "@wallet01/react": "workspace:*",
+    "@wallet01/solana": "workspace:*",
+    "ethers": "^5.7.2",
     "next": "13.0.3",
     "next-transpile-modules": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.0",
     "typescript": "4.8.4"
   },
   "devDependencies": {

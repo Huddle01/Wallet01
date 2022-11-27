@@ -1,10 +1,15 @@
 import { useClient, useConnect, useWallet } from '@wallet01/react';
+import toast from 'react-hot-toast';
 import WalletIcons from './assets/WalletIcons';
 
 const ConnectButtons = () => {
   const { connectors } = useClient();
   const { activeConnector, isConnected, name, address } = useWallet();
   const { connect, isLoading, isError, error } = useConnect();
+
+  if (isError && error) {
+    toast.error(error.message);
+  }
 
   return (
     <div className="flex flex-col">
@@ -19,7 +24,7 @@ const ConnectButtons = () => {
             onClick={() => {
               connect({
                 connector: connector,
-                chainId: '137',
+                chainId: connector.name === 'Injected' ? '137' : undefined,
               });
             }}
             className="p-3 text-lg flex justify-center items-center leading-relaxed aspect-square w-full rounded-lg border border-slate-600 font-bold bg-slate-700"
