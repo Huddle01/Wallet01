@@ -16,30 +16,30 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     super(chain);
     this.chain = chain;
     this.name = 'Injected';
-    this.getProvider();
   }
 
   async getProvider() {
-    const provider = await detectEthereumProvider();
+    try {
+      const provider = await detectEthereumProvider();
 
-    if (provider) {
       const _provider = new Web3Provider(<ExternalProvider>(<unknown>provider));
       this.provider = _provider;
       return this.provider;
-    } else {
-      throw new Error('Please install a Browser Wallet');
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error('No Provider Found!');
+      if (!this.provider) throw new Error('Wallet Not Installed');
       const result = await this.provider.send('eth_requestAccounts', []);
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error('Error in getting Accounts');
+      throw err;
     }
   }
 
@@ -62,7 +62,9 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       console.log('error in switching chain', error);
       if (chainData[chainId]) {
         this.provider?.send('wallet_addEthereumChain', [chainData[chainId]]);
+        return;
       }
+      throw error;
     }
   }
 
@@ -89,6 +91,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       emitter.emit('connected');
     } catch (error) {
       console.error(error, 'in connect');
+      throw error;
     }
   }
 
@@ -99,21 +102,27 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
   async resolveDid(address: string): Promise<string | null> {
     try {
+      if (this.chain !== '1') return null;
       const provider = await this.getProvider();
       const name = await provider.lookupAddress(address);
       return name;
     } catch (error) {
       console.error(error);
-      return null;
+      throw error;
     }
   }
 
   async signMessage(message: string): Promise<string> {
-    if (!this.provider) throw new Error('Connect a wallet!');
-    const signer = await this.provider.getSigner();
-    console.log(signer);
-    const hash = await signer.signMessage(message);
-    return hash;
+    try {
+      if (!this.provider) throw new Error('Connect a wallet!');
+      const signer = await this.provider.getSigner();
+      console.log(signer);
+      const hash = await signer.signMessage(message);
+      return hash;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   protected onAccountsChanged(): void {

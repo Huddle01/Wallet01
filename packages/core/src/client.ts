@@ -34,8 +34,6 @@ export class Client extends EventEmitter<ClientEventEmitter> {
   constructor({ autoConnect = false, connectors }: Config) {
     super();
 
-    console.log({ autoConnect, connectors });
-
     this.autoConnect = autoConnect;
     this.connectors = connectors;
     this.connected = false;
@@ -54,8 +52,6 @@ export class Client extends EventEmitter<ClientEventEmitter> {
   }
 
   private async ac() {
-    console.log('auto connecting');
-
     const lastConnName = localStorage.getItem('lastUsedConnector');
 
     const connector = this.connectors.find(conn => conn.name === lastConnName);

@@ -14,14 +14,15 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
     super(chain);
     this.chain = chain;
     this.name = 'Keplr';
-    this.getProvider();
   }
 
   async getProvider(): Promise<KeplrProvider> {
     if (typeof window !== 'undefined' && window.keplr) {
       this.provider = window.keplr;
+      return this.provider;
+    } else {
+      throw new Error('Wallet Not Installed!');
     }
-    return this.provider;
   }
 
   async getAccount(): Promise<string[]> {
@@ -49,7 +50,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
       console.log(this.chain);
     } catch (err) {
       console.error(err);
-      throw new Error('Error in switching chain');
+      throw err;
     }
   }
 
@@ -58,27 +59,16 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Keplr not installed');
 
-      try {
-        await this.provider.enable(chainId);
-        setLastUsedConnector(this.name);
-      } catch (err) {
-        console.error('Error in enable', err);
-      }
-
-      // const data: ConnectedData<KeplrProvider> = {
-      //   account: (await this.getAccount())[0],
-      //   chainId: this.chain,
-      //   provider: this.provider,
-      // };
-
-      emitter.emit('connected');
+      await this.provider.enable(chainId);
+      setLastUsedConnector(this.name);
     } catch (error) {
       console.error(error);
-      throw new Error('Error in Connecting');
+      throw error;
     }
   }
 
   async disconnect(): Promise<void> {
+    this.chain = '';
     emitter.emit('disconnected');
   }
 
@@ -101,7 +91,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
       return signature;
     } catch (error) {
       console.warn(error);
-      throw new Error(error);
+      throw error;
     }
   }
 

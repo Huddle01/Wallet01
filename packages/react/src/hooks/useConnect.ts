@@ -26,13 +26,19 @@ type ConnectArgs = {
 export const useConnect = () => {
   const [client] = useAtom(clientAtom);
   const setConnector = useSetAtom(connectorAtom);
+  // const isConnected = useAtomValue(connectedAtom);
 
   const isActive = useSetAtom(connectedAtom);
   const setAccount = useSetAtom(addressAtom);
   const setName = useSetAtom(didAtom);
   const setChainId = useSetAtom(chainAtom);
 
-  const { mutate, isLoading, isError, error } = useMutation({
+  const { mutate, isLoading, isError, error } = useMutation<
+    void,
+    Error,
+    ConnectArgs,
+    unknown
+  >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
       if (client?.connectors.length === 0)
         throw new Error('Client not initialised');
@@ -42,12 +48,14 @@ export const useConnect = () => {
 
       if (!client?.connectors.includes(connector))
         throw new Error('Connector not found');
-      console.log(chainId, 'inUseConnect');
+
       if (chainId) {
         await connector.connect({ chainId: chainId });
       } else {
         await connector.connect({});
       }
+
+      isActive(true);
 
       const accounts = await connector.getAccount();
       setAccount(accounts[0]);
@@ -57,8 +65,6 @@ export const useConnect = () => {
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
       }
-
-      isActive(true);
     },
   });
 
