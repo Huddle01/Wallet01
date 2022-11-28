@@ -206,12 +206,14 @@ importers:
       rimraf: ^3.0.2
       tsconfig: workspace:*
       tsup: ^6.3.0
+      tweetnacl: ^1.0.3
     dependencies:
       '@bonfida/spl-name-service': 0.1.55_@solana+web3.js@1.66.2
       '@keplr-wallet/types': 0.11.17
       '@solana/web3.js': 1.66.2
       '@wallet01/core': link:../core
       eventemitter3: 4.0.7
+      tweetnacl: 1.0.3
     devDependencies:
       rimraf: 3.0.2
       tsconfig: link:../../configs/tsconfig
@@ -5971,6 +5973,10 @@ packages:
       turbo-windows-64: 1.6.3
       turbo-windows-arm64: 1.6.3
     dev: true
+
+  /tweetnacl/1.0.3:
+    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
+    dev: false
 
   /type-check/0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}

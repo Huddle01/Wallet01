@@ -17,14 +17,14 @@ type ConnectArgs = {
 };
 
 type UseConenctConfig = {
-  onError: UseMutationOptions<void, Error, unknown>['onError'];
-  onSuccess: UseMutationOptions<void, Error, unknown>['onSuccess'];
+  onError?: UseMutationOptions<void, Error, unknown>['onError'];
+  onSuccess?: UseMutationOptions<void, Error, unknown>['onSuccess'];
 };
 
 export const useConnect = ({
   onError,
   onSuccess,
-}: Partial<UseConenctConfig>) => {
+}: Partial<UseConenctConfig> = {}) => {
   const [client] = useAtom(clientAtom);
   const setConnector = useSetAtom(connectorAtom);
   // const isConnected = useAtomValue(connectedAtom);
