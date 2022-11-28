@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@wallet01/react": "workspace:*",
+    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@wallet01/cosmos": "workspace:*",
-    "@wallet01/solana": "workspace:*",
     "@wallet01/evm": "workspace:*",
+    "@wallet01/react": "workspace:*",
+    "@wallet01/solana": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

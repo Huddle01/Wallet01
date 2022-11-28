@@ -1,7 +1,6 @@
-import React from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import { BaseConnector } from '@wallet01/core';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 
 import {
   addressAtom,
@@ -17,26 +16,30 @@ type ConnectArgs = {
   chainId?: string;
 };
 
-/**
- * @description This hooks will return essential states and two function for connecting and disconnecting the desired wallet.
- * @params Accepts an object with properties connector and chainId
- * @returns isActive, isLoading, isError, error, address, name (ex: theVatsal.eth), activeChain, connect() and disconnect()
- *
- * For more details visit {@link}
- */
+type UseConenctConfig = {
+  onError?: UseMutationOptions<void, Error, unknown>['onError'];
+  onSuccess?: UseMutationOptions<void, Error, unknown>['onSuccess'];
+};
+
 export const useConnect = ({
-  connector,
-  chainId,
-}: Partial<ConnectArgs> = {}) => {
+  onError,
+  onSuccess,
+}: Partial<UseConenctConfig> = {}) => {
   const [client] = useAtom(clientAtom);
   const setConnector = useSetAtom(connectorAtom);
+  // const isConnected = useAtomValue(connectedAtom);
 
   const isActive = useSetAtom(connectedAtom);
   const setAccount = useSetAtom(addressAtom);
   const setName = useSetAtom(didAtom);
   const setChainId = useSetAtom(chainAtom);
 
-  const { mutate, isLoading, isError, error } = useMutation({
+  const { mutate, isLoading, isError, error } = useMutation<
+    void,
+    Error,
+    ConnectArgs,
+    unknown
+  >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
       if (client?.connectors.length === 0)
         throw new Error('Client not initialised');
@@ -47,7 +50,13 @@ export const useConnect = ({
       if (!client?.connectors.includes(connector))
         throw new Error('Connector not found');
 
-      await connector.connect({ chainId: chainId });
+      if (chainId) {
+        await connector.connect({ chainId: chainId });
+      } else {
+        await connector.connect({});
+      }
+
+      isActive(true);
 
       const accounts = await connector.getAccount();
       setAccount(accounts[0]);
@@ -57,23 +66,13 @@ export const useConnect = ({
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
       }
-
-      isActive(true);
     },
+    onError,
+    onSuccess,
   });
 
-  const connect = React.useCallback(
-    (args?: Partial<ConnectArgs>) => {
-      return mutate({
-        chainId: args?.chainId ?? chainId,
-        connector: args?.connector ?? connector,
-      });
-    },
-    [chainId, connector, mutate]
-  );
-
   return {
-    connect,
+    connect: mutate,
     isLoading,
     isError,
     error,

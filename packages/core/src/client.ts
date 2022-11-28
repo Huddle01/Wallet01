@@ -34,8 +34,6 @@ export class Client extends EventEmitter<ClientEventEmitter> {
   constructor({ autoConnect = false, connectors }: Config) {
     super();
 
-    console.log({ autoConnect, connectors });
-
     this.autoConnect = autoConnect;
     this.connectors = connectors;
     this.connected = false;
@@ -54,8 +52,6 @@ export class Client extends EventEmitter<ClientEventEmitter> {
   }
 
   private async ac() {
-    console.log('auto connecting');
-
     const lastConnName = localStorage.getItem('lastUsedConnector');
 
     const connector = this.connectors.find(conn => conn.name === lastConnName);
@@ -73,10 +69,9 @@ export class Client extends EventEmitter<ClientEventEmitter> {
 
     const address = await this.getAddress();
 
-    const [chainId, did] = await Promise.all([
-      this.getChainId(),
-      this.resolveDid(),
-    ]);
+    const chainId = await this.getChainId();
+
+    const did = await this.resolveDid();
 
     this.emit('connect', {
       address,
@@ -107,9 +102,14 @@ export class Client extends EventEmitter<ClientEventEmitter> {
       console.log('No Address', this.address);
       return null;
     }
-    const name = await this.activeConnector.resolveDid(this.address);
-    this.name = name;
-    return name;
+    try {
+      const name = await this.activeConnector.resolveDid(this.address);
+      this.name = name;
+      return name;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 }
 

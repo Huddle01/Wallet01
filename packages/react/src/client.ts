@@ -12,8 +12,6 @@ class ReactClient extends Client {
   set: Setter;
 
   constructor({ autoConnect, connectors }: Config, get: Getter, set: Setter) {
-    console.log('INIALIZING CLIENT');
-
     super({ autoConnect, connectors });
 
     this.get = get;

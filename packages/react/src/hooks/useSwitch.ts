@@ -43,8 +43,9 @@ export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
 
       if (!connector.switchChain)
         throw new Error('Function not supported by wallet');
-      setIsActive(false);
+
       await connector.switchChain(chainId);
+      setIsActive(false);
       setAddress((await connector.getAccount())[0]);
       setIsActive(true);
     },

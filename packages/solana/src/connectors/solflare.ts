@@ -2,7 +2,6 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
 import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 
-import { ConnectedData } from '../types';
 import { SolflareProvider } from '../providers/solflareProvider';
 import emitter from '../utils/emiter';
 
@@ -19,7 +18,6 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
     super(chain);
     this.chain = chain;
     this.name = 'Solflare';
-    this.getProvider();
   }
 
   async getProvider(): Promise<SolflareProvider> {
@@ -27,10 +25,12 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
       typeof window !== 'undefined' &&
       window.solflare &&
       window.solflare.isSolflare
-    )
+    ) {
       this.provider = window.solflare;
-
-    return this.provider;
+      return this.provider;
+    } else {
+      throw new Error('Wallet Not Installed');
+    }
   }
 
   async getAccount(): Promise<string[]> {
@@ -41,7 +41,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
       return [String(accounts)];
     } catch (error) {
       console.error(error);
-      throw new Error('Error in getting accounts');
+      throw error;
     }
   }
 
@@ -57,17 +57,9 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
 
       await this.provider.connect();
       setLastUsedConnector(this.name);
-
-      const data: ConnectedData<SolflareProvider> = {
-        account: (await this.getAccount())[0],
-        chainId: this.chain,
-        provider: this.provider,
-      };
-
-      emitter.emit('connected', data);
     } catch (error) {
       console.error(error);
-      throw new Error('Error in Connecting');
+      throw error;
     }
   }
 
@@ -95,7 +87,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
       return allDomainNames[0];
     } catch (error) {
       console.error(error);
-      throw new Error('Error in fetching names');
+      throw error;
     }
   }
 
@@ -109,8 +101,8 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
       console.log(hash, 'Hash');
       return new TextDecoder('utf-8').decode(hash);
     } catch (err) {
-      console.warn(err);
-      throw new Error(err);
+      console.error(err);
+      throw err;
     }
   }
 

@@ -16,29 +16,33 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
     super(chain);
     this.chain = chain;
     this.name = 'Coinbase';
-    this.getProvider();
   }
 
   async getProvider(): Promise<WalletLinkProvider> {
-    const client = new WalletLink({
-      appName: 'huddle01',
-    });
-    this.provider = client.makeWeb3Provider(
-      'https://mainnet.infura.io/v3/0a7d1e04fd0845d5994516cfb80e0813',
-      Number(this.chain)
-    );
-    return this.provider;
+    try {
+      const client = new WalletLink({
+        appName: 'huddle01',
+      });
+      this.provider = client.makeWeb3Provider(
+        'https://mainnet.infura.io/v3/0a7d1e04fd0845d5994516cfb80e0813',
+        Number(this.chain)
+      );
+      return this.provider;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) throw new Error('Provider Undefined!');
+    if (!this.provider) await this.getProvider();
     try {
-      const result = await this.provider.send('eth_requestAccounts', []);
+      const result = await this.provider?.send('eth_requestAccounts', []);
       console.log({ result });
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error('Error in getting Accounts');
+      throw err;
     }
   }
 
@@ -57,7 +61,8 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
     try {
       await provider?.send('wallet_switchEthereumChain', [{ chainId: id }]);
     } catch (error) {
-      console.log('error in switching chain', error);
+      console.error(error);
+      throw error;
     }
   }
 
@@ -87,6 +92,7 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
       emitter.emit('connected', data);
     } catch (err) {
       console.error(err);
+      throw err;
     }
   }
 
@@ -96,20 +102,32 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
   }
 
   async resolveDid(address: string): Promise<string | null> {
-    const provider = await this.getProvider();
-    const _provider = new Web3Provider(<ExternalProvider>(<unknown>provider));
-    const name = await _provider.lookupAddress(address);
-    return name;
+    try {
+      if (this.chain !== '1') return null;
+      const provider = await this.getProvider();
+      const _provider = new Web3Provider(<ExternalProvider>(<unknown>provider));
+
+      const name = await _provider.lookupAddress(address);
+      return name;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   async signMessage(message: string): Promise<string> {
-    if (!this.provider) throw new Error('Connect a Wallet');
-    const _provider = new Web3Provider(
-      <ExternalProvider>(<unknown>this.provider)
-    );
-    const signer = await _provider.getSigner();
-    const hash = await signer.signMessage(message);
-    return hash;
+    try {
+      if (!this.provider) throw new Error('Connect a Wallet');
+      const _provider = new Web3Provider(
+        <ExternalProvider>(<unknown>this.provider)
+      );
+      const signer = await _provider.getSigner();
+      const hash = await signer.signMessage(message);
+      return hash;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   onAccountsChanged(): void {

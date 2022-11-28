@@ -1,9 +1,5 @@
 import { useInitClient, Wallet01 } from '@wallet01/react';
-import {
-  InjectedConnector,
-  CoinbaseConnector,
-  WalletconnectConnector,
-} from '@wallet01/evm';
+import { InjectedConnector, CoinbaseConnector } from '@wallet01/evm';
 import { PhantomConnector, SolflareConnector } from '@wallet01/solana';
 import { KeplrConnector } from '@wallet01/cosmos';
 

@@ -16,7 +16,12 @@ const ConnectButtons = () => {
           <button
             key={connector.name}
             disabled={isConnected && connector !== activeConnector}
-            onClick={() => connect({ connector: connector })}
+            onClick={() => {
+              connect({
+                connector: connector,
+                chainId: connector.name === 'Injected' ? '137' : undefined,
+              });
+            }}
             className="p-3 text-lg flex justify-center items-center leading-relaxed aspect-square w-full rounded-lg border border-slate-600 font-bold bg-slate-700"
           >
             {WalletIcons[connector.name] ?? connector.name}

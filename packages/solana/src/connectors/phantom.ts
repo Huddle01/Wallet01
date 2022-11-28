@@ -20,7 +20,6 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     super(chain);
     this.chain = chain;
     this.name = 'Phantom';
-    this.getProvider();
   }
 
   async getProvider(): Promise<PhantomProvider> {
@@ -28,10 +27,12 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
       typeof window !== 'undefined' &&
       window.solana &&
       window.solana.isPhantom
-    )
+    ) {
       this.provider = window.solana;
-
-    return this.provider;
+      return this.provider;
+    } else {
+      throw new Error('Wallet Not Installed');
+    }
   }
 
   async getAccount(): Promise<string[]> {
@@ -42,7 +43,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
       return [String(accounts)];
     } catch (error) {
       console.error(error);
-      throw new Error('Error in getting accounts');
+      throw error;
     }
   }
 
@@ -58,17 +59,9 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
         provider.on('accountChanged', this.onAccountsChanged);
         provider.on('disconnect', this.onDisconnect);
       }
-
-      // const data: ConnectedData<PhantomProvider> = {
-      //   account: (await this.getAccount())[0],
-      //   chainId: this.chain,
-      //   provider: this.provider,
-      // };
-
-      emitter.emit('connected');
     } catch (error) {
       console.error(error);
-      throw new Error('Error in Connecting');
+      throw error;
     }
   }
 
@@ -96,7 +89,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
       return allDomainNames[0];
     } catch (error) {
       console.error(error);
-      throw new Error('Error in fetching names');
+      throw error;
     }
   }
 
@@ -107,8 +100,8 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
       const { signature } = await this.provider.signMessage(_message);
       return new TextDecoder('utf-8').decode(signature);
     } catch (err) {
-      console.warn(err);
-      throw new Error(err);
+      console.error(err);
+      throw err;
     }
   }
 

@@ -13,7 +13,6 @@
     "@ethersproject/providers": "^5.7.2",
     "@metamask/detect-provider": "^2.0.0",
     "@wallet01/core": "workspace:*",
-    "@walletconnect/ethereum-provider": "^2.1.2",
     "ethers": "^5.7.2",
     "eventemitter3": "^4.0.7",
     "walletlink": "^2.5.0"

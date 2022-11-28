@@ -5,12 +5,9 @@ import WalletIcons from './assets/WalletIcons';
 const ConnectedModal = () => {
   const [message, setMessage] = useState<string>('');
   const [chainId, setChainId] = useState<string>('');
-  const { isConnected, name, activeConnector, address, chain, disconnect } =
-    useWallet();
+  const { name, activeConnector, address, disconnect } = useWallet();
   const { signMessage, hash } = useMessage({ message });
   const { switchChain } = useSwitch({ chainId });
-
-  console.log(hash);
 
   return (
     <div className="flex flex-col">
