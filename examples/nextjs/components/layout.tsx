@@ -10,7 +10,7 @@ const Layout: React.FC<Props> = ({ children }) => {
   return (
     <div className="flex flex-col">
       <div>
-        <Toaster position="top-right" reverseOrder={false} />
+        <Toaster />
       </div>
       <Nav />
       {children}

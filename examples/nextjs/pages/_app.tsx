@@ -6,6 +6,7 @@ import { KeplrConnector } from '@wallet01/cosmos';
 import { PhantomConnector, SolflareConnector } from '@wallet01/solana';
 import { useEffect } from 'react';
 import { FilecoinConnector } from '../lib/filecoin';
+import Layout from '../components/layout';
 
 export default function App({ Component, pageProps }: AppProps) {
   const init = useInitClient();
@@ -26,7 +27,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <Wallet01>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </Wallet01>
   );
 }
