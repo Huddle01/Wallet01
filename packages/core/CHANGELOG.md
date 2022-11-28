@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.3.0
+
+### Minor Changes
+
+- Fix dependencies and react error handling
+
 ## 0.2.0
 
 ### Minor Changes
