@@ -1,6 +1,8 @@
 # Wallet01
 
 >This package is in beta stage, handle with care.
+
+> Documentation for the Wallet01 can be found [here.](https://huddle01.notion.site/Wallet01-66b9a56d73964fd19614743fb7a38780)
 ## What is Wallet01?
 
 Wallets are an essential part of the ecosystem as they serve as the gateway to interact with the blockchain and represent your unique identity in the blockchain. Therefore, it’s extremely important your app has the ability to communicate with the wallet to transact and make changes on the blockchain.
