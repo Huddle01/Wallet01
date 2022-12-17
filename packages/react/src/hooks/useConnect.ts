@@ -1,15 +1,5 @@
-import { useAtom, useSetAtom } from 'jotai';
-import { BaseConnector } from '@wallet01/core';
+import { BaseConnector, useStore } from '@wallet01/core';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-
-import {
-  addressAtom,
-  chainAtom,
-  connectedAtom,
-  connectorAtom,
-  didAtom,
-} from '../store/clientStore';
-import { clientAtom } from '../store/clientStore';
 
 type ConnectArgs = {
   connector: BaseConnector | undefined;
@@ -25,14 +15,14 @@ export const useConnect = ({
   onError,
   onSuccess,
 }: Partial<UseConenctConfig> = {}) => {
-  const [client] = useAtom(clientAtom);
-  const setConnector = useSetAtom(connectorAtom);
-  // const isConnected = useAtomValue(connectedAtom);
-
-  const isActive = useSetAtom(connectedAtom);
-  const setAccount = useSetAtom(addressAtom);
-  const setName = useSetAtom(didAtom);
-  const setChainId = useSetAtom(chainAtom);
+  const {
+    connectors,
+    setActiveConnector,
+    setIsConnected,
+    setAddress,
+    setDid,
+    setChainId,
+  } = useStore();
 
   const { mutate, isLoading, isError, error } = useMutation<
     void,
@@ -41,13 +31,12 @@ export const useConnect = ({
     unknown
   >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      if (client?.connectors.length === 0)
-        throw new Error('Client not initialised');
+      if (connectors.length === 0) throw new Error('Client not initialised');
 
       if (!connector) throw new Error('Connector required to connect');
-      setConnector(connector);
+      setActiveConnector(connector);
 
-      if (!client?.connectors.includes(connector))
+      if (!connectors.includes(connector))
         throw new Error('Connector not found');
 
       if (chainId) {
@@ -56,12 +45,12 @@ export const useConnect = ({
         await connector.connect({});
       }
 
-      isActive(true);
+      setIsConnected(true);
 
       const accounts = await connector.getAccount();
-      setAccount(accounts[0]);
+      setAddress(accounts[0]);
 
-      setName(await connector.resolveDid(accounts[0]));
+      setDid(await connector.resolveDid(accounts[0]));
 
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
