@@ -7,6 +7,7 @@ type ClientConfig = {
 };
 
 export default class Client extends Wallet01Store {
+  private static instance: Client;
   activeConnector: BaseConnector | null;
 
   constructor({ autoConnect, connectors }: ClientConfig) {
@@ -28,6 +29,11 @@ export default class Client extends Wallet01Store {
       this.ac();
   }
 
+  static init = (config: ClientConfig) => {
+    if (!Client.instance) Client.instance = new Client(config);
+    return Client.instance;
+  };
+
   private async ac() {
     const lastConnName = localStorage.getItem('lastUsedConnector');
 
@@ -35,9 +41,8 @@ export default class Client extends Wallet01Store {
       conn => conn.name === lastConnName
     );
 
-    if (!connector) {
-      return;
-    } else this.setLastUsedConnector(connector);
+    if (!connector) return;
+    else this.setLastUsedConnector(connector);
 
     this.getLastUsedConnector()?.connect({});
     this.setActiveConnector(this.getLastUsedConnector());

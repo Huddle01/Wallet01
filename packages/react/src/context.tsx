@@ -5,7 +5,7 @@ import { BaseConnector, Client } from '@wallet01/core';
 interface Props {
   children: JSX.Element;
   autoConnect: boolean;
-  connectors: BaseConnector[];
+  connectors: BaseConnector[] | (() => BaseConnector[]);
 }
 /**
  * @description A context that wraps your app under wallet01 states and providers
@@ -19,7 +19,10 @@ const Wallet01: FunctionComponent<Props> = ({
   const [queryClient] = React.useState(() => new QueryClient());
 
   useEffect(() => {
-    new Client({ autoConnect, connectors });
+    Client.init({
+      autoConnect,
+      connectors: typeof connectors === 'function' ? connectors() : connectors,
+    });
   }, []);
 
   return (

@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Wallet01
       autoConnect={true}
-      connectors={[
+      connectors={() => [
         new FilecoinConnector(),
         new InjectedConnector(),
         new CoinbaseConnector(),
