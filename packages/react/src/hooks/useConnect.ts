@@ -45,8 +45,6 @@ export const useConnect = ({
         await connector.connect({});
       }
 
-      setIsConnected(true);
-
       const accounts = await connector.getAccount();
       setAddress(accounts[0]);
 
@@ -55,6 +53,7 @@ export const useConnect = ({
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
       }
+      setIsConnected(true);
     },
     onError,
     onSuccess,

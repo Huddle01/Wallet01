@@ -25,8 +25,9 @@ export default class Client extends Wallet01Store {
     if (
       localStorage.getItem('lastUsedConnector') !== null &&
       localStorage.getItem('autoConnect') === 'true'
-    )
+    ) {
       this.ac();
+    }
   }
 
   static init = (config: ClientConfig) => {
@@ -44,22 +45,24 @@ export default class Client extends Wallet01Store {
     if (!connector) return;
     else this.setLastUsedConnector(connector);
 
-    this.getLastUsedConnector()?.connect({});
     this.setActiveConnector(this.getLastUsedConnector());
     this.activeConnector = this.getLastUsedConnector();
 
-    try {
-      if (this.activeConnector) {
-        const address = (await this.activeConnector.getAccount())[0];
-        this.setAddress(address);
+    if (this.activeConnector) {
+      this.activeConnector.connect({});
+      const address = (await this.activeConnector.getAccount())[0];
+      this.setAddress(address);
+      try {
         this.setDid(await this.activeConnector.resolveDid(address));
-
-        this.activeConnector.getChainId
-          ? this.setChainId(await this.activeConnector.getChainId())
-          : this.setChainId(null);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (err) {
-      throw err;
+
+      this.activeConnector.getChainId
+        ? this.setChainId(await this.activeConnector.getChainId())
+        : this.setChainId(null);
+
+      this.setIsConnected(true);
     }
   }
 }
