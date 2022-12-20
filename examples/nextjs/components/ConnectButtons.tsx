@@ -26,7 +26,6 @@ const ConnectButtons = () => {
             onClick={() => {
               connect({
                 connector: connector,
-                chainId: connector.name === 'Injected' ? '137' : undefined,
               });
               toast(connector.name);
             }}

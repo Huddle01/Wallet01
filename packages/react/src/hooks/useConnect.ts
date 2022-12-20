@@ -48,12 +48,12 @@ export const useConnect = ({
       const accounts = await connector.getAccount();
       setAddress(accounts[0]);
 
-      setDid(await connector.resolveDid(accounts[0]));
+      setIsConnected(true);
 
+      setDid(await connector.resolveDid(accounts[0]));
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
       }
-      setIsConnected(true);
     },
     onError,
     onSuccess,
