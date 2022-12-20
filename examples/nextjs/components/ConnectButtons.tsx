@@ -1,10 +1,11 @@
 import { useClient, useConnect, useWallet } from '@wallet01/react';
+import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import WalletIcons from './assets/WalletIcons';
 
 const ConnectButtons = () => {
   const { connectors } = useClient();
-  const { activeConnector, isConnected, name, address } = useWallet();
+  const { activeConnector, isConnected, did, address } = useWallet();
   const { connect, isError, error } = useConnect();
 
   if (isError && error) {
@@ -18,7 +19,7 @@ const ConnectButtons = () => {
       </span>
 
       <div className="grid grid-cols-3 gap-4 items-center mt-5 w-fit justify-center">
-        {connectors?.map(connector => (
+        {connectors.map(connector => (
           <button
             key={connector.name}
             disabled={isConnected && connector !== activeConnector}

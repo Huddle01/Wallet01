@@ -1,11 +1,5 @@
-import { useAtom } from 'jotai';
 import { useMutation } from '@tanstack/react-query';
-import { clientAtom } from '../store/clientStore';
-import {
-  addressAtom,
-  connectedAtom,
-  connectorAtom,
-} from '../store/clientStore';
+import { useStore } from '@wallet01/core';
 
 /**
  * @description This hooks will return switchChain function that will help chain in your desired wallet.
@@ -20,11 +14,8 @@ interface ChainSwitchArgs {
 }
 
 export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
-  const [client] = useAtom(clientAtom);
-  const [connector] = useAtom(connectorAtom);
-
-  const [, setAddress] = useAtom(addressAtom);
-  const [, setIsActive] = useAtom(connectedAtom);
+  const { connectors, activeConnector, setAddress, setIsConnected } =
+    useStore();
 
   const { isLoading, isError, error, mutate } = useMutation<
     void,
@@ -33,21 +24,21 @@ export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
     unknown
   >({
     mutationFn: async () => {
-      if (!client) throw new Error('Client not Initialised');
+      // if (!client) throw new Error('Client not Initialised');
 
-      if (!connector) throw new Error('Wallet not connected');
+      if (!activeConnector) throw new Error('Wallet not connected');
 
-      if (!client.connectors.includes(connector)) {
+      if (!connectors.includes(activeConnector)) {
         throw new Error('Connector not found');
       }
 
-      if (!connector.switchChain)
+      if (!activeConnector.switchChain)
         throw new Error('Function not supported by wallet');
 
-      await connector.switchChain(chainId);
-      setIsActive(false);
-      setAddress((await connector.getAccount())[0]);
-      setIsActive(true);
+      await activeConnector.switchChain(chainId);
+      setIsConnected(false);
+      setAddress((await activeConnector.getAccount())[0]);
+      setIsConnected(true);
     },
   });
 

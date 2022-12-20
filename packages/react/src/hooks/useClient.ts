@@ -1,10 +1,9 @@
-import { useAtom } from 'jotai';
-import { clientAtom } from '../store/clientStore';
+import { useStore } from '@wallet01/core';
 
 export const useClient = () => {
-  const [client] = useAtom(clientAtom);
+  const { connectors } = useStore();
 
   return {
-    connectors: client?.connectors,
+    connectors: connectors,
   };
 };
