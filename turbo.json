@@ -23,9 +23,6 @@
       ],
       "outputs": []
     },
-    "examples": {
-      "dependsOn": ["@wallet01/core#build"]
-    },
     "lint": {
       "outputs": []
     },
