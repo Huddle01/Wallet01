@@ -1,5 +1,16 @@
 # @wallet01/evm
 
+## 0.5.0
+
+### Minor Changes
+
+- move to zustand for state management
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@0.4.0
+
 ## 0.4.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.4.0
+
+### Minor Changes
+
+- move to zustand for state management
+
 ## 0.3.0
 
 ### Minor Changes
