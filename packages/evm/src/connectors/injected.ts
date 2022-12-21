@@ -55,7 +55,6 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     const provider = await this.getProvider();
 
     const id = hexValue(Number(chainId));
-    console.log({ id });
     try {
       await provider?.send('wallet_switchEthereumChain', [{ chainId: id }]);
     } catch (error) {
@@ -80,7 +79,6 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       }
 
       let id = await this.getChainId();
-      console.log({ id, chainId }, 'getChainid');
 
       if (chainId && id !== chainId) {
         await this.switchChain(chainId);
@@ -116,7 +114,6 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     try {
       if (!this.provider) throw new Error('Connect a wallet!');
       const signer = await this.provider.getSigner();
-      console.log(signer);
       const hash = await signer.signMessage(message);
       return hash;
     } catch (error) {

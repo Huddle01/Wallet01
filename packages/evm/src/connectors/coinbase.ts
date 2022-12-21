@@ -38,7 +38,6 @@ export class CoinbaseConnector extends BaseConnector<WalletLinkProvider> {
     if (!this.provider) await this.getProvider();
     try {
       const result = await this.provider?.send('eth_requestAccounts', []);
-      console.log({ result });
       return result;
     } catch (err) {
       console.error(err);

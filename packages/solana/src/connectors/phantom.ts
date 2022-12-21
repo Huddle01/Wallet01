@@ -51,7 +51,6 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new Error('Phantom is not installed');
-      if (provider.isPhantom) console.log('phantom detected');
       await this.provider.connect();
       setLastUsedConnector(this.name);
 
