@@ -1,5 +1,12 @@
 # vite-react
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@0.5.1
+
 ## 0.0.5
 
 ### Patch Changes

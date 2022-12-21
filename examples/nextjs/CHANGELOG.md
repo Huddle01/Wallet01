@@ -1,5 +1,12 @@
 # example
 
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@0.5.1
+
 ## 0.1.5
 
 ### Patch Changes

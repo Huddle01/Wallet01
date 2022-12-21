@@ -15,7 +15,7 @@ interface SignMessageArgs {
 export const useMessage = () => {
   const { connectors, activeConnector } = useStore();
 
-  const { data, isLoading, isError, mutate, error } = useMutation<
+  const { data, isLoading, isError, mutate, mutateAsync, error } = useMutation<
     string,
     Error,
     SignMessageArgs,
@@ -41,5 +41,6 @@ export const useMessage = () => {
     isError,
     error: error?.message,
     signMessage: mutate,
+    signMessageAsync: mutateAsync,
   };
 };
