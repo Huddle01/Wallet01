@@ -12,16 +12,16 @@ interface SignMessageArgs {
   message: string;
 }
 
-export const useMessage = ({ message }: SignMessageArgs) => {
+export const useMessage = () => {
   const { connectors, activeConnector } = useStore();
 
   const { data, isLoading, isError, mutate, error } = useMutation<
     string,
     Error,
-    void,
+    SignMessageArgs,
     unknown
   >({
-    mutationFn: async () => {
+    mutationFn: async ({ message }: SignMessageArgs) => {
       // if (!client) throw new Error('Client not Initialised');
 
       if (!activeConnector) throw new Error('Wallet not connected');

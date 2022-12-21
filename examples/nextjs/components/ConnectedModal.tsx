@@ -6,7 +6,7 @@ const ConnectedModal = () => {
   const [message, setMessage] = useState<string>('');
   const [chainId, setChainId] = useState<string>('');
   const { did, activeConnector, address, disconnect } = useWallet();
-  const { signMessage, hash } = useMessage({ message });
+  const { signMessage, hash } = useMessage();
   const { switchChain } = useSwitch({ chainId });
 
   return (
@@ -45,7 +45,7 @@ const ConnectedModal = () => {
               <span className="font-bold text-lg">Message:</span>
               <button
                 className="bg-blue-400 p-3 min-w-fit font-semibold text-sm text-black rounded-md"
-                onClick={() => signMessage()}
+                onClick={() => signMessage({ message })}
               >
                 Sign Message
               </button>
