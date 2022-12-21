@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.5.0
+
+### Minor Changes
+
+- change useMessage props
+
 ## 0.4.0
 
 ### Minor Changes
