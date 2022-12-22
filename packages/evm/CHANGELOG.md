@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.6.3
+
+### Patch Changes
+
+- fix build
+
 ## 0.6.2
 
 ### Patch Changes
