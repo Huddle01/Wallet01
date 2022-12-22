@@ -1,5 +1,11 @@
 # @wallet01/cosmos
 
+## 0.4.1
+
+### Patch Changes
+
+- added walletconnect and coinbase package update
+
 ## 0.4.0
 
 ### Minor Changes

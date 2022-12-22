@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.6.0
+
+### Minor Changes
+
+- added walletconnect and coinbase package update
+
 ## 0.5.0
 
 ### Minor Changes
