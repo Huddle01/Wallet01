@@ -2,7 +2,7 @@ import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 import { CoinbaseWalletProvider } from '@coinbase/wallet-sdk';
 import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk';
 import { ExternalProvider, Web3Provider } from '@ethersproject/providers';
-import { hexValue } from 'ethers/lib/utils';
+import { hexValue } from 'ethers/lib/utils.js';
 import { chainData } from '../utils/chains';
 
 export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {

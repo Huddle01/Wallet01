@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.6.2
+
+### Patch Changes
+
+- fix coinbase ethers utils import
+
 ## 0.6.1
 
 ### Patch Changes
