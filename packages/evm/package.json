@@ -10,13 +10,13 @@
     "build": "pnpm clean && tsup"
   },
   "dependencies": {
+    "@coinbase/wallet-sdk": "^3.6.3",
     "@ethersproject/providers": "^5.7.2",
     "@metamask/detect-provider": "^2.0.0",
     "@wallet01/core": "workspace:*",
     "@walletconnect/ethereum-provider": "1.8.0",
     "ethers": "^5.7.2",
-    "eventemitter3": "^4.0.7",
-    "walletlink": "^2.5.0"
+    "eventemitter3": "^4.0.7"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",

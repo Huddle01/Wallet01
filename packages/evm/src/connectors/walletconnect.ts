@@ -64,7 +64,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
       if (chainData[chainId]) {
         this.provider?.request({
           method: 'wallet_addEthereumChain',
-          params: [{ chainId: chainData[chainId] }],
+          params: [{ data: chainData[chainId] }],
         });
         this.switchChain(chainId);
       }
@@ -91,12 +91,12 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
 
   async disconnect(): Promise<void> {
     if (!this.provider) throw new Error('Wallet already disconnected');
+    await this.provider.disconnect();
     this.provider = undefined;
   }
 
   async resolveDid(address: string): Promise<string | null> {
     try {
-      console.log('resolveDID', address);
       if (!this.provider) throw new Error('Wallet not connected');
       if (this.chain !== '1') return null;
 
