@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.6.1
+
+### Patch Changes
+
+- fix ethers utils import
+
 ## 0.6.0
 
 ### Minor Changes

@@ -1,7 +1,7 @@
 import { ExternalProvider, Web3Provider } from '@ethersproject/providers';
 import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
 import EthereumProvider from '@walletconnect/ethereum-provider';
-import { hexValue } from 'ethers/lib/utils';
+import { hexValue } from 'ethers/lib/utils.js';
 import { chainData } from '../utils/chains';
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
