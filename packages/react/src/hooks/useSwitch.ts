@@ -39,7 +39,9 @@ export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
       setIsConnected(false);
       const address = (await activeConnector.getAccount())[0];
       setAddress(address);
-      setDid(address ? await activeConnector.resolveDid(address) : null);
+      if (chainId === '1') {
+        setDid(address ? await activeConnector.resolveDid(address) : null);
+      }
       setIsConnected(true);
     },
   });
