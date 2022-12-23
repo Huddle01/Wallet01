@@ -1,5 +1,13 @@
 # @wallet01/evm
 
+## 0.6.4
+
+### Patch Changes
+
+- fix bugs, isAutoConnecting state, did error and set chainId
+- Updated dependencies
+  - @wallet01/core@0.4.1
+
 ## 0.6.3
 
 ### Patch Changes

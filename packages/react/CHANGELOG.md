@@ -1,5 +1,13 @@
 # @wallet01/react
 
+## 0.5.2
+
+### Patch Changes
+
+- fix bugs, isAutoConnecting state, did error and set chainId
+- Updated dependencies
+  - @wallet01/core@0.4.1
+
 ## 0.5.1
 
 ### Patch Changes

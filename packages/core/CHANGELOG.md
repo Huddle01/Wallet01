@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.4.1
+
+### Patch Changes
+
+- fix bugs, isAutoConnecting state, did error and set chainId
+
 ## 0.4.0
 
 ### Minor Changes
