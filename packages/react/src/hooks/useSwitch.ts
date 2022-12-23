@@ -14,7 +14,7 @@ interface ChainSwitchArgs {
 }
 
 export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
-  const { connectors, activeConnector, setAddress, setIsConnected } =
+  const { connectors, activeConnector, setAddress, setIsConnected, setDid } =
     useStore();
 
   const { isLoading, isError, error, mutate } = useMutation<
@@ -37,7 +37,9 @@ export const useSwitch = ({ chainId }: ChainSwitchArgs) => {
 
       await activeConnector.switchChain(chainId);
       setIsConnected(false);
-      setAddress((await activeConnector.getAccount())[0]);
+      const address = (await activeConnector.getAccount())[0];
+      setAddress(address);
+      setDid(address ? await activeConnector.resolveDid(address) : null);
       setIsConnected(true);
     },
   });

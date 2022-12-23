@@ -23,7 +23,7 @@ export default class Client extends Wallet01Store {
       localStorage.setItem('autoConnect', String(autoConnect));
 
     if (
-      localStorage.getItem('lastUsedConnector') !== null &&
+      localStorage.getItem('lastUsedConnector') &&
       localStorage.getItem('autoConnect') === 'true'
     ) {
       this.ac();
@@ -36,6 +36,8 @@ export default class Client extends Wallet01Store {
   };
 
   private async ac() {
+    console.log('in ac');
+    this.setIsAutoConnecting(true);
     const lastConnName = localStorage.getItem('lastUsedConnector');
 
     const connector = this.getConnectors().find(
@@ -62,6 +64,7 @@ export default class Client extends Wallet01Store {
         ? this.setChainId(await this.activeConnector.getChainId())
         : this.setChainId(null);
 
+      this.setIsAutoConnecting(false);
       this.setIsConnected(true);
     }
   }
