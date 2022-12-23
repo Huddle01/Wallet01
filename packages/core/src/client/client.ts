@@ -36,7 +36,6 @@ export default class Client extends Wallet01Store {
   };
 
   private async ac() {
-    console.log('in ac');
     this.setIsAutoConnecting(true);
     const lastConnName = localStorage.getItem('lastUsedConnector');
 
