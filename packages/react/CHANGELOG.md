@@ -1,5 +1,13 @@
 # @wallet01/react
 
+## 0.5.3
+
+### Patch Changes
+
+- update builds
+- Updated dependencies
+  - @wallet01/core@0.4.2
+
 ## 0.5.2
 
 ### Patch Changes

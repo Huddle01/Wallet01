@@ -1,6 +1,6 @@
 {
   "name": "@wallet01/core",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "",
   "main": "dist/index.mjs",
   "import": "dist/index.mjs",

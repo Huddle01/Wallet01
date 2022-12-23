@@ -1,5 +1,13 @@
 # @wallet01/evm
 
+## 0.6.5
+
+### Patch Changes
+
+- update builds
+- Updated dependencies
+  - @wallet01/core@0.4.2
+
 ## 0.6.4
 
 ### Patch Changes

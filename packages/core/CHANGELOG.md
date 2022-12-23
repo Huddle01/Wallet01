@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.4.2
+
+### Patch Changes
+
+- update builds
+
 ## 0.4.1
 
 ### Patch Changes

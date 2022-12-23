@@ -1,5 +1,13 @@
 # @wallet01/cosmos
 
+## 0.4.3
+
+### Patch Changes
+
+- update builds
+- Updated dependencies
+  - @wallet01/core@0.4.2
+
 ## 0.4.2
 
 ### Patch Changes
