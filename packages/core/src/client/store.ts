@@ -42,6 +42,11 @@ export class Wallet01Store {
     return lastUsedConnector;
   }
 
+  getIsAutoConnecting(): boolean {
+    const { isAutoConnecting } = getState();
+    return isAutoConnecting;
+  }
+
   setAddress(address: string | null): void {
     const { setAddress } = getState();
     setAddress(address);
@@ -80,5 +85,10 @@ export class Wallet01Store {
   setLastUsedConnector(connector: BaseConnector | null): void {
     const { setLastUsedConnector } = getState();
     setLastUsedConnector(connector);
+  }
+
+  setIsAutoConnecting(val: boolean): void {
+    const { setIsAutoConnecting } = getState();
+    setIsAutoConnecting(val);
   }
 }

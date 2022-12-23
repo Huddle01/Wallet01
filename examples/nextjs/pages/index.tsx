@@ -1,4 +1,4 @@
-import { useWallet } from '@wallet01/react';
+import { useClient, useWallet } from '@wallet01/react';
 import ConnectButtons from '../components/ConnectButtons';
 import ConnectedModal from '../components/ConnectedModal';
 import Nav from '../components/nav';
@@ -8,11 +8,19 @@ interface SVGIcons {
 }
 
 export default function Home() {
+  const { isAutoConnecting } = useClient();
   const { isConnected } = useWallet();
 
   return (
     <div className="flex flex-col h-screen justify-center items-center">
-      {isConnected ? <ConnectedModal /> : <ConnectButtons />}
+      {isAutoConnecting ? (
+        <span className="text-xl text-white font-bold">AutoConnecting</span>
+      ) : null}
+      {isConnected && !isAutoConnecting ? (
+        <ConnectedModal />
+      ) : (
+        <ConnectButtons />
+      )}
     </div>
   );
 }

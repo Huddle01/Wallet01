@@ -1,15 +1,18 @@
 import { useClient, useConnect, useWallet } from '@wallet01/react';
-import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import WalletIcons from './assets/WalletIcons';
 
 const ConnectButtons = () => {
-  const { connectors } = useClient();
+  const { connectors, isAutoConnecting } = useClient();
   const { activeConnector, isConnected, did, address } = useWallet();
   const { connect, isError, error } = useConnect();
 
   if (isError && error) {
     toast.error(error.message);
+  }
+
+  if (isAutoConnecting) {
+    console.log('isAutoConnecting');
   }
 
   return (

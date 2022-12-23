@@ -11,6 +11,7 @@ const createClientSlice: StateCreator<
   connectors: [],
   activeConnector: null,
   lastUsedConnector: null,
+  isAutoConnecting: false,
   setAutoConnect: autoConnect => {
     set(() => ({ autoConnect }));
   },
@@ -22,6 +23,9 @@ const createClientSlice: StateCreator<
   },
   setLastUsedConnector: lastUsedConnector => {
     set(() => ({ lastUsedConnector }));
+  },
+  setIsAutoConnecting: val => {
+    set(() => ({ isAutoConnecting: val }));
   },
 });
 
