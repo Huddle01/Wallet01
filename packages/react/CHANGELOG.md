@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.5.4
+
+### Patch Changes
+
+- return address in useConnect mutation
+
 ## 0.5.3
 
 ### Patch Changes

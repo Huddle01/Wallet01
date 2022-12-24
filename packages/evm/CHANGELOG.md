@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.6.6
+
+### Patch Changes
+
+- return address in useConnect mutation
+
 ## 0.6.5
 
 ### Patch Changes
