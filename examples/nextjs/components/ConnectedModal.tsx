@@ -1,18 +1,18 @@
-import { useConnect, useMessage, useSwitch, useWallet } from '@wallet01/react';
-import React, { useState } from 'react';
-import WalletIcons from './assets/WalletIcons';
+import { useConnect, useMessage, useSwitch, useWallet } from "@wallet01/react";
+import React, { useState } from "react";
+import WalletIcons from "./assets/WalletIcons";
 
 const ConnectedModal = () => {
-  const [message, setMessage] = useState<string>('');
-  const [chainId, setChainId] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
+  const [chainId, setChainId] = useState<string>("");
   const { did, activeConnector, address, disconnect } = useWallet();
   const { signMessage, hash } = useMessage();
-  const { switchChain } = useSwitch({ chainId });
+  const { switchChain } = useSwitch();
 
   return (
     <div className="flex flex-col">
       <span className="text-lg text-center flex justify-center items-center gap-2 font-base">
-        {activeConnector?.name ? WalletIcons[activeConnector.name] : 'Other'}{' '}
+        {activeConnector?.name ? WalletIcons[activeConnector.name] : "Other"}{" "}
         Methods
       </span>
       <div className="grid grid-cols-2 mt-5 justify-center items-center gap-8 border border-slate-600 bg-slate-700 p-4 rounded-lg m-10">
@@ -22,7 +22,7 @@ const ConnectedModal = () => {
               Hello, <b className="underline underline-offset-1">{did}</b>
             </span>
           ) : (
-            ''
+            ""
           )}
           {address ? (
             <span className="text-xl font-base truncate">
@@ -30,7 +30,7 @@ const ConnectedModal = () => {
               <b className="italic truncate ">{address}</b>
             </span>
           ) : (
-            ''
+            ""
           )}
           <button
             className="bg-slate-600 w-fit p-3 text-medium text-lg rounded-md"
@@ -76,7 +76,7 @@ const ConnectedModal = () => {
               />
               <button
                 className="bg-blue-400 p-2 min-w-fit font-semibold text-sm text-black rounded-lg"
-                onClick={() => switchChain()}
+                onClick={() => switchChain({ chainId })}
               >
                 Switch Chain
               </button>
