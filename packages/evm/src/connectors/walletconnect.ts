@@ -1,24 +1,24 @@
-import { ExternalProvider, Web3Provider } from '@ethersproject/providers';
-import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
-import EthereumProvider from '@walletconnect/ethereum-provider';
-import { hexValue } from 'ethers/lib/utils.js';
-import { chainData } from '../utils/chains';
+import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import EthereumProvider from "@walletconnect/ethereum-provider";
+import { hexValue } from "ethers/lib/utils.js";
+import { chainData } from "../utils/chains";
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider?: EthereumProvider;
   chain: string;
   name: string;
 
-  constructor(chain: string = '1') {
+  constructor(chain: string = "1") {
     super(chain);
     this.chain = chain;
-    this.name = 'Walletconnect';
+    this.name = "Walletconnect";
   }
 
   async getProvider(): Promise<EthereumProvider> {
     try {
       const _provider = new EthereumProvider({
-        infuraId: '0a7d1e04fd0845d5994516cfb80e0813',
+        infuraId: "0a7d1e04fd0845d5994516cfb80e0813",
       });
 
       this.provider = _provider;
@@ -32,7 +32,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error('Wallet Not Installed');
+      if (!this.provider) throw new Error("Wallet Not Installed");
       const result = await this.provider.accounts;
       return result;
     } catch (error) {
@@ -44,9 +44,10 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   async getChainId(): Promise<string> {
     if (this.provider) {
       const chainId = this.provider.chainId.toString();
+      this.chain = chainId;
       return chainId;
     }
-    return '';
+    return "";
   }
 
   async switchChain(chainId: string): Promise<void> {
@@ -55,7 +56,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
 
     try {
       this.provider?.request({
-        method: 'wallet_switchEthereumChain',
+        method: "wallet_switchEthereumChain",
         params: [{ chainId: _id }],
       });
       this.chain = chainId;
@@ -63,7 +64,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
       console.error(error);
       if (chainData[chainId]) {
         this.provider?.request({
-          method: 'wallet_addEthereumChain',
+          method: "wallet_addEthereumChain",
           params: [{ data: chainData[chainId] }],
         });
         this.switchChain(chainId);
@@ -90,15 +91,15 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   }
 
   async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error('Wallet already disconnected');
+    if (!this.provider) throw new Error("Wallet already disconnected");
     await this.provider.disconnect();
     this.provider = undefined;
   }
 
   async resolveDid(address: string): Promise<string | null> {
     try {
-      if (!this.provider) throw new Error('Wallet not connected');
-      if (this.chain !== '1') return null;
+      if (!this.provider) throw new Error("Wallet not connected");
+      if ((await this.getChainId()) !== "1") return null;
 
       const _provider = new Web3Provider(this.provider as ExternalProvider);
       const name = await _provider.lookupAddress(address);
@@ -111,7 +112,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
 
   async signMessage(message: string): Promise<string> {
     try {
-      if (!this.provider) throw new Error('Wallet not Connected!');
+      if (!this.provider) throw new Error("Wallet not Connected!");
       const _address = await this.getAccount();
 
       const signer = new Web3Provider(
@@ -127,14 +128,14 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   }
 
   protected onAccountsChanged(): void {
-    console.log('Account Changed');
+    console.log("Account Changed");
   }
 
   protected onChainChanged(_chain: string): void {
-    console.log('Chain Changed');
+    console.log("Chain Changed");
   }
 
   protected onDisconnect(): void {
-    console.log('Wallet disconnected');
+    console.log("Wallet disconnected");
   }
 }

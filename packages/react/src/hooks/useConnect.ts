@@ -1,5 +1,5 @@
-import { BaseConnector, useStore } from '@wallet01/core';
-import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { BaseConnector, useStore } from "@wallet01/core";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 type ConnectArgs = {
   connector: BaseConnector | undefined;
@@ -7,8 +7,8 @@ type ConnectArgs = {
 };
 
 type UseConenctConfig = {
-  onError?: UseMutationOptions<void, Error, unknown>['onError'];
-  onSuccess?: UseMutationOptions<void, Error, unknown>['onSuccess'];
+  onError?: UseMutationOptions<void, Error, unknown>["onError"];
+  onSuccess?: UseMutationOptions<string, Error, unknown>["onSuccess"];
 };
 
 export const useConnect = ({
@@ -24,20 +24,20 @@ export const useConnect = ({
     setChainId,
   } = useStore();
 
-  const { mutate, isLoading, isError, error } = useMutation<
-    void,
+  const { mutate, mutateAsync, isLoading, isError, error } = useMutation<
+    string,
     Error,
     ConnectArgs,
     unknown
   >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      if (connectors.length === 0) throw new Error('Client not initialised');
+      if (connectors.length === 0) throw new Error("Client not initialised");
 
-      if (!connector) throw new Error('Connector required to connect');
+      if (!connector) throw new Error("Connector required to connect");
       setActiveConnector(connector);
 
       if (!connectors.includes(connector))
-        throw new Error('Connector not found');
+        throw new Error("Connector not found");
 
       if (chainId) {
         await connector.connect({ chainId: chainId });
@@ -45,15 +45,17 @@ export const useConnect = ({
         await connector.connect({});
       }
 
-      const accounts = await connector.getAccount();
-      setAddress(accounts[0]);
+      const account = (await connector.getAccount())[0];
+      setAddress(account);
 
       setIsConnected(true);
 
-      setDid(await connector.resolveDid(accounts[0]));
+      setDid(await connector.resolveDid(account));
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
       }
+
+      return account;
     },
     onError,
     onSuccess,
@@ -61,6 +63,7 @@ export const useConnect = ({
 
   return {
     connect: mutate,
+    connectAsync: mutateAsync,
     isLoading,
     isError,
     error,

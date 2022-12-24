@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import { useStore } from '@wallet01/core';
+import { useMutation } from "@tanstack/react-query";
+import { useStore } from "@wallet01/core";
 
 export const useWallet = () => {
   const {
@@ -20,10 +20,10 @@ export const useWallet = () => {
     mutationFn: async () => {
       // if (!client) throw new Error('Client not Initialised');
 
-      if (!activeConnector) throw new Error('Wallet not connected');
+      if (!activeConnector) throw new Error("Wallet not connected");
 
       if (!connectors.includes(activeConnector)) {
-        throw new Error('Connector not found');
+        throw new Error("Connector not found");
       }
 
       await activeConnector.disconnect();
@@ -32,7 +32,7 @@ export const useWallet = () => {
       setChainId(null);
       setDid(null);
       setIsConnected(false);
-      localStorage.setItem('lastUsedConnector', '');
+      localStorage.setItem("lastUsedConnector", "");
     },
   });
 
