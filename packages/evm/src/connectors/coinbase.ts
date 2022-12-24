@@ -1,25 +1,25 @@
-import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
-import { CoinbaseWalletProvider } from '@coinbase/wallet-sdk';
-import { CoinbaseWalletSDK } from '@coinbase/wallet-sdk';
-import { ExternalProvider, Web3Provider } from '@ethersproject/providers';
-import { hexValue } from 'ethers/lib/utils.js';
-import { chainData } from '../utils/chains';
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
+import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
+import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
+import { hexValue } from "ethers/lib/utils.js";
+import { chainData } from "../utils/chains";
 
 export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   provider?: CoinbaseWalletProvider;
   chain: string;
   name: string;
 
-  constructor(chain: string = '1') {
+  constructor(chain: string = "1") {
     super(chain);
     this.chain = chain;
-    this.name = 'Coinbase';
+    this.name = "Coinbase";
   }
 
   async getProvider(): Promise<CoinbaseWalletProvider> {
     try {
       const _provider = new CoinbaseWalletSDK({
-        appName: 'Wallet01',
+        appName: "Wallet01",
       }).makeWeb3Provider();
       this.provider = _provider;
       return this.provider;
@@ -32,9 +32,9 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error('Wallet Not Connected');
+      if (!this.provider) throw new Error("Wallet Not Connected");
       const result: string[] = await this.provider.send(
-        'eth_requestAccounts',
+        "eth_requestAccounts",
         []
       );
       return result;
@@ -47,25 +47,27 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   async getChainId(): Promise<string> {
     if (this.provider) {
       const id = this.provider.chainId;
+      this.chain = id;
       return id;
     }
-    return '';
+    return "";
   }
 
   async switchChain(chainId: string): Promise<void> {
-    if (!this.provider) throw new Error('Wallet Not Connected');
+    if (!this.provider) throw new Error("Wallet Not Connected");
     const id = hexValue(Number(chainId));
 
     try {
       await this.provider.request({
-        method: 'wallet_switchEthereumChain',
+        method: "wallet_switchEthereumChain",
         params: [{ chainId: id }],
       });
+      this.chain = chainId;
     } catch (error) {
       console.error(error);
       if (chainData[chainId]) {
         this.provider.request({
-          method: 'wallet_addEthereumChain',
+          method: "wallet_addEthereumChain",
           params: [{ data: chainData[chainId] }],
         });
         this.switchChain(chainId);
@@ -92,15 +94,15 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   }
 
   async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error('Wallet already disconnected');
+    if (!this.provider) throw new Error("Wallet already disconnected");
     await this.provider.disconnect();
     this.provider = undefined;
   }
 
   async resolveDid(address: string): Promise<string | null> {
     try {
-      if (!this.provider) throw new Error('Wallet not connected');
-      if (this.chain !== '1') return null;
+      if (!this.provider) throw new Error("Wallet not connected");
+      if ((await this.getChainId()) !== "1") return null;
 
       const _provider = new Web3Provider(
         this.provider as unknown as ExternalProvider
@@ -115,7 +117,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
 
   async signMessage(message: string): Promise<string> {
     try {
-      if (!this.provider) throw new Error('Wallet not Connected!');
+      if (!this.provider) throw new Error("Wallet not Connected!");
       const _address = await this.getAccount();
 
       const signer = new Web3Provider(
@@ -131,14 +133,14 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   }
 
   protected onAccountsChanged(): void {
-    console.log('Account Changed');
+    console.log("Account Changed");
   }
 
   protected onChainChanged(_chain: string): void {
-    console.log('Chain Changed');
+    console.log("Chain Changed");
   }
 
   protected onDisconnect(): void {
-    console.log('Wallet disconnected');
+    console.log("Wallet disconnected");
   }
 }

@@ -46,6 +46,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   async getChainId(): Promise<string> {
     if (this.provider) {
       const { result } = await this.provider?.send('eth_chainId', []);
+      this.chain = result;
       return result;
     }
     return '';
@@ -101,7 +102,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
   async resolveDid(address: string): Promise<string | null> {
     try {
-      if (this.chain !== '1') return null;
+      if ((await this.getChainId()) !== '1') return null;
       const provider = await this.getProvider();
       const name = await provider.lookupAddress(address);
       return name;
