@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.6.8
+
+### Patch Changes
+
+- revert @coinbase/wallet-sdk as dependencies
+
 ## 0.6.7
 
 ### Patch Changes
