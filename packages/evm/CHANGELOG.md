@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.6.7
+
+### Patch Changes
+
+- add @coinbase/wallet-sdk as peerDependencies
+
 ## 0.6.6
 
 ### Patch Changes

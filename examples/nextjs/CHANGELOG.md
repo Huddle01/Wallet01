@@ -1,5 +1,12 @@
 # example
 
+## 0.1.14
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/evm@0.6.7
+
 ## 0.1.13
 
 ### Patch Changes

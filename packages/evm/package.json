@@ -1,6 +1,6 @@
 {
   "name": "@wallet01/evm",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -10,7 +10,6 @@
     "build": "pnpm clean && tsup"
   },
   "dependencies": {
-    "@coinbase/wallet-sdk": "^3.6.3",
     "@ethersproject/providers": "^5.7.2",
     "@metamask/detect-provider": "^2.0.0",
     "@wallet01/core": "workspace:*",
@@ -18,7 +17,16 @@
     "ethers": "^5.7.2",
     "eventemitter3": "^4.0.7"
   },
+  "peerDependencies": {
+    "@coinbase/wallet-sdk": "^3.6.3"
+  },
+  "peerDependenciesMeta": {
+    "@coinbase/wallet-sdk": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@coinbase/wallet-sdk": "^3.6.3",
     "rimraf": "^3.0.2",
     "tsconfig": "workspace:*",
     "tsup": "^6.3.0"
