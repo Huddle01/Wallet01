@@ -1,6 +1,7 @@
+import { lastUsedConnectorAtom, store } from "../store/atoms";
+
 const setLastUsedConnector = (connectorName: string) => {
-  if (localStorage.getItem('lastUsedConnector') !== connectorName)
-    localStorage.setItem('lastUsedConnector', connectorName);
+  store.set(lastUsedConnectorAtom, connectorName);
 };
 
 export default setLastUsedConnector;

@@ -32,6 +32,8 @@ export const useWallet = () => {
       setChainId(null);
       setDid(null);
       setIsConnected(false);
+
+      // TODO
       localStorage.setItem("lastUsedConnector", "");
     },
   });

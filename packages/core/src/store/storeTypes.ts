@@ -1,4 +1,4 @@
-import { BaseConnector } from '../types';
+import { BaseConnector } from "../types";
 
 export interface IAccountState {
   address: string | null;
@@ -15,12 +15,10 @@ export interface IWalletState {
 }
 
 export interface IClientState {
-  autoConnect: boolean;
   connectors: BaseConnector[];
   activeConnector: BaseConnector | null;
   lastUsedConnector: BaseConnector | null;
   isAutoConnecting: boolean;
-  setAutoConnect: (val: boolean) => void;
   setConnectors: (connectors: BaseConnector[]) => void;
   setActiveConnector: (connector: BaseConnector | null) => void;
   setLastUsedConnector: (connector: BaseConnector | null) => void;

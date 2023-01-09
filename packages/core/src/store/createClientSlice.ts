@@ -1,5 +1,5 @@
-import { StateCreator } from 'zustand';
-import { IClientState } from './storeTypes';
+import { StateCreator } from "zustand";
+import { IClientState } from "./storeTypes";
 
 const createClientSlice: StateCreator<
   IClientState,
@@ -7,14 +7,11 @@ const createClientSlice: StateCreator<
   [],
   IClientState
 > = set => ({
-  autoConnect: false,
   connectors: [],
   activeConnector: null,
   lastUsedConnector: null,
   isAutoConnecting: false,
-  setAutoConnect: autoConnect => {
-    set(() => ({ autoConnect }));
-  },
+
   setConnectors: connectors => {
     set(() => ({ connectors }));
   },

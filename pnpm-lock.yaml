@@ -147,6 +147,7 @@ importers:
     specifiers:
       '@types/node': ^18.11.9
       eventemitter3: ^4.0.7
+      jotai: ^1.12.1
       rimraf: ^3.0.2
       tsconfig: workspace:*
       tsup: ^6.3.0
@@ -154,6 +155,7 @@ importers:
       zustand: ^4.1.5
     dependencies:
       eventemitter3: 4.0.7
+      jotai: 1.12.1
       zustand: 4.1.5
     devDependencies:
       '@types/node': 18.11.9
@@ -7975,6 +7977,44 @@ packages:
 
   /join-component/1.1.0:
     resolution: {integrity: sha512-bF7vcQxbODoGK1imE2P9GS9aw4zD0Sd+Hni68IMZLj7zRnquH7dXUmMw9hDI5S/Jzt7q+IyTXN0rSg2GI0IKhQ==}
+    dev: false
+
+  /jotai/1.12.1:
+    resolution: {integrity: sha512-t6gsYM1WkQHMOazaZYLykCA+fh9KPDGrA+tDYzDeV0268QsCqmX6S4lO46uswgt1LGUeG0EDFGuMd9ac8cWNTA==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      '@babel/template': '*'
+      jotai-immer: '*'
+      jotai-optics: '*'
+      jotai-redux: '*'
+      jotai-tanstack-query: '*'
+      jotai-urql: '*'
+      jotai-valtio: '*'
+      jotai-xstate: '*'
+      jotai-zustand: '*'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      jotai-immer:
+        optional: true
+      jotai-optics:
+        optional: true
+      jotai-redux:
+        optional: true
+      jotai-tanstack-query:
+        optional: true
+      jotai-urql:
+        optional: true
+      jotai-valtio:
+        optional: true
+      jotai-xstate:
+        optional: true
+      jotai-zustand:
+        optional: true
     dev: false
 
   /joycon/3.1.1:

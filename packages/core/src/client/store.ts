@@ -1,5 +1,6 @@
-import getState from '../store/rootStore';
-import { BaseConnector } from '../types';
+import { autoConnectAtom, lastUsedConnectorAtom, store } from "../store/atoms";
+import getState from "../store/rootStore";
+import { BaseConnector } from "../types";
 
 export class Wallet01Store {
   getAddress(): string | null {
@@ -20,11 +21,6 @@ export class Wallet01Store {
   getChain(): string | null {
     const { chainId } = getState();
     return chainId;
-  }
-
-  getAutoConnect(): boolean {
-    const { autoConnect } = getState();
-    return autoConnect;
   }
 
   getConnectors(): BaseConnector[] {
@@ -67,11 +63,6 @@ export class Wallet01Store {
     setChainId(id);
   }
 
-  setAutoConnect(val: boolean): void {
-    const { setAutoConnect } = getState();
-    setAutoConnect(val);
-  }
-
   setConnectors(connectors: BaseConnector[]): void {
     const { setConnectors } = getState();
     setConnectors(connectors);
@@ -90,5 +81,17 @@ export class Wallet01Store {
   setIsAutoConnecting(val: boolean): void {
     const { setIsAutoConnecting } = getState();
     setIsAutoConnecting(val);
+  }
+
+  getAutoConnect(): boolean {
+    return store.get(autoConnectAtom);
+  }
+
+  setAutoConnect(val: boolean): void {
+    store.set(autoConnectAtom, val);
+  }
+
+  getLastConnName() {
+    return store.get(lastUsedConnectorAtom);
   }
 }
