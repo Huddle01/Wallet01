@@ -1,9 +1,9 @@
-import { Connection, PublicKey } from '@solana/web3.js';
-import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
+import { Connection, PublicKey } from "@solana/web3.js";
+import { performReverseLookup, getAllDomains } from "@bonfida/spl-name-service";
 
-import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
-import { PhantomProvider } from '../providers/phantomProvider';
-import emitter from '../utils/emiter';
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import { PhantomProvider } from "../providers/phantomProvider";
+import emitter from "../utils/emiter";
 
 interface PhantomWindow extends Window {
   solana?: PhantomProvider;
@@ -13,32 +13,28 @@ declare const window: PhantomWindow;
 
 export class PhantomConnector extends BaseConnector<PhantomProvider> {
   provider!: PhantomProvider;
-  chain: string;
-  name: string;
 
-  constructor(chain: string = '') {
-    super(chain);
-    this.chain = chain;
-    this.name = 'Phantom';
+  constructor(chain: string = "") {
+    super(chain, "phantom");
   }
 
   async getProvider(): Promise<PhantomProvider> {
     if (
-      typeof window !== 'undefined' &&
+      typeof window !== "undefined" &&
       window.solana &&
       window.solana.isPhantom
     ) {
       this.provider = window.solana;
       return this.provider;
     } else {
-      throw new Error('Wallet Not Installed');
+      throw new Error("Wallet Not Installed");
     }
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) throw new Error('Provider Undefined');
+    if (!this.provider) throw new Error("Provider Undefined");
     try {
-      await this.connect('');
+      await this.connect("");
       const accounts = this.provider.publicKey;
       return [String(accounts)];
     } catch (error) {
@@ -50,13 +46,13 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
   async connect({}): Promise<void> {
     try {
       const provider = await this.getProvider();
-      if (!provider) throw new Error('Phantom is not installed');
+      if (!provider) throw new Error("Phantom is not installed");
       await this.provider.connect();
       setLastUsedConnector(this.name);
 
       if (provider.on) {
-        provider.on('accountChanged', this.onAccountsChanged);
-        provider.on('disconnect', this.onDisconnect);
+        provider.on("accountChanged", this.onAccountsChanged);
+        provider.on("disconnect", this.onDisconnect);
       }
     } catch (error) {
       console.error(error);
@@ -65,15 +61,15 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
   }
 
   async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error('No wallet Conencted');
+    if (!this.provider) throw new Error("No wallet Conencted");
     this.provider.disconnect();
-    emitter.emit('disconnected');
+    emitter.emit("disconnected");
   }
 
   async resolveDid(address: string): Promise<string | null> {
-    if (!this.provider) throw new Error('No wallet Connected');
+    if (!this.provider) throw new Error("No wallet Connected");
     const connection = new Connection(
-      'https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc'
+      "https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc"
     );
 
     try {
@@ -93,11 +89,11 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
   }
 
   async signMessage(message: string): Promise<string> {
-    if (!this.provider) throw new Error('No wallet Connected');
+    if (!this.provider) throw new Error("No wallet Connected");
     try {
       const _message = new TextEncoder().encode(message);
       const { signature } = await this.provider.signMessage(_message);
-      return new TextDecoder('utf-8').decode(signature);
+      return new TextDecoder("utf-8").decode(signature);
     } catch (err) {
       console.error(err);
       throw err;
@@ -105,14 +101,14 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
   }
 
   protected onAccountsChanged(): void {
-    console.log('Account Changed');
+    console.log("Account Changed");
   }
 
   protected onChainChanged(_chain: string | number): void {
-    console.log('Chain Changed');
+    console.log("Chain Changed");
   }
 
   protected onDisconnect(): void {
-    console.log('Wallet disconnected');
+    console.log("Wallet disconnected");
   }
 }

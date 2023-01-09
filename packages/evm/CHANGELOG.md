@@ -1,5 +1,16 @@
 # @wallet01/evm
 
+## 0.7.0
+
+### Minor Changes
+
+- change bundling from tsup to tsc
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@0.5.0
+
 ## 0.6.8
 
 ### Patch Changes

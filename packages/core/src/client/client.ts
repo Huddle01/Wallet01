@@ -1,5 +1,5 @@
-import { BaseConnector } from '../types';
-import { Wallet01Store } from './store';
+import { BaseConnector } from "../types";
+import { Wallet01Store } from "./store";
 
 type ClientConfig = {
   autoConnect?: boolean;
@@ -8,7 +8,7 @@ type ClientConfig = {
 
 export default class Client extends Wallet01Store {
   private static instance: Client;
-  activeConnector: BaseConnector | null;
+  activeConnector: BaseConnector | null = null;
 
   constructor({ autoConnect, connectors }: ClientConfig) {
     super();
@@ -16,15 +16,15 @@ export default class Client extends Wallet01Store {
     this.setConnectors(connectors);
     // this.setAddress('INITNIT');
 
-    if (localStorage.getItem('autoConnect') === null)
-      localStorage.setItem('autoConnect', String(autoConnect));
+    if (localStorage.getItem("autoConnect") === null)
+      localStorage.setItem("autoConnect", String(autoConnect));
 
-    if (localStorage.getItem('autoConnect') !== String(autoConnect))
-      localStorage.setItem('autoConnect', String(autoConnect));
+    if (localStorage.getItem("autoConnect") !== String(autoConnect))
+      localStorage.setItem("autoConnect", String(autoConnect));
 
     if (
-      localStorage.getItem('lastUsedConnector') &&
-      localStorage.getItem('autoConnect') === 'true'
+      localStorage.getItem("lastUsedConnector") &&
+      localStorage.getItem("autoConnect") === "true"
     ) {
       this.ac();
     }
@@ -37,7 +37,7 @@ export default class Client extends Wallet01Store {
 
   private async ac() {
     this.setIsAutoConnecting(true);
-    const lastConnName = localStorage.getItem('lastUsedConnector');
+    const lastConnName = localStorage.getItem("lastUsedConnector");
 
     const connector = this.getConnectors().find(
       conn => conn.name === lastConnName
@@ -51,12 +51,17 @@ export default class Client extends Wallet01Store {
 
     if (this.activeConnector) {
       this.activeConnector.connect({});
-      const address = (await this.activeConnector.getAccount())[0];
+      const addresses = await this.activeConnector.getAccount();
+
+      const address = addresses[0];
+
+      if (!address) return;
+
       this.setAddress(address);
       try {
         if (
           this.activeConnector.getChainId &&
-          (await this.activeConnector.getChainId()) === '1'
+          (await this.activeConnector.getChainId()) === "1"
         )
           this.setDid(await this.activeConnector.resolveDid(address));
       } catch (error) {

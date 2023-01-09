@@ -46,6 +46,9 @@ export const useConnect = ({
       }
 
       const account = (await connector.getAccount())[0];
+
+      if (!account) throw new Error("No account found");
+
       setAddress(account);
 
       setIsConnected(true);

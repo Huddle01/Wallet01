@@ -1,4 +1,4 @@
-import { KeplrConnector } from './connectors/keplr';
-import { KeplrProvider } from './providers/keplrProvider';
+import { KeplrConnector } from "./connectors/keplr";
+import { KeplrProvider } from "./providers/keplrProvider";
 
-export { KeplrConnector, KeplrProvider };
+export { KeplrConnector, type KeplrProvider };

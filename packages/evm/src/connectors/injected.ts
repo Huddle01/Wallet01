@@ -1,21 +1,17 @@
-import { hexValue } from 'ethers/lib/utils.js';
-import { Web3Provider, ExternalProvider } from '@ethersproject/providers';
-import detectEthereumProvider from '@metamask/detect-provider';
+import { hexValue } from "ethers/lib/utils.js";
+import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
+import detectEthereumProvider from "@metamask/detect-provider";
 
-import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 
-import emitter from '../utils/emiter';
-import { chainData } from '../utils/chains';
+import emitter from "../utils/emiter";
+import { chainData } from "../utils/chains";
 
 export class InjectedConnector extends BaseConnector<Web3Provider> {
   provider?: Web3Provider;
-  chain: string;
-  name: string;
 
-  constructor(chain: string = '1') {
-    super(chain);
-    this.chain = chain;
-    this.name = 'Injected';
+  constructor(chain: string = "1") {
+    super(chain, "injected");
   }
 
   async getProvider() {
@@ -34,8 +30,8 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error('Wallet Not Installed');
-      const result = await this.provider.send('eth_requestAccounts', []);
+      if (!this.provider) throw new Error("Wallet Not Installed");
+      const result = await this.provider.send("eth_requestAccounts", []);
       return result;
     } catch (err) {
       console.error(err);
@@ -45,11 +41,11 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
   async getChainId(): Promise<string> {
     if (this.provider) {
-      const { result } = await this.provider?.send('eth_chainId', []);
+      const { result } = await this.provider?.send("eth_chainId", []);
       this.chain = result;
       return result;
     }
-    return '';
+    return "";
   }
 
   async switchChain(chainId: string): Promise<void> {
@@ -57,12 +53,12 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
     const id = hexValue(Number(chainId));
     try {
-      await provider?.send('wallet_switchEthereumChain', [{ chainId: id }]);
+      await provider?.send("wallet_switchEthereumChain", [{ chainId: id }]);
       this.chain = chainId;
     } catch (error) {
-      console.log('error in switching chain', error);
+      console.log("error in switching chain", error);
       if (chainData[chainId]) {
-        this.provider?.send('wallet_addEthereumChain', [chainData[chainId]]);
+        this.provider?.send("wallet_addEthereumChain", [chainData[chainId]]);
         return;
       }
       throw error;
@@ -75,9 +71,9 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       this.provider = provider;
 
       if (provider.on) {
-        provider.on('accountsChanged', this.onAccountsChanged);
-        provider.on('chainChanged', this.onChainChanged);
-        provider.on('disconnect', this.onDisconnect);
+        provider.on("accountsChanged", this.onAccountsChanged);
+        provider.on("chainChanged", this.onChainChanged);
+        provider.on("disconnect", this.onDisconnect);
       }
 
       let id = await this.getChainId();
@@ -88,21 +84,21 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
       setLastUsedConnector(this.name);
 
-      emitter.emit('connected');
+      emitter.emit("connected");
     } catch (error) {
-      console.error(error, 'in connect');
+      console.error(error, "in connect");
       throw error;
     }
   }
 
   async disconnect(): Promise<void> {
     this.provider = undefined;
-    emitter.emit('disconnected');
+    emitter.emit("disconnected");
   }
 
   async resolveDid(address: string): Promise<string | null> {
     try {
-      if ((await this.getChainId()) !== '1') return null;
+      if ((await this.getChainId()) !== "1") return null;
       const provider = await this.getProvider();
       const name = await provider.lookupAddress(address);
       return name;
@@ -114,7 +110,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
   async signMessage(message: string): Promise<string> {
     try {
-      if (!this.provider) throw new Error('Connect a wallet!');
+      if (!this.provider) throw new Error("Connect a wallet!");
       const signer = await this.provider.getSigner();
       const hash = await signer.signMessage(message);
       return hash;
@@ -125,14 +121,14 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   }
 
   protected onAccountsChanged(): void {
-    console.log('Account Changed');
+    console.log("Account Changed");
   }
 
   protected onChainChanged(_chain: string): void {
-    console.log('Chain Changed');
+    console.log("Chain Changed");
   }
 
   protected onDisconnect(): void {
-    console.log('Wallet disconnected');
+    console.log("Wallet disconnected");
   }
 }

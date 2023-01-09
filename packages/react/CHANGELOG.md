@@ -1,5 +1,16 @@
 # @wallet01/react
 
+## 0.6.0
+
+### Minor Changes
+
+- change bundling from tsup to tsc
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@0.5.0
+
 ## 0.5.4
 
 ### Patch Changes

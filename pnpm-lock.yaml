@@ -11,7 +11,7 @@ importers:
     devDependencies:
       '@changesets/cli': 2.25.2
       eslint-config-custom: link:configs/eslint
-      prettier: 2.8.1
+      prettier: 2.8.2
       turbo: 1.6.3
 
   configs/eslint:
@@ -119,7 +119,7 @@ importers:
       rimraf: ^3.0.2
       tsconfig: workspace:*
       tsup: ^6.3.0
-      typescript: ^4.8.4
+      typescript: ^4.9.3
       zustand: ^4.1.5
     dependencies:
       eventemitter3: 4.0.7
@@ -139,6 +139,7 @@ importers:
       rimraf: ^3.0.2
       tsconfig: workspace:*
       tsup: ^6.3.0
+      typescript: ^4.9.4
     dependencies:
       '@keplr-wallet/types': 0.11.17
       '@wallet01/core': link:../core
@@ -146,7 +147,8 @@ importers:
     devDependencies:
       rimraf: 3.0.2
       tsconfig: link:../../configs/tsconfig
-      tsup: 6.5.0
+      tsup: 6.5.0_typescript@4.9.4
+      typescript: 4.9.4
 
   packages/evm:
     specifiers:
@@ -160,6 +162,7 @@ importers:
       rimraf: ^3.0.2
       tsconfig: workspace:*
       tsup: ^6.3.0
+      typescript: ^4.9.4
     dependencies:
       '@coinbase/wallet-sdk': 3.6.3
       '@ethersproject/providers': 5.7.2
@@ -171,20 +174,22 @@ importers:
     devDependencies:
       rimraf: 3.0.2
       tsconfig: link:../../configs/tsconfig
-      tsup: 6.5.0
+      tsup: 6.5.0_typescript@4.9.4
+      typescript: 4.9.4
 
   packages/react:
     specifiers:
-      '@tanstack/react-query': ^4.14.5
+      '@tanstack/react-query': ^4.20.4
       '@types/react': ^18.0.25
       '@wallet01/core': workspace:*
       react: ^18.2.0
       rimraf: ^3.0.2
       tsconfig: workspace:*
       tsup: ^6.4.0
+      typescript: ^4.9.4
       zustand: ^4.1.5
     dependencies:
-      '@tanstack/react-query': 4.17.1_react@18.2.0
+      '@tanstack/react-query': 4.22.0_react@18.2.0
       '@wallet01/core': link:../core
       react: 18.2.0
       zustand: 4.1.5_react@18.2.0
@@ -192,7 +197,8 @@ importers:
       '@types/react': 18.0.25
       rimraf: 3.0.2
       tsconfig: link:../../configs/tsconfig
-      tsup: 6.5.0
+      tsup: 6.5.0_typescript@4.9.4
+      typescript: 4.9.4
 
   packages/solana:
     specifiers:
@@ -205,6 +211,7 @@ importers:
       tsconfig: workspace:*
       tsup: ^6.3.0
       tweetnacl: ^1.0.3
+      typescript: ^4.9.4
     dependencies:
       '@bonfida/spl-name-service': 0.1.55_@solana+web3.js@1.66.2
       '@keplr-wallet/types': 0.11.17
@@ -215,7 +222,8 @@ importers:
     devDependencies:
       rimraf: 3.0.2
       tsconfig: link:../../configs/tsconfig
-      tsup: 6.5.0
+      tsup: 6.5.0_typescript@4.9.4
+      typescript: 4.9.4
 
 packages:
 
@@ -609,7 +617,7 @@ packages:
       fs-extra: 7.0.1
       lodash.startcase: 4.4.0
       outdent: 0.5.0
-      prettier: 2.8.1
+      prettier: 2.8.2
       resolve-from: 5.0.0
       semver: 5.7.1
     dev: true
@@ -776,7 +784,7 @@ packages:
       '@changesets/types': 5.2.0
       fs-extra: 7.0.1
       human-id: 1.0.2
-      prettier: 2.8.1
+      prettier: 2.8.2
     dev: true
 
   /@coinbase/wallet-sdk/3.6.3:
@@ -1638,12 +1646,12 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@tanstack/query-core/4.15.1:
-    resolution: {integrity: sha512-+UfqJsNbPIVo0a9ANW0ZxtjiMfGLaaoIaL9vZeVycvmBuWywJGtSi7fgPVMCPdZQFOzMsaXaOsDtSKQD5xLRVQ==}
+  /@tanstack/query-core/4.22.0:
+    resolution: {integrity: sha512-OeLyBKBQoT265f5G9biReijeP8mBxNFwY7ZUu1dKL+YzqpG5q5z7J/N1eT8aWyKuhyDTiUHuKm5l+oIVzbtrjw==}
     dev: false
 
-  /@tanstack/react-query/4.17.1_react@18.2.0:
-    resolution: {integrity: sha512-0AAC1DerbNmmmR4EB6fkILhgTVao7nRPp8jDNHUq1m6AHaDdNV9VKy+h9fsTnBbiHBbcr3erfF//KEO3y3HojA==}
+  /@tanstack/react-query/4.22.0_react@18.2.0:
+    resolution: {integrity: sha512-P9o+HjG42uB/xHR6dMsJaPhtZydSe4v0xdG5G/cEj1oHZAXelMlm67/rYJNQGKgBamKElKogj+HYGF+NY2yHYg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
@@ -1654,7 +1662,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 4.15.1
+      '@tanstack/query-core': 4.22.0
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
@@ -5444,8 +5452,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  /prettier/2.8.1:
-    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
+  /prettier/2.8.2:
+    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -6279,41 +6287,6 @@ packages:
     resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
     dev: false
 
-  /tsup/6.5.0:
-    resolution: {integrity: sha512-36u82r7rYqRHFkD15R20Cd4ercPkbYmuvRkz3Q1LCm5BsiFNUgpo36zbjVhCOgvjyxNBWNKHsaD5Rl8SykfzNA==}
-    engines: {node: '>=14'}
-    hasBin: true
-    peerDependencies:
-      '@swc/core': ^1
-      postcss: ^8.4.12
-      typescript: ^4.1.0
-    peerDependenciesMeta:
-      '@swc/core':
-        optional: true
-      postcss:
-        optional: true
-      typescript:
-        optional: true
-    dependencies:
-      bundle-require: 3.1.2_esbuild@0.15.15
-      cac: 6.7.14
-      chokidar: 3.5.3
-      debug: 4.3.4
-      esbuild: 0.15.15
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      postcss-load-config: 3.1.4
-      resolve-from: 5.0.0
-      rollup: 3.4.0
-      source-map: 0.8.0-beta.0
-      sucrase: 3.29.0
-      tree-kill: 1.2.2
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
-    dev: true
-
   /tsup/6.5.0_typescript@4.9.3:
     resolution: {integrity: sha512-36u82r7rYqRHFkD15R20Cd4ercPkbYmuvRkz3Q1LCm5BsiFNUgpo36zbjVhCOgvjyxNBWNKHsaD5Rl8SykfzNA==}
     engines: {node: '>=14'}
@@ -6345,6 +6318,42 @@ packages:
       sucrase: 3.29.0
       tree-kill: 1.2.2
       typescript: 4.9.3
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+    dev: true
+
+  /tsup/6.5.0_typescript@4.9.4:
+    resolution: {integrity: sha512-36u82r7rYqRHFkD15R20Cd4ercPkbYmuvRkz3Q1LCm5BsiFNUgpo36zbjVhCOgvjyxNBWNKHsaD5Rl8SykfzNA==}
+    engines: {node: '>=14'}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': ^1
+      postcss: ^8.4.12
+      typescript: ^4.1.0
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      postcss:
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      bundle-require: 3.1.2_esbuild@0.15.15
+      cac: 6.7.14
+      chokidar: 3.5.3
+      debug: 4.3.4
+      esbuild: 0.15.15
+      execa: 5.1.1
+      globby: 11.1.0
+      joycon: 3.1.1
+      postcss-load-config: 3.1.4
+      resolve-from: 5.0.0
+      rollup: 3.4.0
+      source-map: 0.8.0-beta.0
+      sucrase: 3.29.0
+      tree-kill: 1.2.2
+      typescript: 4.9.4
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -6481,6 +6490,12 @@ packages:
 
   /typescript/4.9.3:
     resolution: {integrity: sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
+
+  /typescript/4.9.4:
+    resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true

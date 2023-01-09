@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 export interface SvgIcons {
   [key: string]: JSX.Element;
 }
 
 const WalletIcons: SvgIcons = {
-  Injected: (
+  injected: (
     <svg
       width="41"
       height="40"
@@ -43,7 +43,7 @@ const WalletIcons: SvgIcons = {
       </defs>
     </svg>
   ),
-  Coinbase: (
+  coinbase: (
     <svg
       width="41"
       height="40"
@@ -71,7 +71,7 @@ const WalletIcons: SvgIcons = {
       </defs>
     </svg>
   ),
-  WalletConnect: (
+  walletConnect: (
     <svg
       width="41"
       height="40"
@@ -112,7 +112,7 @@ const WalletIcons: SvgIcons = {
       </defs>
     </svg>
   ),
-  Keplr: (
+  keplr: (
     <svg
       width="41"
       height="40"
@@ -274,7 +274,7 @@ const WalletIcons: SvgIcons = {
       </defs>
     </svg>
   ),
-  Phantom: (
+  phantom: (
     <svg
       width="41"
       height="40"
@@ -313,7 +313,7 @@ const WalletIcons: SvgIcons = {
       </defs>
     </svg>
   ),
-  Filecoin: (
+  filecoin: (
     <svg
       width="40"
       height="40"
@@ -335,7 +335,7 @@ const WalletIcons: SvgIcons = {
       />
     </svg>
   ),
-  Solflare: (
+  solflare: (
     <svg
       width="50"
       height="50"

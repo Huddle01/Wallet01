@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.5.0
+
+### Minor Changes
+
+- change bundling from tsup to tsc
+
 ## 0.4.2
 
 ### Patch Changes

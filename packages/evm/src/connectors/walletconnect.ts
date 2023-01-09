@@ -6,13 +6,9 @@ import { chainData } from "../utils/chains";
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider?: EthereumProvider;
-  chain: string;
-  name: string;
 
   constructor(chain: string = "1") {
-    super(chain);
-    this.chain = chain;
-    this.name = "Walletconnect";
+    super(chain, "walletconnect");
   }
 
   async getProvider(): Promise<EthereumProvider> {

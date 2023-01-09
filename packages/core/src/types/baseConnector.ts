@@ -1,10 +1,11 @@
 export abstract class BaseConnector<Provider = any> {
-  readonly chain: string;
+  chain: string;
   readonly name: string;
   abstract provider?: Provider;
 
-  constructor(chain: string) {
+  constructor(chain: string, name: string) {
     this.chain = chain;
+    this.name = name;
   }
 
   abstract connect({

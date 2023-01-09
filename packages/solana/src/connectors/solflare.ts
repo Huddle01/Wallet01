@@ -1,9 +1,9 @@
-import { Connection, PublicKey } from '@solana/web3.js';
-import { performReverseLookup, getAllDomains } from '@bonfida/spl-name-service';
-import { BaseConnector, setLastUsedConnector } from '@wallet01/core';
+import { Connection, PublicKey } from "@solana/web3.js";
+import { performReverseLookup, getAllDomains } from "@bonfida/spl-name-service";
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 
-import { SolflareProvider } from '../providers/solflareProvider';
-import emitter from '../utils/emiter';
+import { SolflareProvider } from "../providers/solflareProvider";
+import emitter from "../utils/emiter";
 
 declare const window: {
   solflare: SolflareProvider;
@@ -11,30 +11,26 @@ declare const window: {
 
 export class SolflareConnector extends BaseConnector<SolflareProvider> {
   provider!: SolflareProvider;
-  chain: string;
-  name: string;
 
-  constructor(chain: string = '') {
-    super(chain);
-    this.chain = chain;
-    this.name = 'Solflare';
+  constructor(chain: string = "") {
+    super(chain, "solflare");
   }
 
   async getProvider(): Promise<SolflareProvider> {
     if (
-      typeof window !== 'undefined' &&
+      typeof window !== "undefined" &&
       window.solflare &&
       window.solflare.isSolflare
     ) {
       this.provider = window.solflare;
       return this.provider;
     } else {
-      throw new Error('Wallet Not Installed');
+      throw new Error("Wallet Not Installed");
     }
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) throw new Error('Provider Undefined');
+    if (!this.provider) throw new Error("Provider Undefined");
     try {
       await this.provider.connect();
       const accounts = this.provider.publicKey;
@@ -48,11 +44,11 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
   async connect({}): Promise<void> {
     try {
       const provider = await this.getProvider();
-      if (!provider) throw new Error('Solflare is not installed');
+      if (!provider) throw new Error("Solflare is not installed");
 
       if (provider.on) {
-        provider.on('accountChanged', this.onAccountsChanged);
-        provider.on('disconnect', this.onDisconnect);
+        provider.on("accountChanged", this.onAccountsChanged);
+        provider.on("disconnect", this.onDisconnect);
       }
 
       await this.provider.connect();
@@ -64,15 +60,15 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
   }
 
   async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error('No wallet Conencted');
+    if (!this.provider) throw new Error("No wallet Conencted");
     this.provider.disconnect();
-    emitter.emit('disconnected');
+    emitter.emit("disconnected");
   }
 
   async resolveDid(address: string): Promise<string | null> {
-    if (!this.provider) throw new Error('No wallet Connected');
+    if (!this.provider) throw new Error("No wallet Connected");
     const connection = new Connection(
-      'https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc'
+      "https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc"
     );
 
     try {
@@ -92,11 +88,11 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
   }
 
   async signMessage(message: string): Promise<string> {
-    if (!this.provider) throw new Error('No wallet Connected');
+    if (!this.provider) throw new Error("No wallet Connected");
     try {
       const _message = new TextEncoder().encode(message);
-      const hash = await this.provider.signMessage(_message, 'utf8');
-      return new TextDecoder('utf-8').decode(hash);
+      const hash = await this.provider.signMessage(_message, "utf8");
+      return new TextDecoder("utf-8").decode(hash);
     } catch (err) {
       console.error(err);
       throw err;
@@ -104,14 +100,14 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
   }
 
   protected onAccountsChanged(): void {
-    console.log('Account Changed');
+    console.log("Account Changed");
   }
 
   protected onChainChanged(_chain: string | number): void {
-    console.log('Chain Changed');
+    console.log("Chain Changed");
   }
 
   protected onDisconnect(): void {
-    console.log('Wallet disconnected');
+    console.log("Wallet disconnected");
   }
 }

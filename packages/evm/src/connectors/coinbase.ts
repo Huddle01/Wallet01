@@ -7,13 +7,9 @@ import { chainData } from "../utils/chains";
 
 export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   provider?: CoinbaseWalletProvider;
-  chain: string;
-  name: string;
 
   constructor(chain: string = "1") {
-    super(chain);
-    this.chain = chain;
-    this.name = "Coinbase";
+    super(chain, "coinbase");
   }
 
   async getProvider(): Promise<CoinbaseWalletProvider> {
