@@ -1,5 +1,21 @@
 # @wallet01/solana
 
+## 0.5.4
+
+### Patch Changes
+
+- change build configs
+- Updated dependencies
+  - @wallet01/core@0.5.4
+
+## 0.5.3
+
+### Patch Changes
+
+- add import in package.json
+- Updated dependencies
+  - @wallet01/core@0.5.3
+
 ## 0.5.2
 
 ### Patch Changes

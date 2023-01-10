@@ -1,9 +1,10 @@
 {
   "name": "@wallet01/core",
-  "version": "0.5.2",
+  "version": "0.5.4",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "import": "dist/index.js",
   "type": "module",
   "scripts": {
     "clean": "rimraf dist/",
