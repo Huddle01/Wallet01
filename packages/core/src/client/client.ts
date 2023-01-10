@@ -1,3 +1,4 @@
+import { store, autoConnectAtom, lastUsedConnectorAtom } from "../store/atoms";
 import { BaseConnector } from "../types";
 import { Wallet01Store } from "./store";
 
@@ -12,6 +13,11 @@ export default class Client extends Wallet01Store {
 
   constructor({ autoConnect, connectors }: ClientConfig) {
     super();
+
+    // Need to subscribe to get value from storage
+    store.sub(autoConnectAtom, () => {});
+    store.sub(lastUsedConnectorAtom, () => {});
+
     this.setAutoConnect(autoConnect || false);
     this.setConnectors(connectors);
 
