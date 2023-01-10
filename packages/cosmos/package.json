@@ -1,8 +1,8 @@
 {
   "name": "@wallet01/cosmos",
-  "version": "0.5.1",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "version": "0.5.2",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
     "clean": "rimraf dist/",

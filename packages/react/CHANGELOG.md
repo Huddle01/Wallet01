@@ -1,5 +1,13 @@
 # @wallet01/react
 
+## 0.6.3
+
+### Patch Changes
+
+- update main and types in package.json
+- Updated dependencies
+  - @wallet01/core@0.5.2
+
 ## 0.6.2
 
 ### Patch Changes
