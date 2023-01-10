@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.6.1
+
+### Patch Changes
+
+- fix exports for react package
+
 ## 0.6.0
 
 ### Minor Changes
