@@ -1,5 +1,13 @@
 # @wallet01/evm
 
+## 0.7.1
+
+### Patch Changes
+
+- remove tsup as dependency
+- Updated dependencies
+  - @wallet01/core@0.5.1
+
 ## 0.7.0
 
 ### Minor Changes

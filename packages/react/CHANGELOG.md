@@ -1,5 +1,13 @@
 # @wallet01/react
 
+## 0.6.2
+
+### Patch Changes
+
+- remove tsup as dependency
+- Updated dependencies
+  - @wallet01/core@0.5.1
+
 ## 0.6.1
 
 ### Patch Changes
