@@ -1,6 +1,7 @@
-import { autoConnectAtom, lastUsedConnectorAtom, store } from "../store/atoms";
+// import { autoConnectAtom, lastUsedConnectorAtom, store } from "../store/atoms";
 import getState from "../store/rootStore";
 import { BaseConnector } from "../types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export class Wallet01Store {
   getAddress(): string | null {
@@ -76,6 +77,7 @@ export class Wallet01Store {
   setLastUsedConnector(connector: BaseConnector | null): void {
     const { setLastUsedConnector } = getState();
     setLastUsedConnector(connector);
+    AsyncStorage.setItem("lastUsedConnector", connector?.name ?? "");
   }
 
   setIsAutoConnecting(val: boolean): void {
@@ -83,15 +85,15 @@ export class Wallet01Store {
     setIsAutoConnecting(val);
   }
 
-  getAutoConnect(): boolean {
-    return store.get(autoConnectAtom);
+  getAutoConnect() {
+    return AsyncStorage.getItem("autoConnect");
   }
 
   setAutoConnect(val: boolean): void {
-    store.set(autoConnectAtom, val);
+    AsyncStorage.setItem("autoConnect", String(val));
   }
 
   getLastConnName() {
-    return store.get(lastUsedConnectorAtom);
+    return AsyncStorage.getItem("lastUsedConnector");
   }
 }
