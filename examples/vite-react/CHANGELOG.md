@@ -1,5 +1,29 @@
 # vite-react
 
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/evm@0.7.7
+
+## 0.0.23
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/evm@0.7.6
+
+## 0.0.22
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/cosmos@0.5.5
+  - @wallet01/evm@0.7.5
+  - @wallet01/react@0.6.6
+  - @wallet01/solana@0.5.5
+
 ## 0.0.21
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @wallet01/react
 
+## 0.6.6
+
+### Patch Changes
+
+- bundle packages using tsup
+- Updated dependencies
+  - @wallet01/core@0.5.5
+
 ## 0.6.5
 
 ### Patch Changes

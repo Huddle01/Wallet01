@@ -1,5 +1,30 @@
 # example
 
+## 0.1.24
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/evm@0.7.7
+
+## 0.1.23
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/evm@0.7.6
+
+## 0.1.22
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@0.5.5
+  - @wallet01/cosmos@0.5.5
+  - @wallet01/evm@0.7.5
+  - @wallet01/react@0.6.6
+  - @wallet01/solana@0.5.5
+
 ## 0.1.21
 
 ### Patch Changes

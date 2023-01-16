@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.5.5
+
+### Patch Changes
+
+- bundle packages using tsup
+
 ## 0.5.4
 
 ### Patch Changes

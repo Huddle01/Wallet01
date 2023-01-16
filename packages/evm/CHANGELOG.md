@@ -1,5 +1,25 @@
 # @wallet01/evm
 
+## 0.7.7
+
+### Patch Changes
+
+- fix injected connector name casing
+
+## 0.7.6
+
+### Patch Changes
+
+- change injected connector name
+
+## 0.7.5
+
+### Patch Changes
+
+- bundle packages using tsup
+- Updated dependencies
+  - @wallet01/core@0.5.5
+
 ## 0.7.4
 
 ### Patch Changes
