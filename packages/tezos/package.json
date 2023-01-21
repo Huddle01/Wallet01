@@ -8,11 +8,11 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "pnpm clean && tsc",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration",
     "dev": "pnpm build --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "thevatsal.eth",
   "dependencies": {
     "@wallet01/core": "workspace:*"
   },
@@ -20,6 +20,7 @@
     "@airgap/beacon-sdk": "^3.3.2",
     "@taquito/utils": "^15.1.0",
     "rimraf": "^3.0.2",
+    "tsup": "^6.5.0",
     "tsconfig": "workspace:*",
     "typescript": "^4.9.4"
   }
