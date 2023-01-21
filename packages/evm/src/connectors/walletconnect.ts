@@ -102,7 +102,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
       return name;
     } catch (error) {
       console.error(error);
-      throw error;
+      return null;
     }
   }
 

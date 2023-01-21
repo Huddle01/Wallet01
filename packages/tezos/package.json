@@ -1,0 +1,26 @@
+{
+  "name": "@wallet01/tezos",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "pnpm clean && tsc",
+    "dev": "pnpm build --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "@wallet01/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@airgap/beacon-sdk": "^3.3.2",
+    "@taquito/utils": "^15.1.0",
+    "rimraf": "^3.0.2",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.9.4"
+  }
+}

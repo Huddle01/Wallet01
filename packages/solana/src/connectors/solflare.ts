@@ -83,7 +83,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
       return allDomainNames[0];
     } catch (error) {
       console.error(error);
-      throw error;
+      return null;
     }
   }
 
