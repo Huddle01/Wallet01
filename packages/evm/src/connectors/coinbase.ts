@@ -9,7 +9,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   provider?: CoinbaseWalletProvider;
 
   constructor(chain: string = "1") {
-    super(chain, "coinbase");
+    super(chain, "coinbase", "ethereum");
   }
 
   async getProvider(): Promise<CoinbaseWalletProvider> {

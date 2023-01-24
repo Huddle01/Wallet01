@@ -1,4 +1,4 @@
-import { BaseConnector } from "@wallet01/core";
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 
 import { TempleDAppNetwork, TempleWallet } from "@temple-wallet/dapp";
 import { formatMessage } from "../utils/formatMessage";
@@ -6,8 +6,8 @@ import { formatMessage } from "../utils/formatMessage";
 export default class TempleConnector extends BaseConnector<TempleWallet> {
   provider?: TempleWallet | undefined;
 
-  constructor(chain: string = "") {
-    super(chain, "TempleWallet");
+  constructor(chain: string = "mainnet") {
+    super(chain, "TempleWallet", "tezos");
   }
 
   async getProvider(): Promise<TempleWallet> {
@@ -67,6 +67,7 @@ export default class TempleConnector extends BaseConnector<TempleWallet> {
 
       await this.provider.connect((chainId as TempleDAppNetwork) || "mainnet");
       this.chain = chainId || "mainnet";
+      setLastUsedConnector(this.name);
     } catch (error) {
       console.error({ error }, "connect");
       throw error;

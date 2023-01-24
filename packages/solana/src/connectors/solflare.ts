@@ -13,7 +13,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
   provider!: SolflareProvider;
 
   constructor(chain: string = "") {
-    super(chain, "solflare");
+    super(chain, "solflare", "solana");
   }
 
   async getProvider(): Promise<SolflareProvider> {

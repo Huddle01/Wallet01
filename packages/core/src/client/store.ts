@@ -1,7 +1,12 @@
-import getState from '../store/rootStore';
-import { BaseConnector } from '../types';
+import getState from "../store/rootStore";
+import { BaseConnector } from "../types";
 
 export class Wallet01Store {
+  getActiveChain(): "ethereum" | "solana" | "cosmos" | "tezos" | null {
+    const { activeChain } = getState();
+    return activeChain;
+  }
+
   getAddress(): string | null {
     const { address } = getState();
     return address;
@@ -45,6 +50,13 @@ export class Wallet01Store {
   getIsAutoConnecting(): boolean {
     const { isAutoConnecting } = getState();
     return isAutoConnecting;
+  }
+
+  setActiveChain(
+    activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | null
+  ): void {
+    const { setActiveChain } = getState();
+    setActiveChain(activeChain);
   }
 
   setAddress(address: string | null): void {

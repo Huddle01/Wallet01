@@ -1,4 +1,4 @@
-import { BaseConnector } from '../types';
+import { BaseConnector } from "../types";
 
 export interface IAccountState {
   address: string | null;
@@ -15,11 +15,15 @@ export interface IWalletState {
 }
 
 export interface IClientState {
+  activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | null;
   autoConnect: boolean;
   connectors: BaseConnector[];
   activeConnector: BaseConnector | null;
   lastUsedConnector: BaseConnector | null;
   isAutoConnecting: boolean;
+  setActiveChain: (
+    val: "ethereum" | "solana" | "cosmos" | "tezos" | null
+  ) => void;
   setAutoConnect: (val: boolean) => void;
   setConnectors: (connectors: BaseConnector[]) => void;
   setActiveConnector: (connector: BaseConnector | null) => void;

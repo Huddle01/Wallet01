@@ -9,7 +9,7 @@ export class FilecoinConnector extends BaseConnector<Web3Provider> {
   provider?: Web3Provider;
 
   constructor(chain: string = "3141") {
-    super(chain, "filecoin");
+    super(chain, "filecoin", "ethereum");
     this.getProvider();
   }
 

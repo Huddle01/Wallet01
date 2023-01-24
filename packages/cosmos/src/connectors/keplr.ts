@@ -9,7 +9,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
   provider!: KeplrProvider;
 
   constructor(chain: string = "secret-4") {
-    super(chain, "keplr");
+    super(chain, "keplr", "cosmos");
   }
 
   async getProvider(): Promise<KeplrProvider> {

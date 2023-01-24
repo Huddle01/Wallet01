@@ -1,4 +1,4 @@
-import { useConnect, useMessage, useSwitch, useWallet } from "@wallet01/react";
+import { useClient, useMessage, useSwitch, useWallet } from "@wallet01/react";
 import React, { useState } from "react";
 import WalletIcons from "./assets/WalletIcons";
 
@@ -8,6 +8,7 @@ const ConnectedModal = () => {
   const { did, activeConnector, address, disconnect } = useWallet();
   const { signMessage, hash } = useMessage();
   const { switchChain } = useSwitch();
+  const { activeChain } = useClient();
 
   return (
     <div className="flex flex-col">
@@ -17,6 +18,11 @@ const ConnectedModal = () => {
       </span>
       <div className="grid grid-cols-2 mt-5 justify-center items-center gap-8 border border-slate-600 bg-slate-700 p-4 rounded-lg m-10">
         <div className="flex flex-col p-6 gap-4 max-w-full">
+          {activeChain ? (
+            <span className="text-xl font-base">
+              Connected to {activeChain}
+            </span>
+          ) : null}
           {did ? (
             <span className="text-xl font-base">
               Hello, <b className="underline underline-offset-1">{did}</b>

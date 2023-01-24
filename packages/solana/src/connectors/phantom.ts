@@ -15,7 +15,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
   provider!: PhantomProvider;
 
   constructor(chain: string = "") {
-    super(chain, "phantom");
+    super(chain, "phantom", "solana");
   }
 
   async getProvider(): Promise<PhantomProvider> {

@@ -58,17 +58,14 @@ export default class Client extends Wallet01Store {
       if (!address) return;
 
       this.setAddress(address);
-      try {
-        this.setDid(await this.activeConnector.resolveDid(address));
-      } catch (error) {
-        console.error(error);
-        this.setDid(null);
-      }
+
+      this.setDid(await this.activeConnector.resolveDid(address));
 
       this.activeConnector.getChainId
         ? this.setChainId(await this.activeConnector.getChainId())
         : this.setChainId(null);
 
+      this.setActiveChain(this.activeConnector.activeChain);
       this.setIsAutoConnecting(false);
       this.setIsConnected(true);
     }
