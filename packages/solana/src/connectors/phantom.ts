@@ -84,7 +84,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
       return allDomainNames[0];
     } catch (error) {
       console.error(error);
-      return null;
+      throw error;
     }
   }
 

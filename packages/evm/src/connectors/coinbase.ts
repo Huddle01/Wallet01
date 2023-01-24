@@ -107,7 +107,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
       return name;
     } catch (error) {
       console.error(error);
-      return null;
+      throw error;
     }
   }
 

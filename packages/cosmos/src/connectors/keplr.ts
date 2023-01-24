@@ -68,7 +68,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
 
   async resolveDid(_address: string): Promise<string | null> {
     console.error("Cosmos Ecosystem doesn't support DIDs as of now");
-    return null;
+    throw new Error("Cosmos Ecosystem doesn't support DIDs as of now");
   }
 
   async signMessage(message: string): Promise<string> {

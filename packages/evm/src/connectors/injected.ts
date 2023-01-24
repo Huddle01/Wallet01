@@ -104,7 +104,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       return name;
     } catch (error) {
       console.error(error);
-      return null;
+      throw error;
     }
   }
 

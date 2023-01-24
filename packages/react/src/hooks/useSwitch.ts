@@ -43,9 +43,9 @@ export const useSwitch = () => {
       if (!address) throw new Error("No account found");
 
       setAddress(address);
-      if (chainId === "1") {
-        setDid(address ? await activeConnector.resolveDid(address) : null);
-      }
+
+      setDid(address ? await activeConnector.resolveDid(address) : null);
+
       setIsConnected(true);
 
       return address;
