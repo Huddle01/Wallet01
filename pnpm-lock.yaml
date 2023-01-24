@@ -230,7 +230,9 @@ importers:
   packages/tezos:
     specifiers:
       '@airgap/beacon-sdk': ^3.3.2
+      '@taquito/taquito': ^15.1.0
       '@taquito/utils': ^15.1.0
+      '@temple-wallet/dapp': ^7.0.0
       '@wallet01/core': workspace:*
       rimraf: ^3.0.2
       tsconfig: workspace:*
@@ -240,7 +242,9 @@ importers:
       '@wallet01/core': link:../core
     devDependencies:
       '@airgap/beacon-sdk': 3.3.2
+      '@taquito/taquito': 15.1.0
       '@taquito/utils': 15.1.0
+      '@temple-wallet/dapp': 7.0.0_@taquito+taquito@15.1.0
       rimraf: 3.0.2
       tsconfig: link:../../configs/tsconfig
       tsup: 6.5.0_typescript@4.9.4
@@ -1913,6 +1917,69 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
+  /@taquito/http-utils/15.1.0:
+    resolution: {integrity: sha512-Uug5hN0XvMlFFN+rxSMW+Y9Z8pw5uqHRDZC83eLOBSijbpMo+ScG/2nKkC8MUUrqLaLeHru1HD4kT5DHc1fI+A==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      '@vespaiach/axios-fetch-adapter': github.com/ecadlabs/axios-fetch-adapter/05cf8ba547aae387933939850231e8abaf323efe_axios@0.26.1
+      axios: 0.26.1
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
+  /@taquito/local-forging/15.1.0:
+    resolution: {integrity: sha512-ib/2RqtxQQC9SjyTB9T5OSc5yUx9GUSdMOA4dmtiiFcN2+AG+aw7ixn6Hjt9Td8ZIOPt9H6HkyTypKrX7+cENw==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      '@taquito/utils': 15.1.0
+      bignumber.js: 9.1.1
+    dev: true
+
+  /@taquito/michel-codec/15.1.0:
+    resolution: {integrity: sha512-wKucIhs7vhaq5H+YSF2f6Qu9+g+QiEL6MPc5ROpxBrXJTeKSwBOEIpfqcKfkfMuecJyHZJW3glNfkpAVTCgkxg==}
+    engines: {node: '>=6.0.0'}
+    dev: true
+
+  /@taquito/michelson-encoder/15.1.0:
+    resolution: {integrity: sha512-uQMEu3g+8WcYb5ZV6+XGvoWJhKoNxU0F2RqodLJB7UxQ1rI/OMa+VlxSLMt4niIxpKXqnO9j4tD7Y4mPC3ufaA==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      '@taquito/rpc': 15.1.0
+      '@taquito/utils': 15.1.0
+      bignumber.js: 9.1.1
+      fast-json-stable-stringify: 2.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
+  /@taquito/rpc/15.1.0:
+    resolution: {integrity: sha512-OeQA8QwT+s6IUmLaF5yeWruPYzWi/DVCA3kl+AaQ8IFfCMzmAW/MszbbNkJSzHpY2p4jPBwdRNxg3qeJdL482A==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      '@taquito/http-utils': 15.1.0
+      '@taquito/utils': 15.1.0
+      bignumber.js: 9.1.1
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
+  /@taquito/taquito/15.1.0:
+    resolution: {integrity: sha512-2AXWeNoXsmMOSkJVXtXjOlJkS+hKXITaSybMA6nJuS1YWY4e7iAr678Y6UgVEHRJxeGohX4R4Ww12Ymr3Sfedg==}
+    engines: {node: '>=6.0.0'}
+    requiresBuild: true
+    dependencies:
+      '@taquito/http-utils': 15.1.0
+      '@taquito/local-forging': 15.1.0
+      '@taquito/michel-codec': 15.1.0
+      '@taquito/michelson-encoder': 15.1.0
+      '@taquito/rpc': 15.1.0
+      '@taquito/utils': 15.1.0
+      bignumber.js: 9.1.1
+      rxjs: 6.6.7
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   /@taquito/utils/15.1.0:
     resolution: {integrity: sha512-lqVThoFMmOKPg9jyREr4A63cpeckf5esCwOyOAW3sm+yCxD9s5khnBPtH8s52cRVnChFdwk/eqmADka9gat5hw==}
     engines: {node: '>=6.0.0'}
@@ -1926,6 +1993,15 @@ packages:
       buffer: 6.0.3
       elliptic: 6.5.4
       typedarray-to-buffer: 4.0.0
+    dev: true
+
+  /@temple-wallet/dapp/7.0.0_@taquito+taquito@15.1.0:
+    resolution: {integrity: sha512-JbpXompkVDh4Wl0Oa+i8iKEGinFqYPTM4uuqw8eBH57vHxq52W5K3NSgVaKjfyWms9UYQ8xOfsUOzzUVWSYtxA==}
+    peerDependencies:
+      '@taquito/taquito': ^12.0.0
+    dependencies:
+      '@taquito/taquito': 15.1.0
+      nanoid: 3.3.4
     dev: true
 
   /@types/bn.js/4.11.6:
@@ -2584,6 +2660,14 @@ packages:
 
   /axios/0.24.0:
     resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
+  /axios/0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
       follow-redirects: 1.15.2
     transitivePeerDependencies:
@@ -6056,7 +6140,6 @@ packages:
     engines: {npm: '>=2.0.0'}
     dependencies:
       tslib: 1.14.1
-    dev: false
 
   /safe-buffer/5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
@@ -7194,6 +7277,17 @@ packages:
       react: 18.2.0
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
+
+  github.com/ecadlabs/axios-fetch-adapter/05cf8ba547aae387933939850231e8abaf323efe_axios@0.26.1:
+    resolution: {tarball: https://codeload.github.com/ecadlabs/axios-fetch-adapter/tar.gz/05cf8ba547aae387933939850231e8abaf323efe}
+    id: github.com/ecadlabs/axios-fetch-adapter/05cf8ba547aae387933939850231e8abaf323efe
+    name: '@vespaiach/axios-fetch-adapter'
+    version: 0.3.1
+    peerDependencies:
+      axios: '>=0.26.0'
+    dependencies:
+      axios: 0.26.1
+    dev: true
 
   github.com/ethereumjs/ethereumjs-abi/ee3994657fa7a427238e6ba92a84d0b529bbcde0:
     resolution: {tarball: https://codeload.github.com/ethereumjs/ethereumjs-abi/tar.gz/ee3994657fa7a427238e6ba92a84d0b529bbcde0}

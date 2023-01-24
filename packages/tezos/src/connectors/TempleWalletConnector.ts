@@ -1,19 +1,18 @@
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
-import { DAppClient, PermissionScope, SigningType } from "@airgap/beacon-sdk";
+import { BaseConnector } from "@wallet01/core";
 
-import { isNetwork } from "../utils/isNetwork";
+import { TempleDAppNetwork, TempleWallet } from "@temple-wallet/dapp";
 import { formatMessage } from "../utils/formatMessage";
 
-export default class TempleConnector extends BaseConnector<DAppClient> {
-  provider?: DAppClient | undefined;
+export default class TempleWalletConenctor extends BaseConnector<TempleWallet> {
+  provider?: TempleWallet | undefined;
 
   constructor(chain: string = "") {
-    super(chain, "Temple");
+    super(chain, "TempleWallet");
   }
 
-  async getProvider(): Promise<DAppClient> {
+  async getProvider(): Promise<TempleWallet> {
     try {
-      const provider = new DAppClient({ name: "Wallet01" });
+      const provider = new TempleWallet("Wallet01");
       this.provider = provider;
       return this.provider;
     } catch (error) {
@@ -26,11 +25,11 @@ export default class TempleConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      const account = await this.provider.getActiveAccount();
+      const account = await this.provider.getPKH();
       if (!account) {
         throw new Error("Wallet Not Conencted");
       }
-      return [account.publicKey];
+      return [account];
     } catch (error) {
       console.error({ error }, "getAccount");
       throw error;
@@ -53,7 +52,7 @@ export default class TempleConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      await this.connect({ chainId });
+      await this.provider.reconnect(chainId as TempleDAppNetwork);
       this.chain = chainId;
     } catch (error) {
       console.error({ error }, "switchChain");
@@ -64,17 +63,10 @@ export default class TempleConnector extends BaseConnector<DAppClient> {
   async connect({ chainId }: { chainId?: string | undefined }): Promise<void> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("Provider Undefined");
+      if (!this.provider) throw new Error("Wallet Not Installed");
 
-      const result = await this.provider.requestPermissions(
-        isNetwork(chainId)
-          ? { network: { type: chainId }, scopes: [PermissionScope.SIGN] }
-          : { scopes: [PermissionScope.SIGN] }
-      );
-
-      this.chain = result.network.type;
-
-      setLastUsedConnector(this.name);
+      await this.provider.connect((chainId as TempleDAppNetwork) || "mainnet");
+      this.chain = chainId || "mainnet";
     } catch (error) {
       console.error({ error }, "connect");
       throw error;
@@ -84,10 +76,11 @@ export default class TempleConnector extends BaseConnector<DAppClient> {
   async disconnect(): Promise<void> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("Wallet Not Connected");
-      await this.provider.clearActiveAccount();
+      if (!this.provider) throw new Error("Wallet Not Installed");
+      this.provider = undefined;
+      this.chain = "";
     } catch (error) {
-      console.error({ error });
+      console.error({ error }, "disconnect");
       throw error;
     }
   }
@@ -109,12 +102,10 @@ export default class TempleConnector extends BaseConnector<DAppClient> {
   }
 
   async signMessage(message: string): Promise<string> {
+    if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Connected");
-      const { signature } = await this.provider.requestSignPayload({
-        signingType: SigningType.MICHELINE,
-        payload: formatMessage(message),
-      });
+      const signature = await this.provider.sign(formatMessage(message));
       return signature;
     } catch (error) {
       console.error({ error }, "signMessage");
