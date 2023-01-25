@@ -7,7 +7,7 @@ export default class TempleConnector extends BaseConnector<TempleWallet> {
   provider?: TempleWallet | undefined;
 
   constructor(chain: string = "mainnet") {
-    super(chain, "TempleWallet", "tezos");
+    super(chain, "templewallet", "tezos");
   }
 
   async getProvider(): Promise<TempleWallet> {
