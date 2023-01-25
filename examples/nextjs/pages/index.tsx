@@ -1,7 +1,7 @@
-import { useClient, useWallet } from '@wallet01/react';
-import ConnectButtons from '../components/ConnectButtons';
-import ConnectedModal from '../components/ConnectedModal';
-import Nav from '../components/nav';
+import { useClient, useWallet } from "@wallet01/react";
+import ConnectButtons from "../components/ConnectButtons";
+import ConnectedModal from "../components/ConnectedModal";
+import Nav from "../components/nav";
 
 interface SVGIcons {
   [key: string]: JSX.Element;

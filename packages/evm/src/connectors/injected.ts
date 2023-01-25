@@ -11,14 +11,17 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
   provider?: Web3Provider;
 
   constructor(chain: string = "1") {
-    super(chain, "injected");
+    super(chain, "injected", "ethereum");
   }
 
   async getProvider() {
     try {
       const provider = await detectEthereumProvider();
 
-      const _provider = new Web3Provider(<ExternalProvider>(<unknown>provider));
+      const _provider = new Web3Provider(
+        <ExternalProvider>(<unknown>provider),
+        "any"
+      );
       this.provider = _provider;
       return this.provider;
     } catch (error) {
@@ -41,9 +44,11 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
 
   async getChainId(): Promise<string> {
     if (this.provider) {
-      const { result } = await this.provider?.send("eth_chainId", []);
-      this.chain = result;
-      return result;
+      const chainId = await (
+        await this.provider.getNetwork()
+      ).chainId.toString();
+      this.chain = chainId;
+      return chainId;
     }
     return "";
   }
@@ -103,7 +108,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       const name = await provider.lookupAddress(address);
       return name;
     } catch (error) {
-      console.error(error);
+      console.error({ error }, "resolveDid");
       throw error;
     }
   }

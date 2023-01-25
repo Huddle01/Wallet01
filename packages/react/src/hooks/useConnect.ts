@@ -22,6 +22,7 @@ export const useConnect = ({
     setAddress,
     setDid,
     setChainId,
+    setActiveChain,
   } = useStore();
 
   const { mutate, mutateAsync, isLoading, isError, error } = useMutation<
@@ -51,6 +52,7 @@ export const useConnect = ({
 
       setAddress(account);
 
+      setActiveChain(connector.activeChain);
       setIsConnected(true);
 
       setDid(await connector.resolveDid(account));

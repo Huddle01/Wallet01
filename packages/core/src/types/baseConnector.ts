@@ -1,11 +1,17 @@
 export abstract class BaseConnector<Provider = any> {
   chain: string;
   readonly name: string;
+  readonly activeChain: "ethereum" | "solana" | "cosmos" | "tezos";
   abstract provider?: Provider;
 
-  constructor(chain: string, name: string) {
+  constructor(
+    chain: string,
+    name: string,
+    activeChain: "ethereum" | "solana" | "cosmos" | "tezos"
+  ) {
     this.chain = chain;
     this.name = name;
+    this.activeChain = activeChain;
   }
 
   abstract connect({

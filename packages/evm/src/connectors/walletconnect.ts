@@ -8,7 +8,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider?: EthereumProvider;
 
   constructor(chain: string = "1") {
-    super(chain, "walletconnect");
+    super(chain, "walletconnect", "ethereum");
   }
 
   async getProvider(): Promise<EthereumProvider> {

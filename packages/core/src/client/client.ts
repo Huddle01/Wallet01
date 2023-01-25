@@ -50,7 +50,7 @@ export default class Client extends Wallet01Store {
     this.activeConnector = this.getLastUsedConnector();
 
     if (this.activeConnector) {
-      this.activeConnector.connect({});
+      await this.activeConnector.connect({});
       const addresses = await this.activeConnector.getAccount();
 
       const address = addresses[0];
@@ -58,20 +58,14 @@ export default class Client extends Wallet01Store {
       if (!address) return;
 
       this.setAddress(address);
-      try {
-        if (
-          this.activeConnector.getChainId &&
-          (await this.activeConnector.getChainId()) === "1"
-        )
-          this.setDid(await this.activeConnector.resolveDid(address));
-      } catch (error) {
-        console.error(error);
-      }
+
+      this.setDid(await this.activeConnector.resolveDid(address));
 
       this.activeConnector.getChainId
         ? this.setChainId(await this.activeConnector.getChainId())
         : this.setChainId(null);
 
+      this.setActiveChain(this.activeConnector.activeChain);
       this.setIsAutoConnecting(false);
       this.setIsConnected(true);
     }

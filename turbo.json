@@ -14,12 +14,16 @@
     "@wallet01/evm#build": {
       "dependsOn": ["@wallet01/core#build"]
     },
+    "@wallet01/tezos#build": {
+      "dependsOn": ["@wallet01/core#build"]
+    },
     "@wallet01/react#build": {
       "dependsOn": [
         "@wallet01/core#build",
         "@wallet01/evm#build",
         "@wallet01/cosmos#build",
-        "@wallet01/solana#build"
+        "@wallet01/solana#build",
+        "@wallet01/tezos#build"
       ],
       "outputs": []
     },
