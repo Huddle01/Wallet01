@@ -1,5 +1,16 @@
 # @wallet01/react
 
+## 0.7.0
+
+### Minor Changes
+
+- added package for tezos
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@0.6.0
+
 ## 0.6.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.6.0
+
+### Minor Changes
+
+- added package for tezos
+
 ## 0.5.5
 
 ### Patch Changes
