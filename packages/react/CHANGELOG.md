@@ -1,5 +1,17 @@
 # @wallet01/react
 
+## 0.7.2
+
+### Patch Changes
+
+- update builds
+
+## 0.7.1
+
+### Patch Changes
+
+- return active chain when connection to wallet
+
 ## 0.7.0
 
 ### Minor Changes
