@@ -7,8 +7,9 @@ type ConnectArgs = {
 };
 
 type ConnectResult = {
-  account: string;
-  activeChain: "ethereum" | "solana" | "cosmos" | "tezos";
+  address: string;
+  chain: "ethereum" | "solana" | "cosmos" | "tezos";
+  connector: BaseConnector;
 };
 
 type UseConenctConfig = {
@@ -51,24 +52,25 @@ export const useConnect = ({
         await connector.connect({});
       }
 
-      const account = (await connector.getAccount())[0];
-      const activeChain = connector.activeChain;
+      const address = (await connector.getAccount())[0];
+      const chain = connector.activeChain;
 
-      if (!account) throw new Error("No account found");
+      if (!address) throw new Error("No account found");
 
-      setAddress(account);
+      setAddress(address);
 
       setActiveChain(connector.activeChain);
       setIsConnected(true);
 
-      setDid(await connector.resolveDid(account));
+      setDid(await connector.resolveDid(address));
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
       }
 
       return {
-        account,
-        activeChain,
+        address,
+        chain,
+        connector,
       };
     },
     onError,
