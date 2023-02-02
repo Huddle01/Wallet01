@@ -1,5 +1,19 @@
 # vite-react
 
+## 0.0.29
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@0.7.4
+
+## 0.0.28
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@0.7.3
+
 ## 0.0.27
 
 ### Patch Changes
