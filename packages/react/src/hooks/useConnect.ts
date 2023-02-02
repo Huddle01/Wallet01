@@ -6,9 +6,14 @@ type ConnectArgs = {
   chainId?: string;
 };
 
+type ConnectResult = {
+  account: string;
+  activeChain: "ethereum" | "solana" | "cosmos" | "tezos";
+};
+
 type UseConenctConfig = {
   onError?: UseMutationOptions<void, Error, unknown>["onError"];
-  onSuccess?: UseMutationOptions<string, Error, unknown>["onSuccess"];
+  onSuccess?: UseMutationOptions<ConnectResult, Error, unknown>["onSuccess"];
 };
 
 export const useConnect = ({
@@ -26,7 +31,7 @@ export const useConnect = ({
   } = useStore();
 
   const { mutate, mutateAsync, isLoading, isError, error } = useMutation<
-    string,
+    ConnectResult,
     Error,
     ConnectArgs,
     unknown
@@ -47,6 +52,7 @@ export const useConnect = ({
       }
 
       const account = (await connector.getAccount())[0];
+      const activeChain = connector.activeChain;
 
       if (!account) throw new Error("No account found");
 
@@ -60,7 +66,10 @@ export const useConnect = ({
         setChainId(await connector.getChainId());
       }
 
-      return account;
+      return {
+        account,
+        activeChain,
+      };
     },
     onError,
     onSuccess,
