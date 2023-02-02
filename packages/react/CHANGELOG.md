@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.7.3
+
+### Patch Changes
+
+- Returning the Connector from the connect function
+
 ## 0.7.2
 
 ### Patch Changes
