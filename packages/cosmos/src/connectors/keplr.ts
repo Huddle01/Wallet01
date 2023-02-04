@@ -28,7 +28,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
       const { bech32Address } = await this.provider.getKey(this.chain);
       return [bech32Address];
     } catch (error) {
-      console.error(error);
+      console.error({ error });
       throw new Error("Error in getting accounts");
     }
   }
@@ -54,6 +54,7 @@ export class KeplrConnector extends BaseConnector<KeplrProvider> {
       if (!provider) throw new Error("Keplr not installed");
 
       await this.provider.enable(chainId);
+      this.chain = chainId;
       setLastUsedConnector(this.name);
     } catch (error) {
       console.error(error);
