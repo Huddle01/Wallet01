@@ -62,7 +62,12 @@ export const useConnect = ({
       setActiveChain(connector.activeChain);
       setIsConnected(true);
 
-      setDid(await connector.resolveDid(address));
+      setDid(
+        await connector.resolveDid(address).catch(error => {
+          console.error({ error });
+          return null;
+        })
+      );
       if (connector.getChainId) {
         setChainId(await connector.getChainId());
       }

@@ -1,5 +1,11 @@
 # @wallet01/cosmos
 
+## 0.7.0
+
+### Minor Changes
+
+- Patch fixing DID error handling and Keplr Account fetching
+
 ## 0.6.0
 
 ### Minor Changes
