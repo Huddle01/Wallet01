@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.8.0
+
+### Minor Changes
+
+- Patch fixing DID error handling and Keplr Account fetching
+
 ## 0.7.4
 
 ### Patch Changes
