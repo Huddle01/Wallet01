@@ -14,8 +14,14 @@ interface ChainSwitchArgs {
 }
 
 export const useSwitch = () => {
-  const { connectors, activeConnector, setAddress, setIsConnected, setDid } =
-    useStore();
+  const {
+    connectors,
+    activeConnector,
+    setAddress,
+    setIsConnected,
+    setDid,
+    setChainId,
+  } = useStore();
 
   const { isLoading, isError, error, mutate, mutateAsync } = useMutation<
     string,
@@ -44,8 +50,22 @@ export const useSwitch = () => {
 
       setAddress(address);
 
-      setDid(address ? await activeConnector.resolveDid(address) : null);
-
+      setDid(
+        address
+          ? await activeConnector.resolveDid(address).catch(error => {
+              console.error({ error });
+              return null;
+            })
+          : null
+      );
+      setChainId(
+        activeConnector.getChainId
+          ? await activeConnector.getChainId().catch(error => {
+              console.error({ error });
+              return null;
+            })
+          : null
+      );
       setIsConnected(true);
 
       return address;
