@@ -1,5 +1,11 @@
 # @wallet01/cosmos
 
+## 0.7.0
+
+### Minor Changes
+
+- Error handling for resolve DID functions
+
 ## 0.6.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.8.0
+
+### Minor Changes
+
+- Error handling for resolve DID functions
+
 ## 0.7.3
 
 ### Patch Changes

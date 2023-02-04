@@ -1,5 +1,13 @@
 # example
 
+## 0.1.29
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/cosmos@0.7.0
+  - @wallet01/react@0.8.0
+
 ## 0.1.28
 
 ### Patch Changes
