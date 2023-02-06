@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.6.1
+
+### Patch Changes
+
+- DID Errors while autoConnecting
+
 ## 0.6.0
 
 ### Minor Changes

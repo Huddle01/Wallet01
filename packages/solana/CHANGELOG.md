@@ -1,5 +1,12 @@
 # @wallet01/solana
 
+## 0.6.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@0.6.1
+
 ## 0.6.0
 
 ### Minor Changes
