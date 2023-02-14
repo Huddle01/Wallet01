@@ -12,7 +12,7 @@ const createClientSlice: StateCreator<
   connectors: [],
   activeConnector: null,
   lastUsedConnector: null,
-  isAutoConnecting: false,
+  isAutoConnecting: true,
   setActiveChain: activeChain => {
     set(() => ({ activeChain }));
   },
