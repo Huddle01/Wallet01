@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.6.4
+
+### Patch Changes
+
+- State logic for autoconnection
+
 ## 0.6.3
 
 ### Patch Changes

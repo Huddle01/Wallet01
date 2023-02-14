@@ -44,8 +44,10 @@ export default class Client extends Wallet01Store {
         conn => conn.name === lastConnName
       );
 
-      if (!connector) return;
-      else this.setLastUsedConnector(connector);
+      if (!connector) {
+        this.setIsAutoConnecting(false);
+        return;
+      } else this.setLastUsedConnector(connector);
 
       this.setActiveConnector(this.getLastUsedConnector());
       this.activeConnector = this.getLastUsedConnector();
@@ -78,6 +80,8 @@ export default class Client extends Wallet01Store {
         this.setActiveChain(this.activeConnector.activeChain);
         this.setIsAutoConnecting(false);
         this.setIsConnected(true);
+      } else {
+        this.setIsAutoConnecting(false);
       }
     } catch (error) {
       console.error({ error });
