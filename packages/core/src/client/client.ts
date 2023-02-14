@@ -36,45 +36,52 @@ export default class Client extends Wallet01Store {
   };
 
   private async ac() {
-    this.setIsAutoConnecting(true);
-    const lastConnName = localStorage.getItem("lastUsedConnector");
+    try {
+      this.setIsAutoConnecting(true);
+      const lastConnName = localStorage.getItem("lastUsedConnector");
 
-    const connector = this.getConnectors().find(
-      conn => conn.name === lastConnName
-    );
+      const connector = this.getConnectors().find(
+        conn => conn.name === lastConnName
+      );
 
-    if (!connector) return;
-    else this.setLastUsedConnector(connector);
+      if (!connector) return;
+      else this.setLastUsedConnector(connector);
 
-    this.setActiveConnector(this.getLastUsedConnector());
-    this.activeConnector = this.getLastUsedConnector();
+      this.setActiveConnector(this.getLastUsedConnector());
+      this.activeConnector = this.getLastUsedConnector();
 
-    if (this.activeConnector) {
-      await this.activeConnector.connect({});
-      const addresses = await this.activeConnector.getAccount();
+      if (this.activeConnector) {
+        await this.activeConnector.connect({});
+        const addresses = await this.activeConnector.getAccount();
 
-      const address = addresses[0];
+        const address = addresses[0];
 
-      if (!address) return;
+        if (!address) return;
 
-      this.setAddress(address);
+        this.setAddress(address);
 
-      const did = await this.activeConnector.resolveDid(address).catch(err => {
-        console.error({ error: err });
-        return null;
-      });
+        const did = await this.activeConnector
+          .resolveDid(address)
+          .catch(err => {
+            console.error({ error: err });
+            return null;
+          });
 
-      this.setDid(did);
+        this.setDid(did);
 
-      const chain = this.activeConnector.getChainId
-        ? await this.activeConnector.getChainId()
-        : null;
+        const chain = this.activeConnector.getChainId
+          ? await this.activeConnector.getChainId()
+          : null;
 
-      this.setChainId(chain);
+        this.setChainId(chain);
 
-      this.setActiveChain(this.activeConnector.activeChain);
+        this.setActiveChain(this.activeConnector.activeChain);
+        this.setIsAutoConnecting(false);
+        this.setIsConnected(true);
+      }
+    } catch (error) {
+      console.error({ error });
       this.setIsAutoConnecting(false);
-      this.setIsConnected(true);
     }
   }
 }
