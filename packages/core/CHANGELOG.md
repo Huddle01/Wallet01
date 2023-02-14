@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.6.3
+
+### Patch Changes
+
+- State initilisation value change
+
 ## 0.6.2
 
 ### Patch Changes
