@@ -1,5 +1,11 @@
 # @wallet01/core
 
+## 0.6.5
+
+### Patch Changes
+
+- Fixed autoconnection state errors in edge-cases
+
 ## 0.6.4
 
 ### Patch Changes

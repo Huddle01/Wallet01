@@ -14,13 +14,18 @@ export default class Client extends Wallet01Store {
     super();
     this.setAutoConnect(autoConnect || false);
     this.setConnectors(connectors);
-    // this.setAddress('INITNIT');
 
     if (localStorage.getItem("autoConnect") === null)
       localStorage.setItem("autoConnect", String(autoConnect));
 
+    if (localStorage.getItem("autoConnect") === "false")
+      this.setIsAutoConnecting(false);
+
     if (localStorage.getItem("autoConnect") !== String(autoConnect))
       localStorage.setItem("autoConnect", String(autoConnect));
+
+    if (!localStorage.getItem("lastUsedConnector"))
+      this.setIsAutoConnecting(false);
 
     if (
       localStorage.getItem("lastUsedConnector") &&
@@ -39,6 +44,10 @@ export default class Client extends Wallet01Store {
     try {
       this.setIsAutoConnecting(true);
       const lastConnName = localStorage.getItem("lastUsedConnector");
+      if (!lastConnName) {
+        this.setIsAutoConnecting(false);
+        return;
+      }
 
       const connector = this.getConnectors().find(
         conn => conn.name === lastConnName

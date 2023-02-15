@@ -1,5 +1,14 @@
 # vite-react
 
+## 0.0.35
+
+### Patch Changes
+
+- @wallet01/cosmos@0.7.5
+- @wallet01/evm@0.8.5
+- @wallet01/react@0.8.5
+- @wallet01/solana@0.6.5
+
 ## 0.0.34
 
 ### Patch Changes

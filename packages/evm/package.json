@@ -1,6 +1,6 @@
 {
   "name": "@wallet01/evm",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "import": "dist/index.js",
