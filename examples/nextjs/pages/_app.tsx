@@ -7,7 +7,7 @@ import {
   InjectedConnector,
   WalletconnectConnector,
   BananaConnector,
-  OkxWalletConnector
+  OkxWalletConnector,
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
@@ -33,7 +33,8 @@ export default function App({ Component, pageProps }: AppProps) {
         new KeplrConnector(),
         new TempleConnector(),
         new BananaConnector(),
-        new OkxWalletConnector()
+        new OkxWalletConnector(),
+        new BeaconConnector(),
       ]}
     >
       <Layout>
