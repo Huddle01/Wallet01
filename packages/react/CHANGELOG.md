@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.8.7
+
+### Patch Changes
+
+- fixing state updation
+
 ## 0.8.6
 
 ### Patch Changes
