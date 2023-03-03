@@ -15,6 +15,7 @@ export const useWallet = () => {
     setIsConnected,
     setActiveConnector,
     setActiveChain,
+    setAutoConnect,
   } = useStore();
 
   const { mutate } = useMutation({
@@ -34,6 +35,7 @@ export const useWallet = () => {
       setDid(null);
       setActiveChain(null);
       setIsConnected(false);
+      setAutoConnect(false);
       localStorage.setItem("lastUsedConnector", "");
     },
   });

@@ -1,5 +1,11 @@
 # @wallet01/react
 
+## 0.8.6
+
+### Patch Changes
+
+- setting autoConnection state on disconnection
+
 ## 0.8.5
 
 ### Patch Changes
