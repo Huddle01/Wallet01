@@ -1,21 +1,26 @@
 import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
 import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 import EthereumProvider from "@walletconnect/ethereum-provider";
+import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
 import { hexValue } from "ethers/lib/utils.js";
 import { chainData } from "../utils/chains";
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider?: EthereumProvider;
+  private options: EthereumProviderOptions;
 
-  constructor(chain: string = "1") {
+  constructor(chain: string = "1", { chains, projectId, ...options }: EthereumProviderOptions) {
     super(chain, "walletconnect", "ethereum");
+    this.options = {
+      chains,
+      projectId,
+      ...options,
+    }
   }
 
   async getProvider(): Promise<EthereumProvider> {
     try {
-      const _provider = new EthereumProvider({
-        infuraId: "0a7d1e04fd0845d5994516cfb80e0813",
-      });
+      const _provider = await EthereumProvider.init(this.options);
 
       this.provider = _provider;
       return this.provider;
@@ -72,7 +77,10 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   async connect({ chainId }: { chainId?: string | undefined }): Promise<void> {
     if (!this.provider) await this.getProvider();
     try {
-      await this.provider?.enable();
+      await this.provider?.connect({
+        chains: this.options.chains,
+
+      });
 
       let currentId = await this.getChainId();
       if (chainId && currentId !== chainId) {
