@@ -216,8 +216,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@rize-labs/banana-wallet-sdk':
-        specifier: ^0.1.14
-        version: 0.1.14
+        specifier: ^0.1.16
+        version: 0.1.16
       '@wallet01/core':
         specifier: workspace:*
         version: link:../core
@@ -1664,8 +1664,8 @@ packages:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: false
 
-  /@rize-labs/banana-wallet-sdk@0.1.14:
-    resolution: {integrity: sha512-bsAB5LjrgtkQdWrq1MCxMSJJkgeEHV0mmaMkBtdPxzh4+Lm2+shk9cK2DnQhcVvrzKIx4i71LFzh1oiY27kZxA==}
+  /@rize-labs/banana-wallet-sdk@0.1.16:
+    resolution: {integrity: sha512-iM5H1UKyFEbgbmVcoWaHVJI2+IzquieNUYhGjWesIEZWtYphaQzN8MUR4jK341zDTVkAlGRZxxEeGBlgOxgM5g==}
     dependencies:
       '@account-abstraction/contracts': 0.5.0
       '@account-abstraction/sdk': 0.5.0
@@ -1927,7 +1927,7 @@ packages:
   /@types/bn.js@4.11.6:
     resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
     dependencies:
-      '@types/node': 18.11.18
+      '@types/node': 18.15.11
     dev: false
 
   /@types/bs58check@2.1.0:
@@ -1982,6 +1982,10 @@ packages:
 
   /@types/node@18.11.9:
     resolution: {integrity: sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==}
+
+  /@types/node@18.15.11:
+    resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
+    dev: false
 
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
