@@ -112,6 +112,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     }
   }
 
+  //! Currently Banana wallet has 1:1 mapping with account
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
@@ -137,7 +138,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     return "";
   }
 
-  //! Currently Banana wallet has 1:1 mapping with accounts
+  //! Currently Banana wallet has 1:1 mapping with account
   protected onAccountsChanged(): void {
     throw new Error("Method not implemented.");
   }
