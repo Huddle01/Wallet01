@@ -17,6 +17,7 @@
     "@wallet01/react": "workspace:*",
     "@wallet01/solana": "workspace:*",
     "@wallet01/tezos": "workspace:*",
+    "@wallet01/multichain": "workspace:*",
     "ethers": "^5.7.2",
     "next": "13.0.3",
     "react": "18.2.0",
