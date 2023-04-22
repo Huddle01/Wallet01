@@ -1,0 +1,31 @@
+{
+  "name": "@wallet01/multichain",
+  "version": "1.0.0",
+  "main": "dist/index.cjs",
+  "types": "dist/index.d.ts",
+  "import": "dist/index.js",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration",
+    "dev": "pnpm build --watch"
+  },
+  "dependencies": {
+    "@ethersproject/providers": "^5.7.2",
+    "@okwallet/extension": "^1.0.17",
+    "@wallet01/core": "^0.6.5",
+    "ethers": "^5.7.2",
+    "eventemitter3": "^4.0.7",
+    "web3": "^1.9.0"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "tsconfig": "workspace:*",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
