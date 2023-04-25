@@ -391,7 +391,7 @@ const WalletIcons: SvgIcons = {
       width="50"
       height="50"
       viewBox="0 0 316 348"
-      enable-background="new 0 0 100 100"
+      enableBackground="new 0 0 100 100"
       xmlSpace="preserve"
     >
       <path
@@ -399,7 +399,7 @@ const WalletIcons: SvgIcons = {
         opacity="1.000000"
         stroke="none"
         d="
-M137.016388,111.010109 
+  M137.016388,111.010109 
 	C144.350006,105.445084 153.200333,103.858795 161.832413,102.108093 
 	C172.528061,99.938873 183.182327,100.617645 193.928177,103.261322 
 	C202.825592,105.450241 211.073746,108.648735 218.840424,113.367821 

@@ -2,9 +2,9 @@ import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 import {
   Banana4337Provider,
   Banana,
-  Chains as BananaSupportedChains,
   Wallet,
 } from "@rize-labs/banana-wallet-sdk";
+import { getBananaSupportedChain, isBananSupported } from "../utils/helpers";
 
 export class BananaConnector extends BaseConnector<Banana4337Provider> {
   provider!: Banana4337Provider;
@@ -112,7 +112,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     }
   }
 
-  //! Currently Banana wallet has 1:1 mapping with account
+  // Currently Banana wallet has 1:1 mapping with account
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
@@ -138,7 +138,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     return "";
   }
 
-  //! Currently Banana wallet has 1:1 mapping with account
+  // Currently Banana wallet has 1:1 mapping with account
   protected onAccountsChanged(): void {
     throw new Error("Method not implemented.");
   }
@@ -150,46 +150,4 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   protected onDisconnect(): void {
     this.BananaInstance.resetWallet();
   }
-}
-
-function isBananSupported(chainId: number | string): boolean {
-  chainId = normalizeChainId(chainId);
-  for (let chain in BananaSupportedChains) {
-    let currentChainId = BananaSupportedChains[chain] || -1;
-    if (currentChainId == chainId) return true;
-  }
-  return false;
-}
-
-function getBananaSupportedChain(
-  chainId: number | string
-): BananaSupportedChains {
-  const normalizedChainId = normalizeChainId(chainId);
-  let bananaSupportedChain: BananaSupportedChains;
-  switch (normalizedChainId) {
-    case 80001:
-      bananaSupportedChain = BananaSupportedChains.mumbai;
-      break;
-    case 420:
-      bananaSupportedChain = BananaSupportedChains.optimismTestnet;
-      break;
-    case 5:
-      bananaSupportedChain = BananaSupportedChains.goerli;
-      break;
-    default:
-      bananaSupportedChain = BananaSupportedChains.mumbai;
-      break;
-  }
-
-  return bananaSupportedChain;
-}
-
-function normalizeChainId(chainId: string | number | bigint) {
-  if (typeof chainId === "string")
-    return Number.parseInt(
-      chainId,
-      chainId.trim().substring(0, 2) === "0x" ? 16 : 10
-    );
-  if (typeof chainId === "bigint") return Number(chainId);
-  return chainId;
 }
