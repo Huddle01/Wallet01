@@ -126,7 +126,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   }
 
   async disconnect() {
-    this.BananaInstance.resetWallet();
+    this.connected = false;
   }
 
   async getChainId(): Promise<string> {
@@ -148,7 +148,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   }
 
   protected onDisconnect(): void {
-    this.BananaInstance.resetWallet();
+    this.connected = false;
   }
 }
 

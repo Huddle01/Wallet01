@@ -15,7 +15,7 @@
     "@coinbase/wallet-sdk": "^3.6.3",
     "@ethersproject/providers": "^5.7.2",
     "@metamask/detect-provider": "^2.0.0",
-    "@rize-labs/banana-wallet-sdk": "^0.1.16",
+    "@rize-labs/banana-wallet-sdk": "^0.1.18",
     "@wallet01/core": "workspace:*",
     "@walletconnect/ethereum-provider": "1.8.0",
     "ethers": "^5.7.2",
