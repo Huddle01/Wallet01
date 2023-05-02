@@ -5,13 +5,12 @@ import { Wallet01 } from "@wallet01/react";
 import {
   CoinbaseConnector,
   InjectedConnector,
-  WalletconnectConnector
+  WalletconnectConnector,
+  OkxWalletConnector,
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
 import { TempleConnector } from "@wallet01/tezos";
-import { OkxWalletConnector } from "@wallet01/multichain";
-
 import Layout from "../components/layout";
 import { FilecoinConnector } from "../lib/filecoin";
 
@@ -28,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
         new SolflareConnector(),
         new KeplrConnector(),
         new TempleConnector(),
-        new OkxWalletConnector()
+        new OkxWalletConnector(),
       ]}
     >
       <Layout>
