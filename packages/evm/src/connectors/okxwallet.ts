@@ -1,30 +1,36 @@
-import { Web3Provider } from "@ethersproject/providers";
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 import { hexValue } from "ethers/lib/utils.js";
-import { chainData } from "../utils/chains";
+import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
+
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+
 import emitter from "../utils/emiter";
-import Web3 from "web3";
+import { chainData } from "../utils/chains";
 
 interface OkxWalletWindow extends Window {
-  okxwallet?: any;
+    okxwallet?: Web3Provider;
 }
 
 declare const window: OkxWalletWindow;
 
 export class OkxWalletConnector extends BaseConnector<Web3Provider> {
-  provider?: any;
+  provider?: Web3Provider;
 
   constructor(chain: string = "1") {
     super(chain, "okxwallet", "ethereum");
   }
 
-  async getProvider(): Promise<any> {
+  async getProvider() {
     if (typeof window !== "undefined" && window.okxwallet) {
-      this.provider = window.okxwallet;
-      return this.provider;
-    } else {
-      throw new Error("Wallet Not Installed");
-    }
+        const provider = window.okxwallet;
+        const _provider = new Web3Provider(
+            <ExternalProvider>(<unknown>provider),
+            "any"
+          );
+        this.provider = _provider;
+        return this.provider;
+      } else {
+        throw new Error("Wallet Not Installed");
+      }
   }
 
   async getAccount(): Promise<string[]> {
@@ -32,7 +38,7 @@ export class OkxWalletConnector extends BaseConnector<Web3Provider> {
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
       const result = await this.provider.send("eth_requestAccounts", []);
-      return result.result;
+      return result;
     } catch (err) {
       console.error(err);
       throw err;
@@ -41,9 +47,9 @@ export class OkxWalletConnector extends BaseConnector<Web3Provider> {
 
   async getChainId(): Promise<string> {
     if (this.provider) {
-      const chainId = (
-        await new Web3(this.provider).eth.getChainId()
-      ).toString();
+      const chainId = await (
+        await this.provider.getNetwork()
+      ).chainId.toString();
       this.chain = chainId;
       return chainId;
     }
@@ -52,6 +58,7 @@ export class OkxWalletConnector extends BaseConnector<Web3Provider> {
 
   async switchChain(chainId: string): Promise<void> {
     const provider = await this.getProvider();
+
     const id = hexValue(Number(chainId));
     try {
       await provider?.send("wallet_switchEthereumChain", [{ chainId: id }]);
@@ -101,7 +108,7 @@ export class OkxWalletConnector extends BaseConnector<Web3Provider> {
     try {
       if ((await this.getChainId()) !== "1") return null;
       const provider = await this.getProvider();
-      const name = await new Web3(provider).eth.ens.getAddress(address);
+      const name = await provider.lookupAddress(address);
       return name;
     } catch (error) {
       console.error({ error }, "resolveDid");
@@ -112,13 +119,9 @@ export class OkxWalletConnector extends BaseConnector<Web3Provider> {
   async signMessage(message: string): Promise<string> {
     try {
       if (!this.provider) throw new Error("Connect a wallet!");
-      const address = (await this.getAccount()).toString();
-      const signer = await new Web3(this.provider).eth.personal.sign(
-        message,
-        address,
-        ""
-      );
-      return signer;
+      const signer = await this.provider.getSigner();
+      const hash = await signer.signMessage(message);
+      return hash;
     } catch (error) {
       console.error(error);
       throw error;
