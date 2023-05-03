@@ -7,7 +7,7 @@ import emitter from "../utils/emiter";
 import { chainData } from "../utils/chains";
 
 interface OkxWalletWindow extends Window {
-    okxwallet?: Web3Provider;
+  okxwallet?: Web3Provider;
 }
 
 declare const window: OkxWalletWindow;
@@ -21,16 +21,13 @@ export class OkxWalletConnector extends BaseConnector<Web3Provider> {
 
   async getProvider() {
     if (typeof window !== "undefined" && window.okxwallet) {
-        const provider = window.okxwallet;
-        const _provider = new Web3Provider(
-            <ExternalProvider>(<unknown>provider),
-            "any"
-          );
-        this.provider = _provider;
-        return this.provider;
-      } else {
-        throw new Error("Wallet Not Installed");
-      }
+      const provider = window.okxwallet;
+      const _provider = new Web3Provider(<ExternalProvider>(<unknown>provider));
+      this.provider = _provider;
+      return this.provider;
+    } else {
+      throw new Error("Wallet Not Installed");
+    }
   }
 
   async getAccount(): Promise<string[]> {
@@ -47,9 +44,7 @@ export class OkxWalletConnector extends BaseConnector<Web3Provider> {
 
   async getChainId(): Promise<string> {
     if (this.provider) {
-      const chainId = await (
-        await this.provider.getNetwork()
-      ).chainId.toString();
+      const chainId = (await this.provider.getNetwork()).chainId.toString();
       this.chain = chainId;
       return chainId;
     }
