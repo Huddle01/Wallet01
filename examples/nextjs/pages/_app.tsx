@@ -6,7 +6,8 @@ import {
   CoinbaseConnector,
   InjectedConnector,
   WalletconnectConnector,
-  OkxWalletConnector,
+  BananaConnector,
+  OkxWalletConnector
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
@@ -27,7 +28,8 @@ export default function App({ Component, pageProps }: AppProps) {
         new SolflareConnector(),
         new KeplrConnector(),
         new TempleConnector(),
-        new OkxWalletConnector(),
+        new BananaConnector(),
+        new OkxWalletConnector()
       ]}
     >
       <Layout>
