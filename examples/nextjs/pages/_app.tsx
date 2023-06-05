@@ -11,7 +11,7 @@ import {
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
-import { TempleConnector } from "@wallet01/tezos";
+import { TempleConnector, BeaconConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
 
 export default function App({ Component, pageProps }: AppProps) {

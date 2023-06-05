@@ -19,7 +19,7 @@
     "@wallet01/core": "workspace:*"
   },
   "devDependencies": {
-    "@airgap/beacon-sdk": "^3.3.3",
+    "@airgap/beacon-sdk": "^3.3.4",
     "@types/node": "^18.11.18",
     "rimraf": "^3.0.2",
     "tsconfig": "workspace:*",

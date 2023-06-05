@@ -335,8 +335,8 @@ importers:
         version: link:../core
     devDependencies:
       '@airgap/beacon-sdk':
-        specifier: ^3.3.3
-        version: 3.3.3
+        specifier: ^3.3.4
+        version: 3.3.4
       '@types/node':
         specifier: ^18.11.18
         version: 18.11.18
@@ -431,8 +431,8 @@ packages:
       - debug
     dev: true
 
-  /@airgap/beacon-sdk@3.3.3:
-    resolution: {integrity: sha512-VpQW1QAp4kdUbtcKAIxFVrQg0az0EdS5TN5aUCqUJcQxRLlUaku86aZt+sxU5UMIdDfiEj5FLIn2l7sUUBCIxg==}
+  /@airgap/beacon-sdk@3.3.4:
+    resolution: {integrity: sha512-9feyD9vOHqPU6L5JBn6yGWFzvcxStTSmvMIjHRX1tAz8gwAzQxormc6jlXqNK8vNgU1CbLY38kbcMcp/gQTlvw==}
     dependencies:
       '@airgap/beacon-blockchain-substrate': 3.3.4
       '@airgap/beacon-blockchain-tezos': 3.3.4

@@ -1,4 +1,4 @@
-import { BaseConnector } from "@wallet01/core";
+import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 import { DAppClient, PermissionScope, SigningType } from "@airgap/beacon-sdk";
 import { formatMessage } from "../utils/formatMessage";
 import { isNetwork } from "../utils/isNetwork";
@@ -84,6 +84,7 @@ export default class BeaconConnector extends BaseConnector<DAppClient> {
         throw new Error("Wallet Not Conencted");
       }
       this.chain = result.network.type;
+      setLastUsedConnector(this.name);
     } catch (error) {
       console.error({ error }, "connect");
       throw error;
