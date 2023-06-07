@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
         new TempleConnector(),
         new BananaConnector(),
         new OkxWalletConnector(),
-        new BeaconConnector(),
+        new BeaconConnector("mainnet", "Wallet01"),
       ]}
     >
       <Layout>
