@@ -1,4 +1,4 @@
-import { NetworkType } from "@airgap/beacon-sdk";
+import { NetworkType } from "@airgap/beacon-dapp";
 
 export const isNetwork = (str: string | undefined): str is NetworkType => {
   if (!str) return false;

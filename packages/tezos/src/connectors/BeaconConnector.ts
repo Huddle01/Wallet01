@@ -1,19 +1,31 @@
 import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
-import { DAppClient, PermissionScope, SigningType } from "@airgap/beacon-sdk";
+import {
+  getDAppClientInstance,
+  DAppClient,
+  PermissionScope,
+  SigningType,
+} from "@airgap/beacon-dapp";
 import { formatMessage } from "../utils/formatMessage";
 import { isNetwork } from "../utils/isNetwork";
 
 export default class BeaconConnector extends BaseConnector<DAppClient> {
   provider?: DAppClient | undefined;
+  private projectName: string;
 
-  constructor(chain: string = "mainnet") {
+  constructor(chain: string = "mainnet", projectName: string) {
     super(chain, "beacon", "tezos");
+    this.projectName = projectName;
+
+    const provider = getDAppClientInstance({ name: this.projectName });
+    this.provider = provider;
   }
 
   async getProvider(): Promise<DAppClient> {
     try {
-      const provider = new DAppClient({ name: "Wallet01" });
-      this.provider = provider;
+      if (!this.provider) {
+        const provider = getDAppClientInstance({ name: this.projectName });
+        this.provider = provider;
+      }
       return this.provider;
     } catch (error) {
       console.error({ error }, "getProvider");
