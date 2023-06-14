@@ -14,12 +14,12 @@
   "keywords": [],
   "author": "thevatsal.eth",
   "dependencies": {
-    "@airgap/beacon-dapp": "^4.0.4",
     "@taquito/taquito": "12.0.0",
     "@temple-wallet/dapp": "^7.0.0",
     "@wallet01/core": "workspace:*"
   },
   "devDependencies": {
+    "@airgap/beacon-dapp": "3.3.4",
     "@types/node": "^18.11.18",
     "rimraf": "^3.0.2",
     "tsconfig": "workspace:*",

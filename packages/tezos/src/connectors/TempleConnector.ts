@@ -3,7 +3,7 @@ import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 import { TempleDAppNetwork, TempleWallet } from "@temple-wallet/dapp";
 import { formatMessage } from "../utils/formatMessage";
 
-export default class TempleConnector extends BaseConnector<TempleWallet> {
+export class TempleConnector extends BaseConnector<TempleWallet> {
   provider?: TempleWallet | undefined;
 
   constructor(chain: string = "mainnet") {

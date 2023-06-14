@@ -8,7 +8,7 @@ import {
 import { formatMessage } from "../utils/formatMessage";
 import { isNetwork } from "../utils/isNetwork";
 
-export default class BeaconConnector extends BaseConnector<DAppClient> {
+export class BeaconConnector extends BaseConnector<DAppClient> {
   provider?: DAppClient | undefined;
   private projectName: string;
 
@@ -83,19 +83,26 @@ export default class BeaconConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      console.log({ chainId });
-      const result = await this.provider.requestPermissions(
-        isNetwork(chainId)
-          ? {
-              network: { type: chainId },
-              scopes: [PermissionScope.SIGN],
-            }
-          : { scopes: [PermissionScope.SIGN] }
-      );
-      if (!result.address) {
+      let activeAccount = await this.provider.getActiveAccount();
+      if (!activeAccount) {
+        await this.provider.requestPermissions(
+          isNetwork(chainId)
+            ? {
+                network: {
+                  type: chainId,
+                },
+                scopes: [PermissionScope.SIGN],
+              }
+            : {
+                scopes: [PermissionScope.SIGN],
+              }
+        );
+        activeAccount = await this.provider.getActiveAccount();
+      }
+      if (!activeAccount?.address) {
         throw new Error("Wallet Not Conencted");
       }
-      this.chain = result.network.type;
+      this.chain = activeAccount.network.type;
       setLastUsedConnector(this.name);
     } catch (error) {
       console.error({ error }, "connect");
