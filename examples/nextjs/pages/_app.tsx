@@ -22,12 +22,11 @@ export default function App({ Component, pageProps }: AppProps) {
         new FilecoinConnector(),
         new InjectedConnector(),
         new CoinbaseConnector(),
-        new WalletconnectConnector("1", {
-          chains: [1,4, 137],
+        new WalletconnectConnector({
+          chain: "1",
+          chains: [1, 4, 137],
           projectId: "190ea8e3ce540de271817462e33e310b",
-          qrModalOptions: {
-            themeMode: "dark",
-          }
+          showQrModal: true,
         }),
         new PhantomConnector(),
         new SolflareConnector(),

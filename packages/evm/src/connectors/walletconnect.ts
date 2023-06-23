@@ -5,17 +5,26 @@ import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/t
 import { hexValue } from "ethers/lib/utils.js";
 import { chainData } from "../utils/chains";
 
+type WalletconnectConnectorOptions = {
+  chain?: string;
+} & EthereumProviderOptions;
+
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider?: EthereumProvider;
   private options: EthereumProviderOptions;
 
-  constructor(chain: string = "1", { chains, projectId, ...options }: EthereumProviderOptions) {
+  constructor({
+    chain = "1",
+    chains,
+    projectId,
+    ...options
+  }: WalletconnectConnectorOptions) {
     super(chain, "walletconnect", "ethereum");
     this.options = {
       chains,
       projectId,
       ...options,
-    }
+    };
   }
 
   async getProvider(): Promise<EthereumProvider> {
@@ -79,7 +88,6 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
     try {
       await this.provider?.connect({
         chains: this.options.chains,
-
       });
 
       let currentId = await this.getChainId();
