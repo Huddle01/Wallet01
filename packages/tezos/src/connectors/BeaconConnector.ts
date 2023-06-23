@@ -1,29 +1,48 @@
 import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
-import {
-  getDAppClientInstance,
-  DAppClient,
-  PermissionScope,
-  SigningType,
-} from "@airgap/beacon-dapp";
+import { BeaconWallet } from "@taquito/beacon-wallet";
 import { formatMessage } from "../utils/formatMessage";
 import { isNetwork } from "../utils/isNetwork";
+import { TezosToolkit } from "@taquito/taquito";
+import { PermissionScope, SigningType } from "@airgap/beacon-dapp";
 
-export class BeaconConnector extends BaseConnector<DAppClient> {
-  provider?: DAppClient | undefined;
+interface BeaconConnectorOptions {
+  chain?: string;
+  projectName: string;
+  rpcUrl?: string;
+}
+
+export class BeaconConnector extends BaseConnector<BeaconWallet> {
+  provider?: BeaconWallet | undefined;
   private projectName: string;
+  private rpcUrl: string;
+  private toolkit: TezosToolkit;
 
-  constructor(chain: string = "mainnet", projectName: string) {
+  constructor({
+    chain = "mainnet",
+    projectName,
+    rpcUrl,
+  }: BeaconConnectorOptions) {
     super(chain, "beacon", "tezos");
     this.projectName = projectName;
 
-    const provider = getDAppClientInstance({ name: this.projectName });
+    if (rpcUrl) {
+      this.rpcUrl = rpcUrl;
+    } else {
+      this.rpcUrl = "https://mainnet.api.tez.ie/";
+    }
+
+    this.toolkit = new TezosToolkit(this.rpcUrl);
+
+    const provider = new BeaconWallet({ name: this.projectName });
     this.provider = provider;
+
+    this.toolkit.setProvider({ wallet: provider });
   }
 
-  async getProvider(): Promise<DAppClient> {
+  async getProvider(): Promise<BeaconWallet> {
     try {
       if (!this.provider) {
-        const provider = getDAppClientInstance({ name: this.projectName });
+        const provider = new BeaconWallet({ name: this.projectName });
         this.provider = provider;
       }
       return this.provider;
@@ -37,11 +56,11 @@ export class BeaconConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      const account = await this.provider.getActiveAccount();
+      const account = await this.provider.getPKH();
       if (!account) {
         throw new Error("Wallet Not Conencted");
       }
-      return [account.address];
+      return [account];
     } catch (error) {
       console.error({ error }, "getAccount");
       throw error;
@@ -52,7 +71,7 @@ export class BeaconConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      const account = await this.provider.getActiveAccount();
+      const account = await this.provider.client.getActiveAccount();
       if (!account) {
         await this.connect({});
         return this.chain;
@@ -83,7 +102,7 @@ export class BeaconConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      let activeAccount = await this.provider.getActiveAccount();
+      let activeAccount = await this.provider.client.getActiveAccount();
       if (!activeAccount) {
         await this.provider.requestPermissions(
           isNetwork(chainId)
@@ -97,7 +116,7 @@ export class BeaconConnector extends BaseConnector<DAppClient> {
                 scopes: [PermissionScope.SIGN],
               }
         );
-        activeAccount = await this.provider.getActiveAccount();
+        activeAccount = await this.provider.client.getActiveAccount();
       }
       if (!activeAccount?.address) {
         throw new Error("Wallet Not Conencted");
@@ -114,7 +133,7 @@ export class BeaconConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      await this.provider.clearActiveAccount();
+      await this.provider.disconnect();
     } catch (error) {
       console.error({ error }, "disconnect");
       throw error;
@@ -141,14 +160,14 @@ export class BeaconConnector extends BaseConnector<DAppClient> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Connected");
-      const account = await this.provider.getActiveAccount();
-      if (!account) {
+      const address = await this.provider.getPKH();
+      if (!address) {
         throw new Error("Wallet Not Conencted");
       }
-      const { signature } = await this.provider.requestSignPayload({
+      const { signature } = await this.provider.client.requestSignPayload({
         signingType: SigningType.MICHELINE,
         payload: formatMessage(message),
-        sourceAddress: account.address,
+        sourceAddress: address,
       });
       return signature;
     } catch (error) {

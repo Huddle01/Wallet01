@@ -1,4 +1,3 @@
-"use client";
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 
@@ -12,7 +11,7 @@ import {
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
-import { BeaconConnector, TempleConnector } from "@wallet01/tezos";
+import { BeaconConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -32,10 +31,10 @@ export default function App({ Component, pageProps }: AppProps) {
         new PhantomConnector(),
         new SolflareConnector(),
         new KeplrConnector(),
-        new TempleConnector(),
+        // new TempleConnector({ projectName: "Wallet01" }),
         new BananaConnector(),
         new OkxWalletConnector(),
-        new BeaconConnector("mainnet", "Wallet01"),
+        new BeaconConnector({ projectName: "Wallet01" }),
       ]}
     >
       <Layout>

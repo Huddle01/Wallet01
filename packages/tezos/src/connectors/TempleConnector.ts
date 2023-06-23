@@ -1,18 +1,46 @@
 import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
 
 import { TempleDAppNetwork, TempleWallet } from "@temple-wallet/dapp";
+import { TezosToolkit } from "@taquito/taquito";
 import { formatMessage } from "../utils/formatMessage";
+import { isTempleNetwork } from "../utils/isNetwork";
+
+interface TempleConnectorOptions {
+  chain?: string;
+  rpcUrl?: string;
+  projectName: string;
+}
 
 export class TempleConnector extends BaseConnector<TempleWallet> {
   provider?: TempleWallet | undefined;
+  private toolkit: TezosToolkit;
+  private rpcUrl: string;
+  private projectName: string;
 
-  constructor(chain: string = "mainnet") {
+  constructor({
+    chain = "mainnet",
+    projectName,
+    rpcUrl,
+  }: TempleConnectorOptions) {
     super(chain, "templewallet", "tezos");
+
+    this.projectName = projectName;
+    if (rpcUrl) {
+      this.rpcUrl = rpcUrl;
+    } else {
+      this.rpcUrl = "https://mainnet.api.tez.ie/";
+    }
+
+    this.toolkit = new TezosToolkit(this.rpcUrl);
+    this.provider = new TempleWallet(projectName);
+
+    this.toolkit.setProvider({ wallet: this.provider });
   }
 
   async getProvider(): Promise<TempleWallet> {
     try {
-      const provider = new TempleWallet("Wallet01");
+      if (this.provider) return this.provider;
+      const provider = new TempleWallet(this.projectName);
       this.provider = provider;
       return this.provider;
     } catch (error) {
@@ -63,9 +91,18 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
   async connect({ chainId }: { chainId?: string | undefined }): Promise<void> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("Wallet Not Installed");
+      if (!this.provider) throw new Error("Provider not initialized");
 
-      await this.provider.connect((chainId as TempleDAppNetwork) || "mainnet");
+      if (!(await TempleWallet.isAvailable())) {
+        throw new Error("Wallet Not Installed");
+      }
+
+      if (isTempleNetwork(chainId)) {
+        await this.provider.connect(chainId);
+      } else {
+        await this.provider.connect("mainnet");
+      }
+
       this.chain = chainId || "mainnet";
       setLastUsedConnector(this.name);
     } catch (error) {
