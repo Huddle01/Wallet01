@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
           chain: "1",
           chains: [1],
           optionalChains: [137, 80001],
-          projectId: "190ea8e3ce540de271817462e33e310b",
+          projectId: "cef77f9c3969fb563468d997449c92d2",
           showQrModal: true,
         }),
       ]}
