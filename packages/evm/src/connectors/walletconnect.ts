@@ -1,13 +1,20 @@
 import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
 import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
-import EthereumProvider from "@walletconnect/ethereum-provider";
+import EthereumProvider, {
+  OPTIONAL_METHODS,
+  REQUIRED_METHODS,
+} from "@walletconnect/ethereum-provider";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
-import { hexValue } from "ethers/lib/utils.js";
+// import { hexValue } from "ethers/lib/utils.js";
 import { chainData } from "../utils/chains";
+import { hexlify } from "ethers/lib/utils";
 
 type WalletconnectConnectorOptions = {
   chain?: string;
 } & EthereumProviderOptions;
+
+const NAMESPACE = "eip155";
+const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider?: EthereumProvider;
@@ -23,8 +30,13 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
     this.options = {
       chains,
       projectId,
+      optionalChains: options.optionalChains ?? [],
+      methods: options.methods ?? REQUIRED_METHODS,
+      optionalMethods: options.optionalMethods ?? OPTIONAL_METHODS,
       ...options,
     };
+
+    this.getProvider();
   }
 
   async getProvider(): Promise<EthereumProvider> {
@@ -62,35 +74,58 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
 
   async switchChain(chainId: string): Promise<void> {
     if (!this.provider) await this.getProvider();
-    const _id = hexValue(Number(chainId));
+    const _id = hexlify(Number(chainId));
 
     try {
-      this.provider?.request({
+      if (!this.provider) throw new Error("Provider not found");
+      const namespaceChains = this.getNamespaceChainsIds();
+      const namespaceMethods = this.getNamespaceMethods();
+      const isChainApproved = namespaceChains.includes(chainId);
+
+      if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
+        await this.provider.request({
+          method: ADD_ETH_CHAIN_METHOD,
+          params: [
+            {
+              ...chainData[chainId],
+            },
+          ],
+        });
+      }
+
+      await this.provider.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: _id }],
       });
+
       this.chain = chainId;
     } catch (error) {
-      console.error(error);
-      if (chainData[chainId]) {
-        this.provider?.request({
-          method: "wallet_addEthereumChain",
-          params: [{ data: chainData[chainId] }],
-        });
-        this.switchChain(chainId);
-      }
+      console.error({ error });
+
       throw error;
     }
   }
 
   async connect({ chainId }: { chainId?: string | undefined }): Promise<void> {
-    if (!this.provider) await this.getProvider();
     try {
-      await this.provider?.connect({
-        chains: this.options.chains,
-      });
+      const provider = await this.getProvider();
+      const isStaleChain = this.isChainsStale();
 
-      let currentId = await this.getChainId();
+      if (provider.session && isStaleChain) await provider.disconnect();
+
+      if (!provider.session || isStaleChain) {
+        const _chainId = Number(chainId || this.chain);
+        await provider.connect({
+          chains: [_chainId],
+          optionalChains: this.options.optionalChains,
+        });
+
+        this.chain = _chainId.toString();
+      }
+
+      await provider.enable();
+      this.chain = await this.getChainId();
+      const currentId = this.chain;
       if (chainId && currentId !== chainId) {
         await this.switchChain(chainId);
       }
@@ -127,16 +162,46 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
       if (!this.provider) throw new Error("Wallet not Connected!");
       const _address = await this.getAccount();
 
-      const signer = new Web3Provider(
-        this.provider as ExternalProvider
-      ).getSigner(_address[0]);
+      const hash = await this.provider.request<string>({
+        method: "personal_sign",
+        params: [_address[0], message],
+      });
 
-      const hash = await signer.signMessage(message);
       return hash;
     } catch (error) {
       console.error(error);
       throw error;
     }
+  }
+
+  private getNamespaceChainsIds() {
+    if (!this.provider) return [];
+    const chainIds = this.provider.session?.namespaces[NAMESPACE]?.chains?.map(
+      chain => chain.split(":")[1] || ""
+    );
+    return chainIds ?? [];
+  }
+
+  private getNamespaceMethods() {
+    if (!this.provider) return [];
+    const methods = this.provider.session?.namespaces[NAMESPACE]?.methods;
+    return methods ?? [];
+  }
+
+  private isChainsStale() {
+    const namespaceMethods = this.getNamespaceMethods();
+    if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) return false;
+
+    const connectorChains = this.chain;
+    const namespaceChains = this.getNamespaceChainsIds();
+
+    if (
+      namespaceChains.length &&
+      !namespaceChains.some(id => id === this.chain)
+    )
+      return false;
+
+    return !connectorChains.includes(this.chain);
   }
 
   protected onAccountsChanged(): void {
