@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.11.0
+
+### Minor Changes
+
+- Migrating to Walletconnect v2
+
 ## 0.10.0
 
 ### Minor Changes
