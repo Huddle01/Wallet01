@@ -17,7 +17,10 @@
     "@metamask/detect-provider": "^2.0.0",
     "@rize-labs/banana-wallet-sdk": "^0.1.18",
     "@wallet01/core": "workspace:*",
-    "@walletconnect/ethereum-provider": "1.8.0",
+    "@walletconnect/ethereum-provider": "^2.8.2",
+    "@walletconnect/modal": "^2.5.2",
+    "@web3modal/core": "^2.2.2",
+    "@web3modal/standalone": "^2.2.2",
     "ethers": "^5.7.2",
     "eventemitter3": "^4.0.7"
   },

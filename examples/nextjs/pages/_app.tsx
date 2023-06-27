@@ -13,17 +13,21 @@ import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
 import { TempleConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
-import { FilecoinConnector } from "../lib/filecoin";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Wallet01
       autoConnect={true}
       connectors={() => [
-        new FilecoinConnector(),
         new InjectedConnector(),
+        new WalletconnectConnector({
+          chain: "1",
+          chains: [1],
+          optionalChains: [137, 80001],
+          projectId: "cef77f9c3969fb563468d997449c92d2",
+          showQrModal: true,
+        }),
         new CoinbaseConnector(),
-        new WalletconnectConnector(),
         new PhantomConnector(),
         new SolflareConnector(),
         new KeplrConnector(),
