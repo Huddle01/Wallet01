@@ -1,5 +1,17 @@
 # @wallet01/evm
 
+## 0.10.0
+
+### Minor Changes
+
+- Adding Banana Wallet Support
+
+## 0.9.0
+
+### Minor Changes
+
+- Adding support for OkxWallet
+
 ## 0.8.5
 
 ### Patch Changes
