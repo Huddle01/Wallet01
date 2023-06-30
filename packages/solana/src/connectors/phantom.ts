@@ -11,11 +11,17 @@ interface PhantomWindow extends Window {
 
 declare const window: PhantomWindow;
 
+interface PhantomConnectorOptions {
+  rpcUrl: string;
+}
+
 export class PhantomConnector extends BaseConnector<PhantomProvider> {
   provider!: PhantomProvider;
+  private rpcUrl: string;
+  constructor({ rpcUrl }: PhantomConnectorOptions) {
+    super("", "phantom", "solana");
 
-  constructor(chain: string = "") {
-    super(chain, "phantom", "solana");
+    this.rpcUrl = rpcUrl;
   }
 
   async getProvider(): Promise<PhantomProvider> {
@@ -68,9 +74,7 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
 
   async resolveDid(address: string): Promise<string | null> {
     if (!this.provider) throw new Error("No wallet Connected");
-    const connection = new Connection(
-      "https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc"
-    );
+    const connection = new Connection(this.rpcUrl);
 
     try {
       const ownerWallet = new PublicKey(address);

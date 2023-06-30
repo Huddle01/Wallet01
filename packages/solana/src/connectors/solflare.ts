@@ -9,11 +9,18 @@ declare const window: {
   solflare: SolflareProvider;
 };
 
+interface SolflareConnectorOptions {
+  rpcUrl: string;
+}
+
 export class SolflareConnector extends BaseConnector<SolflareProvider> {
   provider!: SolflareProvider;
+  private rpcUrl: string;
 
-  constructor(chain: string = "") {
-    super(chain, "solflare", "solana");
+  constructor({ rpcUrl }: SolflareConnectorOptions) {
+    super("", "solflare", "solana");
+
+    this.rpcUrl = rpcUrl;
   }
 
   async getProvider(): Promise<SolflareProvider> {
@@ -67,9 +74,7 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
 
   async resolveDid(address: string): Promise<string | null> {
     if (!this.provider) throw new Error("No wallet Connected");
-    const connection = new Connection(
-      "https://solana-api.syndica.io/access-token/590ibuUowWyZiI1R3d6f8ubDBXGMtGul6vjXAsZDLnGPMDdB4GojJuw7y23KDkP0/rpc"
-    );
+    const connection = new Connection(this.rpcUrl);
 
     try {
       const ownerWallet = new PublicKey(address);
