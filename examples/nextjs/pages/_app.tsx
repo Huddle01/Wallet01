@@ -28,13 +28,18 @@ export default function App({ Component, pageProps }: AppProps) {
           showQrModal: true,
         }),
         new CoinbaseConnector(),
-        new PhantomConnector(),
-        new SolflareConnector(),
+        new PhantomConnector({
+          rpcUrl: "https://api.mainnet-beta.solana.com",
+        }),
+        new SolflareConnector({
+          rpcUrl: "https://api.mainnet-beta.solana.com",
+        }),
         new KeplrConnector(),
         new TempleConnector({ projectName: "Wallet01" }),
         new BananaConnector(),
         new OkxWalletConnector(),
         new BeaconConnector({ projectName: "Wallet01" }),
+        ,
       ]}
     >
       <Layout>
