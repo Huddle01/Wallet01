@@ -1,28 +1,11 @@
-import beacon from "@airgap/beacon-dapp";
+import { NetworkType, Networks } from "../types";
 
-export const isNetwork = (
-  str: string | undefined
-): str is beacon.NetworkType => {
+export const isNetwork = (str: string | undefined): str is Networks => {
   if (!str) return false;
-  return Object.values<string>(beacon.NetworkType).includes(str.toLowerCase());
+  return Object.values<string>(NetworkType).includes(str.toLowerCase());
 };
 
-const Networks = [
-  "mainnet",
-  "ithacanet",
-  "hangzhounet",
-  "idiazabalnet",
-  "granadanet",
-  "edo2net",
-  "florencenet",
-  "sandbox",
-] as const;
-
-type NetworkKeys = (typeof Networks)[number];
-
-export const isTempleNetwork = (
-  str: string | undefined
-): str is NetworkKeys => {
+export const isTempleNetwork = (str: string | undefined): str is Networks => {
   if (!str) return false;
-  return Networks.includes(str.toLowerCase() as NetworkKeys);
+  return Object.values(NetworkType).includes(str.toLowerCase() as Networks);
 };

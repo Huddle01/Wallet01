@@ -1,5 +1,17 @@
 # @wallet01/tezos
 
+## 0.2.0-beta.5
+
+### Patch Changes
+
+- changin types locally
+
+## 0.2.0-beta.4
+
+### Patch Changes
+
+- Changing network types
+
 ## 0.2.0-beta.3
 
 ### Patch Changes

@@ -3,8 +3,7 @@ import { BeaconWallet } from "@taquito/beacon-wallet";
 import { formatMessage } from "../utils/formatMessage";
 import { isNetwork } from "../utils/isNetwork";
 import { TezosToolkit } from "@taquito/taquito";
-import { PermissionScope, SigningType } from "@airgap/beacon-dapp";
-
+import { PermissionScope, SigningType } from "../types";
 interface BeaconConnectorOptions {
   chain?: string;
   projectName: string;
@@ -148,7 +147,6 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
         `https://api.tzkt.io/v1/domains?owner=${address}`
       ).then(res => res.json());
       if (!domain || domain.length == 0 || !domain[0]) return null;
-      console.error(address, domain[0].name);
       return domain[0].name as string;
     } catch (error) {
       console.error({ error }, "resolveDid");

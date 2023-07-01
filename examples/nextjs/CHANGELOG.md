@@ -1,5 +1,19 @@
 # example
 
+## 0.1.40-beta.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/tezos@0.2.0-beta.4
+
+## 0.1.40-beta.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/tezos@0.2.0-beta.4
+
 ## 0.1.40-beta.2
 
 ### Patch Changes

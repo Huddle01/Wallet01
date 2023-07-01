@@ -1,6 +1,6 @@
 {
   "name": "@wallet01/tezos",
-  "version": "0.2.0-beta.3",
+  "version": "0.2.0-beta.5",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,8 +17,7 @@
     "@taquito/beacon-wallet": "^17.0.0",
     "@taquito/taquito": "12.0.0",
     "@temple-wallet/dapp": "^7.0.0",
-    "@wallet01/core": "workspace:*",
-    "@airgap/beacon-dapp": "3.3.4"
+    "@wallet01/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

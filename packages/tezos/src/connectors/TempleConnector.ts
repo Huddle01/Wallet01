@@ -98,7 +98,7 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
       }
 
       if (isTempleNetwork(chainId)) {
-        await this.provider.connect(chainId);
+        await this.provider.connect(chainId as TempleDAppNetwork);
       } else {
         await this.provider.connect("mainnet");
       }
