@@ -1,8 +1,10 @@
-import { NetworkType } from "@airgap/beacon-dapp";
+import * as beacon from "@airgap/beacon-dapp";
 
-export const isNetwork = (str: string | undefined): str is NetworkType => {
+export const isNetwork = (
+  str: string | undefined
+): str is beacon.NetworkType => {
   if (!str) return false;
-  return Object.values<string>(NetworkType).includes(str.toLowerCase());
+  return Object.values<string>(beacon.NetworkType).includes(str.toLowerCase());
 };
 
 const Networks = [

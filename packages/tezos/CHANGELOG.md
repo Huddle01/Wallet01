@@ -1,5 +1,11 @@
 # @wallet01/tezos
 
+## 0.2.0-beta.2
+
+### Patch Changes
+
+- Changing import from airgap package
+
 ## 0.2.0-beta.1
 
 ### Patch Changes
