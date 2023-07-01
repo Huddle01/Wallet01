@@ -1,5 +1,11 @@
 # @wallet01/tezos
 
+## 0.2.0-beta.3
+
+### Patch Changes
+
+- changing package imports
+
 ## 0.2.0-beta.2
 
 ### Patch Changes

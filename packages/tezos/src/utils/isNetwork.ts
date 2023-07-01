@@ -1,4 +1,4 @@
-import * as beacon from "@airgap/beacon-dapp";
+import beacon from "@airgap/beacon-dapp";
 
 export const isNetwork = (
   str: string | undefined
