@@ -1,5 +1,11 @@
 # @wallet01/tezos
 
+## 0.2.0-beta.0
+
+### Minor Changes
+
+- Adding Beacon connector
+
 ## 0.1.5
 
 ### Patch Changes
