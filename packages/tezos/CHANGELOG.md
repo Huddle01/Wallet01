@@ -1,5 +1,11 @@
 # @wallet01/tezos
 
+## 0.2.0-beta.1
+
+### Patch Changes
+
+- Adding beacon package in the dependency
+
 ## 0.2.0-beta.0
 
 ### Minor Changes
