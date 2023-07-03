@@ -32,7 +32,10 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
 
     this.toolkit = new TezosToolkit(this.rpcUrl);
 
-    const provider = new BeaconWallet({ name: this.projectName });
+    const provider = new BeaconWallet({
+      name: this.projectName,
+      appUrl: window.location.href,
+    });
     this.provider = provider;
 
     this.toolkit.setProvider({ wallet: provider });
