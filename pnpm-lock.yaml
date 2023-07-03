@@ -6299,7 +6299,6 @@ packages:
 
   /pino@7.11.0:
     resolution: {integrity: sha512-dMACeu63HtRLmCG8VKdy4cShCPKaYDR4youZqoSWLxl5Gu99HUw8bw75thbPv9Nip+H+QYX8o3ZJbTdVZZ2TVg==}
-    hasBin: true
     dependencies:
       atomic-sleep: 1.0.0
       fast-redact: 3.2.0
@@ -6509,7 +6508,6 @@ packages:
 
   /qrcode-svg@1.1.0:
     resolution: {integrity: sha512-XyQCIXux1zEIA3NPb0AeR8UMYvXZzWEhgdBgBjH9gO7M48H9uoHzviNz8pXw3UzrAcxRRRn9gxHewAVK7bn9qw==}
-    hasBin: true
     dev: false
 
   /qrcode@1.5.1:
