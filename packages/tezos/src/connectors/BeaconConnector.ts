@@ -31,21 +31,14 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
     }
 
     this.toolkit = new TezosToolkit(this.rpcUrl);
-
-    const provider = new BeaconWallet({
-      name: this.projectName,
-      appUrl: window.location.href,
-    });
-    this.provider = provider;
-
-    this.toolkit.setProvider({ wallet: provider });
   }
-
+  
   async getProvider(): Promise<BeaconWallet> {
     try {
       if (!this.provider) {
         const provider = new BeaconWallet({ name: this.projectName });
         this.provider = provider;
+        this.toolkit.setProvider({ wallet: provider });
       }
       return this.provider;
     } catch (error) {
@@ -135,6 +128,7 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
+      await this.provider.clearActiveAccount();
       await this.provider.disconnect();
     } catch (error) {
       console.error({ error }, "disconnect");

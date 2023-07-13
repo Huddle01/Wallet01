@@ -325,8 +325,8 @@ importers:
   packages/tezos:
     dependencies:
       '@taquito/beacon-wallet':
-        specifier: ^17.0.0
-        version: 17.0.0
+        specifier: ^17.1.0
+        version: 17.1.0
       '@taquito/taquito':
         specifier: 12.0.0
         version: 12.0.0
@@ -2096,8 +2096,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /@taquito/beacon-wallet@17.0.0:
-    resolution: {integrity: sha512-OKuN2V2xLMeSb0u3nfzSjZDYV4mIB4pur2eR8xa+NhkXlY0gkQXjmZ3K9lwtjKcU3GI0iv5IVod4blYyHNeNvg==}
+  /@taquito/beacon-wallet@17.1.0:
+    resolution: {integrity: sha512-iABiUx4KDXkqXVAKo8W1ik0zEt+aAZRxFHaxtS6wqwmpqCCl9+EGDPpP+FlOLoj320HXlkIba7OdsPpHAEJsKQ==}
     engines: {node: '>=16'}
     dependencies:
       '@airgap/beacon-dapp': 4.0.2
@@ -6508,6 +6508,7 @@ packages:
 
   /qrcode-svg@1.1.0:
     resolution: {integrity: sha512-XyQCIXux1zEIA3NPb0AeR8UMYvXZzWEhgdBgBjH9gO7M48H9uoHzviNz8pXw3UzrAcxRRRn9gxHewAVK7bn9qw==}
+    hasBin: true
     dev: false
 
   /qrcode@1.5.1:
