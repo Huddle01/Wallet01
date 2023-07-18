@@ -11,13 +11,16 @@
     "@wallet01/evm": "0.10.0",
     "@wallet01/react": "0.8.7",
     "@wallet01/solana": "0.6.5",
-    "@wallet01/tezos": "0.1.5"
+    "@wallet01/tezos": "0.1.5",
+    "example-nextjs": "0.1.40-beta.4",
+    "exmaple-vite-react": "0.0.40"
   },
   "changesets": [
     "cyan-camels-prove",
     "moody-gorillas-warn",
     "rare-feet-watch",
     "sixty-brooms-live",
+    "smart-socks-buy",
     "thirty-moons-tap",
     "violet-pots-jog"
   ]

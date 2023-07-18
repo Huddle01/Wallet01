@@ -1,5 +1,11 @@
 # @wallet01/tezos
 
+## 0.2.0-beta.6
+
+### Patch Changes
+
+- fixing disconnect function
+
 ## 0.2.0-beta.5
 
 ### Patch Changes

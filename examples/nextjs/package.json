@@ -1,5 +1,5 @@
 {
-  "name": "nextjs",
+  "name": "example-nextjs",
   "version": "0.1.40-beta.4",
   "private": true,
   "scripts": {
@@ -16,7 +16,7 @@
     "@wallet01/evm": "workspace:*",
     "@wallet01/react": "workspace:*",
     "@wallet01/solana": "workspace:*",
-    "@wallet01/tezos": "workspace:*",
+    "@wallet01/tezos": "0.2.0-beta.6",
     "ethers": "^5.7.2",
     "next": "13.0.3",
     "react": "18.2.0",
