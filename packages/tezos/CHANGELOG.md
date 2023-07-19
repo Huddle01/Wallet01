@@ -1,5 +1,20 @@
 # @wallet01/tezos
 
+## 0.2.0
+
+### Minor Changes
+
+- 6275204: Adding Beacon connector
+
+### Patch Changes
+
+- edfcb84: changing package imports
+- a0b43cf: Changing network types
+- a0b43cf: changin types locally
+- 8f1a6c2: fixing disconnect function
+- bfe27d6: Adding beacon package in the dependency
+- 8ff3492: Changing import from airgap package
+
 ## 0.2.0-beta.6
 
 ### Patch Changes
