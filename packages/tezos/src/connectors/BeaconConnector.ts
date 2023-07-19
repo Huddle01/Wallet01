@@ -1,30 +1,29 @@
 import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
-
-import { TempleDAppNetwork, TempleWallet } from "@temple-wallet/dapp";
-import { TezosToolkit } from "@taquito/taquito";
+import { BeaconWallet } from "@taquito/beacon-wallet";
 import { formatMessage } from "../utils/formatMessage";
-import { isTempleNetwork } from "../utils/isNetwork";
-
-interface TempleConnectorOptions {
+import { isNetwork } from "../utils/isNetwork";
+import { TezosToolkit } from "@taquito/taquito";
+import { PermissionScope, SigningType } from "../types";
+interface BeaconConnectorOptions {
   chain?: string;
-  rpcUrl?: string;
   projectName: string;
+  rpcUrl?: string;
 }
 
-export class TempleConnector extends BaseConnector<TempleWallet> {
-  provider?: TempleWallet | undefined;
-  private toolkit: TezosToolkit;
-  private rpcUrl: string;
+export class BeaconConnector extends BaseConnector<BeaconWallet> {
+  provider?: BeaconWallet | undefined;
   private projectName: string;
+  private rpcUrl: string;
+  private toolkit: TezosToolkit;
 
   constructor({
     chain = "mainnet",
     projectName,
     rpcUrl,
-  }: TempleConnectorOptions) {
-    super(chain, "templewallet", "tezos");
-
+  }: BeaconConnectorOptions) {
+    super(chain, "beacon", "tezos");
     this.projectName = projectName;
+
     if (rpcUrl) {
       this.rpcUrl = rpcUrl;
     } else {
@@ -32,16 +31,15 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
     }
 
     this.toolkit = new TezosToolkit(this.rpcUrl);
-    this.provider = new TempleWallet(projectName);
-
-    this.toolkit.setProvider({ wallet: this.provider });
   }
-
-  async getProvider(): Promise<TempleWallet> {
+  
+  async getProvider(): Promise<BeaconWallet> {
     try {
-      if (this.provider) return this.provider;
-      const provider = new TempleWallet(this.projectName);
-      this.provider = provider;
+      if (!this.provider) {
+        const provider = new BeaconWallet({ name: this.projectName });
+        this.provider = provider;
+        this.toolkit.setProvider({ wallet: provider });
+      }
       return this.provider;
     } catch (error) {
       console.error({ error }, "getProvider");
@@ -68,8 +66,15 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      if (!this.chain) await this.connect({});
-      return this.chain;
+      const account = await this.provider.client.getActiveAccount();
+      if (!account) {
+        await this.connect({});
+        return this.chain;
+      }
+      const {
+        network: { type },
+      } = account;
+      return type;
     } catch (error) {
       console.error({ error }, "getChainId");
       throw error;
@@ -80,7 +85,7 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      await this.provider.reconnect(chainId as TempleDAppNetwork);
+      await this.connect({ chainId });
       this.chain = chainId;
     } catch (error) {
       console.error({ error }, "switchChain");
@@ -91,19 +96,27 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
   async connect({ chainId }: { chainId?: string | undefined }): Promise<void> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("Provider not initialized");
-
-      if (!(await TempleWallet.isAvailable())) {
-        throw new Error("Wallet Not Installed");
+      if (!this.provider) throw new Error("Wallet Not Installed");
+      let activeAccount = await this.provider.client.getActiveAccount();
+      if (!activeAccount) {
+        await this.provider.requestPermissions(
+          isNetwork(chainId)
+            ? {
+                network: {
+                  type: chainId,
+                },
+                scopes: [PermissionScope.SIGN],
+              }
+            : {
+                scopes: [PermissionScope.SIGN],
+              }
+        );
+        activeAccount = await this.provider.client.getActiveAccount();
       }
-
-      if (isTempleNetwork(chainId)) {
-        await this.provider.connect(chainId as TempleDAppNetwork);
-      } else {
-        await this.provider.connect("mainnet");
+      if (!activeAccount?.address) {
+        throw new Error("Wallet Not Conencted");
       }
-
-      this.chain = chainId || "mainnet";
+      this.chain = activeAccount.network.type;
       setLastUsedConnector(this.name);
     } catch (error) {
       console.error({ error }, "connect");
@@ -115,8 +128,8 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
-      this.provider = undefined;
-      this.chain = "";
+      await this.provider.clearActiveAccount();
+      await this.provider.disconnect();
     } catch (error) {
       console.error({ error }, "disconnect");
       throw error;
@@ -131,7 +144,6 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
         `https://api.tzkt.io/v1/domains?owner=${address}`
       ).then(res => res.json());
       if (!domain || domain.length == 0 || !domain[0]) return null;
-      console.error(address, domain[0].name);
       return domain[0].name as string;
     } catch (error) {
       console.error({ error }, "resolveDid");
@@ -143,7 +155,15 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Connected");
-      const signature = await this.provider.sign(formatMessage(message));
+      const address = await this.provider.getPKH();
+      if (!address) {
+        throw new Error("Wallet Not Conencted");
+      }
+      const { signature } = await this.provider.client.requestSignPayload({
+        signingType: SigningType.MICHELINE,
+        payload: formatMessage(message),
+        sourceAddress: address,
+      });
       return signature;
     } catch (error) {
       console.error({ error }, "signMessage");
@@ -155,7 +175,7 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
     return;
   }
 
-  protected onChainChanged(_chain: string | number): void {
+  protected onChainChanged(): void {
     return;
   }
 

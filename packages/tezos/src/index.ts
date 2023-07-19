@@ -1,3 +1,4 @@
-import TempleConnector from "./connectors/TempleConnector";
+import { TempleConnector } from "./connectors/TempleConnector";
+import { BeaconConnector } from "./connectors/BeaconConnector";
 
-export { TempleConnector };
+export { TempleConnector, BeaconConnector };
