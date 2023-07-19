@@ -27,6 +27,8 @@ export default function App({ Component, pageProps }: AppProps) {
           projectId: "cef77f9c3969fb563468d997449c92d2",
           showQrModal: true,
         }),
+        new BananaConnector(),
+        new OkxWalletConnector(),
         new CoinbaseConnector(),
         new PhantomConnector({
           rpcUrl: "https://api.mainnet-beta.solana.com",
@@ -36,10 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
         }),
         new KeplrConnector(),
         new TempleConnector({ projectName: "Wallet01" }),
-        new BananaConnector(),
-        new OkxWalletConnector(),
         new BeaconConnector({ projectName: "Wallet01" }),
-        ,
       ]}
     >
       <Layout>

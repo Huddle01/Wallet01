@@ -63,8 +63,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/solana
       '@wallet01/tezos':
-        specifier: 0.2.0-beta.6
-        version: 0.2.0-beta.6(react@18.2.0)
+        specifier: workspace:*
+        version: link:../../packages/tezos
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -2503,33 +2503,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@wallet01/core@0.6.5(react@18.2.0):
-    resolution: {integrity: sha512-jVyKoD6yYfIz/2bKXt2vaA87Re0UxhPVlVY8zQ1Jm8SsdWGH08oe/pIsRirLqn53qQJCWwgBQKH6PoLO7+D9Pw==}
-    dependencies:
-      eventemitter3: 4.0.7
-      zustand: 4.1.5(react@18.2.0)
-    transitivePeerDependencies:
-      - immer
-      - react
-    dev: false
-
-  /@wallet01/tezos@0.2.0-beta.6(react@18.2.0):
-    resolution: {integrity: sha512-y7B2C+msnA8yEJfTqLtxP+sgP0OeFT2p+IpHcNFzZrMVphKoG0kL1sk8h0dkzY43t8mPqXUKTHtijrXNK0kxdw==}
-    dependencies:
-      '@taquito/beacon-wallet': 17.1.0
-      '@taquito/taquito': 12.0.0
-      '@temple-wallet/dapp': 7.0.0(@taquito/taquito@12.0.0)
-      '@wallet01/core': 0.6.5(react@18.2.0)
-    transitivePeerDependencies:
-      - '@react-native-async-storage/async-storage'
-      - bufferutil
-      - debug
-      - immer
-      - lokijs
-      - react
-      - utf-8-validate
-    dev: false
 
   /@walletconnect/core@2.7.0:
     resolution: {integrity: sha512-xUeFPpElybgn1a+lknqtHleei4VyuV/4qWgB1nP8qQUAO6a5pNsioODrnB2VAPdUHJYBdx2dCt2maRk6g53IPQ==}
