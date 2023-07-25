@@ -51,4 +51,15 @@ export const chainData: ChainObj = {
     rpcUrls: [`https://rpc-mumbai.maticvigil.com`],
     blockExplorerUrls: [`https://mumbai.polygonscan.com`],
   },
+  "303": {
+    chainId: "0x12f",
+    chainName: "WYZth Scan",
+    nativeCurrency: {
+      name: "WYZ",
+      symbol: "WYZ",
+      decimals: 18,
+    },
+    rpcUrls: [`https://rpc-mainnet.wyzthchain.org`],
+    blockExplorerUrls: [`https://wyzthscan.org`],
+  }
 };
