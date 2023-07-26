@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.11.1-beta.0
+
+### Patch Changes
+
+- adding shardeum and wyzth chain types
+
 ## 0.11.0
 
 ### Minor Changes
