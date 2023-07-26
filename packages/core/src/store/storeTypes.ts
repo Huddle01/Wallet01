@@ -15,14 +15,14 @@ export interface IWalletState {
 }
 
 export interface IClientState {
-  activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | "wyzth" | null;
+  activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | null;
   autoConnect: boolean;
   connectors: BaseConnector[];
   activeConnector: BaseConnector | null;
   lastUsedConnector: BaseConnector | null;
   isAutoConnecting: boolean;
   setActiveChain: (
-    val: "ethereum" | "solana" | "cosmos" | "tezos" | "wyzth" | null
+    val: "ethereum" | "solana" | "cosmos" | "tezos" | null
   ) => void;
   setAutoConnect: (val: boolean) => void;
   setConnectors: (connectors: BaseConnector[]) => void;

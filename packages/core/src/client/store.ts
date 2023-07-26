@@ -2,7 +2,7 @@ import getState from "../store/rootStore";
 import { BaseConnector } from "../types";
 
 export class Wallet01Store {
-  getActiveChain(): "ethereum" | "solana" | "cosmos" | "tezos" | "wyzth" | null {
+  getActiveChain(): "ethereum" | "solana" | "cosmos" | "tezos" | null {
     const { activeChain } = getState();
     return activeChain;
   }
@@ -53,7 +53,7 @@ export class Wallet01Store {
   }
 
   setActiveChain(
-    activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | "wyzth" | null
+    activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | null
   ): void {
     const { setActiveChain } = getState();
     setActiveChain(activeChain);

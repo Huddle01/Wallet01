@@ -8,7 +8,7 @@ type ConnectArgs = {
 
 type ConnectResult = {
   address: string;
-  chain: "ethereum" | "solana" | "cosmos" | "tezos" | "wyzth";
+  chain: "ethereum" | "solana" | "cosmos" | "tezos";
   connector: BaseConnector;
 };
 
