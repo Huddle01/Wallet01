@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.11.1-beta.1
+
+### Patch Changes
+
+- adding build files
+
 ## 0.11.1-beta.0
 
 ### Patch Changes

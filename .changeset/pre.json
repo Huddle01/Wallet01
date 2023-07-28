@@ -14,6 +14,7 @@
     "@wallet01/tezos": "0.2.0"
   },
   "changesets": [
+    "lazy-rice-deny",
     "slimy-glasses-prove"
   ]
 }
