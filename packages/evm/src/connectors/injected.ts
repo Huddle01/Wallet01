@@ -63,8 +63,7 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
     } catch (error) {
       console.log("error in switching chain", error);
       if (chainData[chainId]) {
-        this.provider?.send("wallet_addEthereumChain", [chainData[chainId]]);
-        return;
+        await this.addChain(chainId, provider);
       }
       throw error;
     }
@@ -121,6 +120,16 @@ export class InjectedConnector extends BaseConnector<Web3Provider> {
       return hash;
     } catch (error) {
       console.error(error);
+      throw error;
+    }
+  }
+
+  private async addChain(chainId: string, provider: Web3Provider) {
+    try {
+      await provider.send("wallet_addEthereumChain", [chainData[chainId]]);
+      return;
+    } catch (error) {
+      console.log("error in adding chain", error);
       throw error;
     }
   }
