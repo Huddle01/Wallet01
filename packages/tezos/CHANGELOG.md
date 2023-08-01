@@ -1,5 +1,11 @@
 # @wallet01/tezos
 
+## 0.2.1-beta.0
+
+### Patch Changes
+
+- adding publicKey
+
 ## 0.2.0
 
 ### Minor Changes
