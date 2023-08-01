@@ -1,5 +1,12 @@
 # @wallet01/tezos
 
+## 0.2.1
+
+### Patch Changes
+
+- Adding further customisation for beacon wallet modal
+- b5fc994: adding publicKey
+
 ## 0.2.1-beta.0
 
 ### Patch Changes
