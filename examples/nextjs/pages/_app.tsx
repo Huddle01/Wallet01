@@ -13,6 +13,7 @@ import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
 import { BeaconConnector, TempleConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
+import { ColorMode } from "@wallet01/tezos/dist/types";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -38,7 +39,11 @@ export default function App({ Component, pageProps }: AppProps) {
         }),
         new KeplrConnector(),
         new TempleConnector({ projectName: "Wallet01" }),
-        new BeaconConnector({ projectName: "Wallet01" }),
+        new BeaconConnector({
+          name: "Wallet01",
+          featuredWallets: ["temple", "umami", "kukai", "naan"],
+          colorMode: ColorMode.DARK,
+        }),
       ]}
     >
       <Layout>

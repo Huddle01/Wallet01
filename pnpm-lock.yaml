@@ -2116,6 +2116,11 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
+  /@taquito/core@17.1.1:
+    resolution: {integrity: sha512-ib+dzHbVT+0maYGAVdeIk9v9CNkOiB5j8CwnHUygBkEajoOdWTPlsrldRhRTAOnbj+iQk0kdkUECD6KY6iNknw==}
+    engines: {node: '>=16'}
+    dev: false
+
   /@taquito/http-utils@12.1.1:
     resolution: {integrity: sha512-Zlp/eTRVjFs0XEIiAhgxkh6s9npF4dO+e/Sm2XWsDmNPoGI2jdXNH0L+NiKJIOkYcu0CXlcgriTeEaYnbeTvcA==}
     engines: {node: '>=6.0.0'}
@@ -2148,7 +2153,7 @@ packages:
     engines: {node: '>=16'}
     dependencies:
       '@taquito/core': 17.1.0
-      '@taquito/utils': 17.1.0
+      '@taquito/utils': 17.1.1
       bignumber.js: 9.1.1
     dev: false
 
@@ -2181,7 +2186,7 @@ packages:
     engines: {node: '>=16'}
     dependencies:
       '@taquito/rpc': 17.1.0
-      '@taquito/utils': 17.1.0
+      '@taquito/utils': 17.1.1
       bignumber.js: 9.1.1
       fast-json-stable-stringify: 2.1.0
     transitivePeerDependencies:
@@ -2205,7 +2210,7 @@ packages:
     dependencies:
       '@taquito/core': 17.1.0
       '@taquito/http-utils': 17.1.0
-      '@taquito/utils': 17.1.0
+      '@taquito/utils': 17.1.1
       bignumber.js: 9.1.1
     transitivePeerDependencies:
       - debug
@@ -2239,7 +2244,7 @@ packages:
       '@taquito/michel-codec': 17.1.0
       '@taquito/michelson-encoder': 17.1.0
       '@taquito/rpc': 17.1.0
-      '@taquito/utils': 17.1.0
+      '@taquito/utils': 17.1.1
       bignumber.js: 9.1.1
       rxjs: 7.8.1
     transitivePeerDependencies:
@@ -2260,13 +2265,13 @@ packages:
       typedarray-to-buffer: 4.0.0
     dev: false
 
-  /@taquito/utils@17.1.0:
-    resolution: {integrity: sha512-ob5Zth16vhyFq/RP5wr3t11M8jdnwMA1dmxNljVwwBuDW/qHgHr6lBS8hFOVe6ZTwf4DO+3lRYRHiaBaXS82Hw==}
+  /@taquito/utils@17.1.1:
+    resolution: {integrity: sha512-KcK7Qa2+SCcevxSJixA3utDtlPYS5DGXpZdMlrAjwjozMiuDGSLM63D1CrW/ojYI0t3tPuErty10cPhURZ+d4A==}
     engines: {node: '>=16'}
     dependencies:
       '@stablelib/blake2b': 1.0.1
       '@stablelib/ed25519': 1.0.3
-      '@taquito/core': 17.1.0
+      '@taquito/core': 17.1.1
       '@types/bs58check': 2.1.0
       bignumber.js: 9.1.1
       blakejs: 1.2.1

@@ -1,6 +1,7 @@
 import { useClient, useMessage, useSwitch, useWallet } from "@wallet01/react";
 import React, { useState } from "react";
 import WalletIcons from "./assets/WalletIcons";
+import { BeaconConnector } from "@wallet01/tezos";
 
 const ConnectedModal = () => {
   const [message, setMessage] = useState<string>("");
@@ -38,6 +39,9 @@ const ConnectedModal = () => {
           ) : (
             ""
           )}
+          {activeConnector?.name === "beacon" ? (
+            <span>{BeaconConnector.publicKey}</span>
+          ) : null}
           <button
             className="bg-slate-600 w-fit p-3 text-medium text-lg rounded-md"
             onClick={() => disconnect()}

@@ -17,6 +17,8 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
   private rpcUrl: string;
   private projectName: string;
 
+  static publicKey?: string;
+
   constructor({
     chain = "mainnet",
     projectName,
@@ -103,6 +105,7 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
         await this.provider.connect("mainnet");
       }
 
+      TempleConnector.publicKey = await this.provider.permission?.publicKey;
       this.chain = chainId || "mainnet";
       setLastUsedConnector(this.name);
     } catch (error) {
@@ -115,6 +118,7 @@ export class TempleConnector extends BaseConnector<TempleWallet> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
+      TempleConnector.publicKey = undefined;
       this.provider = undefined;
       this.chain = "";
     } catch (error) {

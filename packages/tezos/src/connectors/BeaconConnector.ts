@@ -1,28 +1,35 @@
 import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet } from "@taquito/beacon-wallet";
+
 import { formatMessage } from "../utils/formatMessage";
 import { isNetwork } from "../utils/isNetwork";
-import { TezosToolkit } from "@taquito/taquito";
-import { PermissionScope, SigningType } from "../types";
-interface BeaconConnectorOptions {
+import { PermissionScope, SigningType, DAppClientOptions } from "../types";
+
+type BeaconConnectorOptions = {
   chain?: string;
-  projectName: string;
+  name: string;
   rpcUrl?: string;
-}
+} & DAppClientOptions;
 
 export class BeaconConnector extends BaseConnector<BeaconWallet> {
   provider?: BeaconWallet | undefined;
   private projectName: string;
   private rpcUrl: string;
+  private featuredWallets?: string[];
   private toolkit: TezosToolkit;
+
+  static publicKey?: string;
 
   constructor({
     chain = "mainnet",
-    projectName,
+    name,
     rpcUrl,
+    featuredWallets,
   }: BeaconConnectorOptions) {
     super(chain, "beacon", "tezos");
-    this.projectName = projectName;
+    this.projectName = name;
+    this.featuredWallets = featuredWallets;
 
     if (rpcUrl) {
       this.rpcUrl = rpcUrl;
@@ -32,11 +39,14 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
 
     this.toolkit = new TezosToolkit(this.rpcUrl);
   }
-  
+
   async getProvider(): Promise<BeaconWallet> {
     try {
       if (!this.provider) {
-        const provider = new BeaconWallet({ name: this.projectName });
+        const provider = new BeaconWallet({
+          name: this.projectName,
+          featuredWallets: this.featuredWallets,
+        });
         this.provider = provider;
         this.toolkit.setProvider({ wallet: provider });
       }
@@ -116,6 +126,8 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
       if (!activeAccount?.address) {
         throw new Error("Wallet Not Conencted");
       }
+
+      BeaconConnector.publicKey = activeAccount.publicKey;
       this.chain = activeAccount.network.type;
       setLastUsedConnector(this.name);
     } catch (error) {
@@ -129,6 +141,7 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
       await this.provider.clearActiveAccount();
+      BeaconConnector.publicKey = undefined;
       await this.provider.disconnect();
     } catch (error) {
       console.error({ error }, "disconnect");
