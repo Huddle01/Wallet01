@@ -15,6 +15,7 @@
   },
   "changesets": [
     "lazy-rice-deny",
+    "mean-scissors-hang",
     "slimy-glasses-prove"
   ]
 }
