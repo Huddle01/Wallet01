@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.11.1-beta.3
+
+### Patch Changes
+
+- build package publish
+
 ## 0.11.1-beta.2
 
 ### Patch Changes
