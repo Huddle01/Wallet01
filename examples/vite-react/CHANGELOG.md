@@ -1,5 +1,15 @@
 # vite-react
 
+## 0.0.41
+
+### Patch Changes
+
+- Updated dependencies [54643bb]
+- Updated dependencies [ecf12f2]
+- Updated dependencies [6bd0842]
+- Updated dependencies [cc12eeb]
+  - @wallet01/evm@0.11.1
+
 ## 0.0.41-beta.3
 
 ### Patch Changes

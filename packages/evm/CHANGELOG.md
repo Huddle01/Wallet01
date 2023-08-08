@@ -1,5 +1,14 @@
 # @wallet01/evm
 
+## 0.11.1
+
+### Patch Changes
+
+- 54643bb: build package publish
+- ecf12f2: adding build files
+- 6bd0842: Adding add chain error handler
+- cc12eeb: adding shardeum and wyzth chain types
+
 ## 0.11.1-beta.3
 
 ### Patch Changes
