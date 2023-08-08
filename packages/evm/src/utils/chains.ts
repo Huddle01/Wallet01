@@ -51,4 +51,26 @@ export const chainData: ChainObj = {
     rpcUrls: [`https://rpc-mumbai.maticvigil.com`],
     blockExplorerUrls: [`https://mumbai.polygonscan.com`],
   },
+  "303": {
+    chainId: "0x12f",
+    chainName: "WYZth Scan",
+    nativeCurrency: {
+      name: "WYZ",
+      symbol: "WYZ",
+      decimals: 18,
+    },
+    rpcUrls: [`https://rpc-mainnet.wyzthchain.org`],
+    blockExplorerUrls: [`https://wyzthscan.org`],
+  },
+  "8081": {
+    chainId: "0x1f91",
+    chainName: "Shardeum Sphinx Dapp 1.X",
+    nativeCurrency: {
+      name: "SHM",
+      symbol: "SHM",
+      decimals: 18,
+    },
+    rpcUrls: [`https://dapps.shardeum.org`],
+    blockExplorerUrls: [`https://explorer-dapps.shardeum.org`],
+  }
 };
