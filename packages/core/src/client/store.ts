@@ -1,15 +1,36 @@
-import getState from "../store/rootStore";
+import { getState } from "../store/rootStore";
+import { IState } from "../store/storeTypes";
 import { BaseConnector } from "../types";
 
 export class Wallet01Store {
-  getActiveChain(): "ethereum" | "solana" | "cosmos" | "tezos" | null {
-    const { activeChain } = getState();
-    return activeChain;
+  static #instance: Wallet01Store;
+
+  constructor() {
+    this.getState = getState;
   }
 
-  getAddress(): string | null {
+  public static init() {
+    if (!Wallet01Store.#instance) {
+      Wallet01Store.#instance = new Wallet01Store();
+    }
+    return Wallet01Store.#instance;
+  }
+
+  getState: () => IState;
+
+  getEcosystem() {
+    const { ecosystem } = getState();
+    return ecosystem;
+  }
+
+  getAddress() {
     const { address } = getState();
     return address;
+  }
+
+  getAddresses() {
+    const { addresses } = getState();
+    return addresses;
   }
 
   getDid(): string | null {
@@ -27,11 +48,6 @@ export class Wallet01Store {
     return chainId;
   }
 
-  getAutoConnect(): boolean {
-    const { autoConnect } = getState();
-    return autoConnect;
-  }
-
   getConnectors(): BaseConnector[] {
     const { connectors } = getState();
     return connectors;
@@ -42,65 +58,38 @@ export class Wallet01Store {
     return activeConnector;
   }
 
-  getLastUsedConnector(): BaseConnector | null {
-    const { lastUsedConnector } = getState();
-    return lastUsedConnector;
+  setEcosystem(ecosystem: "ethereum" | "solana" | "cosmos" | "tezos") {
+    const { setEcosystem } = getState();
+    setEcosystem(ecosystem);
   }
 
-  getIsAutoConnecting(): boolean {
-    const { isAutoConnecting } = getState();
-    return isAutoConnecting;
-  }
-
-  setActiveChain(
-    activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | null
-  ): void {
-    const { setActiveChain } = getState();
-    setActiveChain(activeChain);
-  }
-
-  setAddress(address: string | null): void {
+  setAddress(address: string | null) {
     const { setAddress } = getState();
     setAddress(address);
   }
 
-  setDid(did: string | null): void {
+  setDid(did: string | null) {
     const { setDid } = getState();
     setDid(did);
   }
 
-  setIsConnected(val: boolean): void {
+  setIsConnected(val: boolean) {
     const { setIsConnected } = getState();
     setIsConnected(val);
   }
 
-  setChainId(id: string | null): void {
+  setChainId(id: string | "default") {
     const { setChainId } = getState();
     setChainId(id);
   }
 
-  setAutoConnect(val: boolean): void {
-    const { setAutoConnect } = getState();
-    setAutoConnect(val);
-  }
-
-  setConnectors(connectors: BaseConnector[]): void {
+  setConnectors(connectors: BaseConnector[]) {
     const { setConnectors } = getState();
     setConnectors(connectors);
   }
 
-  setActiveConnector(connector: BaseConnector | null): void {
+  setActiveConnector(connector: BaseConnector | null) {
     const { setActiveConnector } = getState();
     setActiveConnector(connector);
-  }
-
-  setLastUsedConnector(connector: BaseConnector | null): void {
-    const { setLastUsedConnector } = getState();
-    setLastUsedConnector(connector);
-  }
-
-  setIsAutoConnecting(val: boolean): void {
-    const { setIsAutoConnecting } = getState();
-    setIsAutoConnecting(val);
   }
 }

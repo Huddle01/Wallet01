@@ -7,29 +7,17 @@ const createClientSlice: StateCreator<
   [],
   IClientState
 > = set => ({
-  activeChain: null,
-  autoConnect: false,
+  ecosystem: null,
   connectors: [],
   activeConnector: null,
-  lastUsedConnector: null,
-  isAutoConnecting: true,
-  setActiveChain: activeChain => {
-    set(() => ({ activeChain }));
-  },
-  setAutoConnect: autoConnect => {
-    set(() => ({ autoConnect }));
+  setEcosystem: ecosystem => {
+    set(() => ({ ecosystem }));
   },
   setConnectors: connectors => {
     set(() => ({ connectors }));
   },
   setActiveConnector: activeConnector => {
     set(() => ({ activeConnector }));
-  },
-  setLastUsedConnector: lastUsedConnector => {
-    set(() => ({ lastUsedConnector }));
-  },
-  setIsAutoConnecting: val => {
-    set(() => ({ isAutoConnecting: val }));
   },
 });
 

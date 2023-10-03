@@ -1,100 +1,78 @@
-import { BaseConnector } from "../types";
+import { ClientEvents, ConnectorEvents } from "../types/events";
+import { ClientConfig } from "../types/methodTypes";
+import { EnhancedEventEmitter } from "../utils/EnhancedEventEmitter";
 import { Wallet01Store } from "./store";
 
-type ClientConfig = {
-  autoConnect?: boolean;
-  connectors: BaseConnector[];
-};
+export default class Wallet01Client extends EnhancedEventEmitter<
+  ClientEvents & ConnectorEvents
+> {
+  static #instance: Wallet01Client;
 
-export default class Client extends Wallet01Store {
-  private static instance: Client;
-  activeConnector: BaseConnector | null = null;
+  public store: Wallet01Store = Wallet01Store.init();
 
-  constructor({ autoConnect, connectors }: ClientConfig) {
+  constructor({ autoConnect = false, connectors }: ClientConfig) {
     super();
-    this.setAutoConnect(autoConnect || false);
-    this.setConnectors(connectors);
+
+    this.store.setConnectors(connectors);
 
     if (localStorage.getItem("autoConnect") === null)
       localStorage.setItem("autoConnect", String(autoConnect));
 
-    if (localStorage.getItem("autoConnect") === "false")
-      this.setIsAutoConnecting(false);
+    if (localStorage.getItem("autoConnect") === "false") {
+      return;
+    }
 
     if (localStorage.getItem("autoConnect") !== String(autoConnect))
       localStorage.setItem("autoConnect", String(autoConnect));
 
-    if (!localStorage.getItem("lastUsedConnector"))
-      this.setIsAutoConnecting(false);
+    if (!localStorage.getItem("lastUsedConnector")) {
+      return;
+    }
 
     if (
       localStorage.getItem("lastUsedConnector") &&
       localStorage.getItem("autoConnect") === "true"
     ) {
-      this.ac();
+      this.autoConnect();
     }
   }
 
   static init = (config: ClientConfig) => {
-    if (!Client.instance) Client.instance = new Client(config);
-    return Client.instance;
+    if (!Wallet01Client.#instance)
+      Wallet01Client.#instance = new Wallet01Client(config);
+    return Wallet01Client.#instance;
   };
 
-  private async ac() {
-    try {
-      this.setIsAutoConnecting(true);
-      const lastConnName = localStorage.getItem("lastUsedConnector");
-      if (!lastConnName) {
-        this.setIsAutoConnecting(false);
-        return;
-      }
+  private async autoConnect() {
+    const lastUsedConnectorName = localStorage.getItem("lastUsedConnector");
 
-      const connector = this.getConnectors().find(
-        conn => conn.name === lastConnName
-      );
+    if (!lastUsedConnectorName) {
+      console.info({
+        message: "No last used connector found",
+      });
+      return;
+    }
 
-      if (!connector) {
-        this.setIsAutoConnecting(false);
-        return;
-      } else this.setLastUsedConnector(connector);
+    const lastUsedConnector = this.store
+      .getConnectors()
+      .find(conn => conn.name === lastUsedConnectorName);
 
-      this.setActiveConnector(this.getLastUsedConnector());
-      this.activeConnector = this.getLastUsedConnector();
+    if (!lastUsedConnector) {
+      console.warn({
+        message: `The connector for wallet name: ${lastUsedConnectorName} was not found in the list of connectors`,
+      });
+      return;
+    }
 
-      if (this.activeConnector) {
-        await this.activeConnector.connect({});
-        const addresses = await this.activeConnector.getAccount();
+    this.store.setActiveConnector(lastUsedConnector);
 
-        const address = addresses[0];
+    const activeConnector = this.store.getActiveConnector();
 
-        if (!address) return;
+    if (activeConnector) {
+      this.emit("isAutoConnecting", activeConnector.ecosystem, activeConnector);
 
-        this.setAddress(address);
-
-        const did = await this.activeConnector
-          .resolveDid(address)
-          .catch(err => {
-            console.error({ error: err });
-            return null;
-          });
-
-        this.setDid(did);
-
-        const chain = this.activeConnector.getChainId
-          ? await this.activeConnector.getChainId()
-          : null;
-
-        this.setChainId(chain);
-
-        this.setActiveChain(this.activeConnector.activeChain);
-        this.setIsAutoConnecting(false);
-        this.setIsConnected(true);
-      } else {
-        this.setIsAutoConnecting(false);
-      }
-    } catch (error) {
-      console.error({ error });
-      this.setIsAutoConnecting(false);
+      await activeConnector.init();
+      await activeConnector.connect();
     }
   }
 }

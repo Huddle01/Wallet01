@@ -1,34 +1,30 @@
 import { BaseConnector } from "../types";
 
+export type TEcosystem = "ethereum" | "solana" | "cosmos" | "tezos";
+
 export interface IAccountState {
   address: string | null;
+  addresses: string[];
   did: string | null;
   setAddress: (address: string | null) => void;
+  setAddresses: (addresses: string[]) => void;
   setDid: (did: string | null) => void;
 }
 
 export interface IWalletState {
   isConnected: boolean;
-  chainId: string | null;
+  chainId: "default" | string;
   setIsConnected: (val: boolean) => void;
-  setChainId: (id: string | null) => void;
+  setChainId: (id: "default" | string) => void;
 }
 
 export interface IClientState {
-  activeChain: "ethereum" | "solana" | "cosmos" | "tezos" | null;
-  autoConnect: boolean;
+  ecosystem: TEcosystem | null;
   connectors: BaseConnector[];
   activeConnector: BaseConnector | null;
-  lastUsedConnector: BaseConnector | null;
-  isAutoConnecting: boolean;
-  setActiveChain: (
-    val: "ethereum" | "solana" | "cosmos" | "tezos" | null
-  ) => void;
-  setAutoConnect: (val: boolean) => void;
+  setEcosystem: (val: TEcosystem) => void;
   setConnectors: (connectors: BaseConnector[]) => void;
   setActiveConnector: (connector: BaseConnector | null) => void;
-  setLastUsedConnector: (connector: BaseConnector | null) => void;
-  setIsAutoConnecting: (val: boolean) => void;
 }
 
 export type IState = IAccountState & IWalletState & IClientState;
