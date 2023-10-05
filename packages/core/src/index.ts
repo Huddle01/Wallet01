@@ -9,3 +9,5 @@ import setLastUsedConnector from "./utils";
 export { Client, BaseConnector, setLastUsedConnector };
 
 export { useStore, getState, setState };
+
+export * from "./utils/errors";

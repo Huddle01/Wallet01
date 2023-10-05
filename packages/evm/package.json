@@ -12,7 +12,7 @@
     "dev": "pnpm build --watch"
   },
   "dependencies": {
-    "@coinbase/wallet-sdk": "^3.6.3",
+    "@coinbase/wallet-sdk": "^3.7.2",
     "@ethersproject/providers": "^5.7.2",
     "@metamask/detect-provider": "^2.0.0",
     "@rize-labs/banana-wallet-sdk": "^0.1.18",

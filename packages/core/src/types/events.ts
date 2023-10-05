@@ -6,13 +6,14 @@ export type ConnectorEvents = {
   connecting: [walletName: string, ecosystem: TEcosystem];
   connected: [
     address: string,
+    chainId: string,
     walletName: string,
     ecosystem: TEcosystem,
     activeConnector: BaseConnector,
   ];
   disconnected: [walletName: string, ecosystem: TEcosystem];
   chainChanged: [chainId: string, activeConnector: BaseConnector];
-  accountChanged: [address: string, activeConnector: BaseConnector];
+  accountsChanged: [address: string[], activeConnector: BaseConnector];
   messageSigned: [signature: SignatureHash, activeConnector: BaseConnector];
   error: [error: Error];
   switchingChain: [
