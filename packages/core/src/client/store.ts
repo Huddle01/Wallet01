@@ -33,11 +33,6 @@ export class Wallet01Store {
     return addresses;
   }
 
-  getDid(): string | null {
-    const { did } = getState();
-    return did;
-  }
-
   getIsConnected(): boolean {
     const { isConnected } = getState();
     return isConnected;
@@ -58,7 +53,7 @@ export class Wallet01Store {
     return activeConnector;
   }
 
-  setEcosystem(ecosystem: "ethereum" | "solana" | "cosmos" | "tezos") {
+  setEcosystem(ecosystem: "ethereum" | "solana" | "cosmos" | "tezos" | null) {
     const { setEcosystem } = getState();
     setEcosystem(ecosystem);
   }
@@ -68,9 +63,9 @@ export class Wallet01Store {
     setAddress(address);
   }
 
-  setDid(did: string | null) {
-    const { setDid } = getState();
-    setDid(did);
+  setAddresses(addresses: string[]) {
+    const { setAddresses } = getState();
+    setAddresses(addresses);
   }
 
   setIsConnected(val: boolean) {
@@ -78,7 +73,7 @@ export class Wallet01Store {
     setIsConnected(val);
   }
 
-  setChainId(id: string | "default") {
+  setChainId(id: string | "mainnet" | null) {
     const { setChainId } = getState();
     setChainId(id);
   }

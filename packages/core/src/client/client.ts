@@ -12,8 +12,8 @@ export default class Wallet01Client extends EnhancedEventEmitter<
 
   constructor({ autoConnect = false, connectors }: ClientConfig) {
     super();
-
     this.store.setConnectors(connectors);
+    this.registerEventListeners();
 
     if (localStorage.getItem("autoConnect") === null)
       localStorage.setItem("autoConnect", String(autoConnect));
@@ -42,6 +42,39 @@ export default class Wallet01Client extends EnhancedEventEmitter<
       Wallet01Client.#instance = new Wallet01Client(config);
     return Wallet01Client.#instance;
   };
+
+  private registerEventListeners() {
+    // this.on("isAutoConnecting", (ecosystem) => {})
+    this.on(
+      "connected",
+      (address, chainId, walletName, ecosystem, activeConnector) => {
+        localStorage.setItem("lastUsedConnector", walletName);
+        this.store.setActiveConnector(activeConnector);
+        this.store.setAddress(address);
+        this.store.setChainId(chainId);
+        this.store.setEcosystem(ecosystem);
+        this.store.setIsConnected(true);
+      }
+    );
+
+    this.on("disconnected", () => {
+      localStorage.removeItem("lastUsedConnector");
+      this.store.setActiveConnector(null);
+      this.store.setAddress(null);
+      this.store.setChainId(null);
+      this.store.setEcosystem(null);
+      this.store.setIsConnected(false);
+      this.removeAllListeners();
+    });
+
+    this.on("chainChanged", chainId => {
+      this.store.setChainId(chainId);
+    });
+
+    this.on("accountsChanged", addresses => {
+      this.store.setAddresses(addresses);
+    });
+  }
 
   private async autoConnect() {
     const lastUsedConnectorName = localStorage.getItem("lastUsedConnector");

@@ -6,14 +6,17 @@ import {
 } from "@wallet01/core";
 import { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
-import { hexValue, hexlify, toUtf8Bytes } from "ethers/lib/utils.js";
+import { hexlify, toUtf8Bytes, toQuantity } from "ethers";
 import { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
 import { UnrecognisedChainError } from "../utils/errors";
-import { AddChainParameter } from "@wallet01/core/dist/types/methodTypes";
+import {
+  AddChainParameter,
+  ConnectionResponse,
+} from "@wallet01/core/dist/types/methodTypes";
 export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
   static #instance: BaseConnector<CoinbaseWalletProvider>;
-  provider!: CoinbaseWalletProvider;
   static options: CoinbaseWalletSDKOptions;
+  provider!: CoinbaseWalletProvider;
 
   constructor(options: CoinbaseWalletSDKOptions) {
     super("coinbase", "ethereum");
@@ -96,7 +99,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
         throw new ProviderNotFoundError({ walletName: this.name });
 
       const oldChainId = await this.getChainId();
-      const hexChainId = hexValue(Number(chainId));
+      const hexChainId = toQuantity(Number(chainId));
       const params = [{ chainId: hexChainId }];
 
       const response = await this.provider.request({
@@ -115,7 +118,12 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
         });
       }
 
-      this.emit("switchingChain", oldChainId, chainId, this);
+      this.emit(
+        "switchingChain",
+        oldChainId,
+        chainId,
+        CoinbaseConnector.#instance
+      );
 
       return {
         fromChainId: oldChainId,
@@ -131,7 +139,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
     }
   }
 
-  async connect(options?: { chainId: string }) {
+  async connect(options?: { chainId: string }): Promise<ConnectionResponse> {
     if (!this.provider) await this.getProvider();
     try {
       if (!this.provider)
@@ -168,6 +176,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
       return {
         address: address[0]!,
         walletName: this.name,
+        chainId: currentId,
         ecosystem: this.ecosystem,
         activeConnector: CoinbaseConnector.#instance,
       };
@@ -224,9 +233,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
 
       return {
         signature: response as string,
-        activeConnector: CoinbaseConnector.getInstance(
-          CoinbaseConnector.options
-        ),
+        activeConnector: CoinbaseConnector.#instance,
       };
     } catch (error) {
       console.error(error);

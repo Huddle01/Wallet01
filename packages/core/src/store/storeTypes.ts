@@ -5,24 +5,22 @@ export type TEcosystem = "ethereum" | "solana" | "cosmos" | "tezos";
 export interface IAccountState {
   address: string | null;
   addresses: string[];
-  did: string | null;
   setAddress: (address: string | null) => void;
   setAddresses: (addresses: string[]) => void;
-  setDid: (did: string | null) => void;
 }
 
 export interface IWalletState {
   isConnected: boolean;
-  chainId: "default" | string;
+  chainId: "mainnet" | string | null;
   setIsConnected: (val: boolean) => void;
-  setChainId: (id: "default" | string) => void;
+  setChainId: (id: "mainnet" | string | null) => void;
 }
 
 export interface IClientState {
   ecosystem: TEcosystem | null;
   connectors: BaseConnector[];
   activeConnector: BaseConnector | null;
-  setEcosystem: (val: TEcosystem) => void;
+  setEcosystem: (val: TEcosystem | null) => void;
   setConnectors: (connectors: BaseConnector[]) => void;
   setActiveConnector: (connector: BaseConnector | null) => void;
 }

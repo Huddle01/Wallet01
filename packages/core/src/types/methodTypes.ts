@@ -23,6 +23,7 @@ export interface AddChainParameter {
 
 export type ConnectionResponse = {
   address: string;
+  chainId: string;
   walletName: string;
   ecosystem: TEcosystem;
   activeConnector: BaseConnector;

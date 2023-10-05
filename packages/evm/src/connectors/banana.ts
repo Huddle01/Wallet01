@@ -87,6 +87,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     return {
       address,
       walletName: this.name,
+      chainId,
       ecosystem: this.ecosystem,
       activeConnector: BananaConnector.getInstance(),
     };
@@ -156,7 +157,6 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   async getChainId(): Promise<string> {
     if (this.provider) {
       const id = this.provider.chainId.toString();
-      this.store.setChainId(id);
       return id;
     }
     return "";

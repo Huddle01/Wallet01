@@ -1,5 +1,4 @@
 import { AddChainParameter } from "./methodTypes";
-import { Wallet01Store } from "../client/store";
 import { TEcosystem } from "../store/storeTypes";
 import { EnhancedEventEmitter } from "../utils/EnhancedEventEmitter";
 import {
@@ -17,7 +16,6 @@ export abstract class BaseConnector<
   abstract provider: TProvider;
   readonly name: TWalletName;
   readonly ecosystem: TEcosystem;
-  readonly store: Wallet01Store = Wallet01Store.init();
 
   constructor(name: TWalletName, ecosystem: TEcosystem) {
     super();

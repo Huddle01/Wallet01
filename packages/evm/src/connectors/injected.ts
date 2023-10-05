@@ -1,149 +1,263 @@
-import { hexValue } from "ethers/lib/utils.js";
-import { Web3Provider, ExternalProvider } from "@ethersproject/providers";
-import detectEthereumProvider from "@metamask/detect-provider";
+import { toQuantity, BrowserProvider, hexlify, toUtf8Bytes } from "ethers";
 
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import {
+  BaseConnector,
+  ProviderNotFoundError,
+  UnknownError,
+  UserRejectedRequestError,
+} from "@wallet01/core";
 
-import emitter from "../utils/emiter";
-import { chainData } from "../utils/chains";
+import { UnrecognisedChainError } from "../utils/errors";
+import {
+  AddChainParameter,
+  ChainSwitchResponse,
+} from "@wallet01/core/dist/types/methodTypes";
 
-export class InjectedConnector extends BaseConnector<Web3Provider> {
-  provider?: Web3Provider;
+export class InjectedConnector extends BaseConnector<BrowserProvider> {
+  static #instance: BaseConnector<BrowserProvider>;
+  provider!: BrowserProvider;
 
-  constructor(chain: string = "1") {
-    super(chain, "injected", "ethereum");
+  constructor() {
+    super("injected", "ethereum");
+  }
+
+  static getInstance() {
+    return this.#instance;
+  }
+
+  init() {
+    if (!InjectedConnector.#instance) {
+      InjectedConnector.#instance =
+        new InjectedConnector() as BaseConnector<BrowserProvider>;
+    }
+    return InjectedConnector.#instance;
   }
 
   async getProvider() {
     try {
-      const provider = await detectEthereumProvider();
+      if (this.provider) return this.provider;
 
-      const _provider = new Web3Provider(
-        <ExternalProvider>(<unknown>provider),
-        "any"
-      );
-      this.provider = _provider;
+      const windowProvider = window.ethereum;
+
+      if (!windowProvider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const provider = new BrowserProvider(windowProvider);
+
+      this.provider = provider;
       return this.provider;
     } catch (error) {
       console.error(error);
-      throw error;
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getProvider",
+      });
     }
   }
 
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("Wallet Not Installed");
-      const result = await this.provider.send("eth_requestAccounts", []);
-      return result;
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const accounts = (await this.provider.send(
+        "eth_requestAccounts",
+        []
+      )) as string[];
+
+      return accounts;
     } catch (err) {
       console.error(err);
-      throw err;
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getAccount",
+      });
     }
   }
 
   async getChainId(): Promise<string> {
-    if (this.provider) {
-      const chainId = await (
-        await this.provider.getNetwork()
-      ).chainId.toString();
-      this.chain = chainId;
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const id = (await this.provider.send("eth_chainId", [])) as string;
+
+      const chainId = parseInt(id, 16).toString();
       return chainId;
-    }
-    return "";
-  }
-
-  async switchChain(chainId: string): Promise<void> {
-    const provider = await this.getProvider();
-
-    const id = hexValue(Number(chainId));
-    try {
-      await provider?.send("wallet_switchEthereumChain", [{ chainId: id }]);
-      this.chain = chainId;
-    } catch (error: any) {
-      console.log("error in switching chain", error);
-      if (error.code === 4902 && chainData[chainId]) {
-        await this.addChain(chainId, provider);
-        await this.switchChain(chainId);
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  async connect({ chainId }: { chainId: string }) {
-    try {
-      const provider = await this.getProvider();
-      this.provider = provider;
-
-      if (provider.on) {
-        provider.on("accountsChanged", this.onAccountsChanged);
-        provider.on("chainChanged", this.onChainChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
-
-      let id = await this.getChainId();
-
-      if (chainId && id !== chainId) {
-        await this.switchChain(chainId);
-      }
-
-      setLastUsedConnector(this.name);
-
-      emitter.emit("connected");
-    } catch (error) {
-      console.error(error, "in connect");
-      throw error;
-    }
-  }
-
-  async disconnect(): Promise<void> {
-    this.provider = undefined;
-    emitter.emit("disconnected");
-  }
-
-  async resolveDid(address: string): Promise<string | null> {
-    try {
-      if ((await this.getChainId()) !== "1") return null;
-      const provider = await this.getProvider();
-      const name = await provider.lookupAddress(address);
-      return name;
-    } catch (error) {
-      console.error({ error }, "resolveDid");
-      throw error;
-    }
-  }
-
-  async signMessage(message: string): Promise<string> {
-    try {
-      if (!this.provider) throw new Error("Connect a wallet!");
-      const signer = await this.provider.getSigner();
-      const hash = await signer.signMessage(message);
-      return hash;
     } catch (error) {
       console.error(error);
-      throw error;
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getChainId",
+      });
     }
   }
 
-  private async addChain(chainId: string, provider: Web3Provider) {
+  async switchChain(
+    chainId: string,
+    options?: AddChainParameter | undefined
+  ): Promise<ChainSwitchResponse> {
+    if (!this.provider) await this.getProvider();
     try {
-      await provider.send("wallet_addEthereumChain", [chainData[chainId]]);
-    } catch (error: any) {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const oldChainId = await this.getChainId();
+      const hexChainId = toQuantity(Number(chainId));
+      const params = [{ chainId: hexChainId }];
+
+      const response = await this.provider.send(
+        "wallet_switchEthereumChain",
+        params
+      );
+
+      if ((response as any).code === 4902) {
+        if (!options) {
+          throw new UnrecognisedChainError({ walletName: this.name, chainId });
+        }
+
+        await this.provider.send("wallet_addEthereumChain", [options]);
+      }
+
+      this.emit(
+        "switchingChain",
+        oldChainId,
+        chainId,
+        InjectedConnector.#instance
+      );
+
+      return {
+        fromChainId: oldChainId,
+        toChainId: chainId,
+        activeConnector: InjectedConnector.#instance,
+      };
+    } catch (error) {
       console.error(error);
-      throw error;
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "switchChain",
+      });
     }
   }
 
-  protected onAccountsChanged(): void {
-    console.log("Account Changed");
+  async connect(options?: { chainId: string }) {
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const response = await this.provider.send("eth_requestAccounts", []);
+
+      if ((response as any).code === 4001) {
+        throw new UserRejectedRequestError();
+      }
+
+      this.provider.on("accountsChanged", this.onAccountsChanged);
+      this.provider.on("disconnect", this.onDisconnect);
+      this.provider.on("chainChanged", this.onChainChanged);
+
+      const currentId = await this.getChainId();
+      if (options?.chainId && currentId !== options.chainId) {
+        await this.switchChain(options.chainId);
+      }
+
+      const address = await this.getAccount();
+
+      this.emit(
+        "connected",
+        address[0]!,
+        currentId,
+        this.name,
+        this.ecosystem,
+        InjectedConnector.#instance
+      );
+
+      return {
+        address: address[0]!,
+        walletName: this.name,
+        chainId: currentId,
+        ecosystem: this.ecosystem,
+        activeConnector: InjectedConnector.#instance,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "connect",
+      });
+    }
   }
 
-  protected onChainChanged(_chain: string): void {
-    console.log("Chain Changed");
+  async disconnect() {
+    if (!this.provider) await this.getProvider();
+    try {
+      await this.provider.destroy();
+      this.emit("disconnected", this.name, this.ecosystem);
+      return {
+        walletName: this.name,
+        ecosystem: this.ecosystem,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "disconnect",
+      });
+    }
   }
 
-  protected onDisconnect(): void {
-    console.log("Wallet disconnected");
+  async signMessage(message: string) {
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+      const address = await this.getAccount();
+
+      const hexMessage = hexlify(toUtf8Bytes(message));
+
+      const response = await this.provider.send("personal_sign", [
+        hexMessage,
+        address[0],
+      ]);
+
+      if ((response as any).code === 4001) {
+        throw new UserRejectedRequestError();
+      }
+
+      this.emit(
+        "messageSigned",
+        response as string,
+        InjectedConnector.#instance
+      );
+
+      return {
+        signature: response as string,
+        activeConnector: InjectedConnector.#instance,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "signMessage",
+      });
+    }
+  }
+
+  protected onAccountsChanged(accounts: string[]): void {
+    this.emit("accountsChanged", accounts, InjectedConnector.#instance);
+  }
+
+  protected onChainChanged(hexChainId: string): void {
+    const chainId = parseInt(hexChainId, 16).toString();
+    this.emit("chainChanged", chainId, InjectedConnector.#instance);
+  }
+
+  protected onDisconnect(error: any): void {
+    console.error({
+      error,
+    });
+    this.emit("disconnected", this.name, this.ecosystem);
   }
 }
