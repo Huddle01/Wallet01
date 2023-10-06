@@ -40,7 +40,7 @@ export type MessageSignedResponse = {
 };
 
 export type ChainSwitchResponse = {
-  fromChainId: string | "default";
-  toChainId: string | "default";
+  fromChainId: string | "mainnet";
+  toChainId: string | "mainnet";
   activeConnector: BaseConnector;
 };

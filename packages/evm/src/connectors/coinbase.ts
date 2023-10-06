@@ -13,8 +13,11 @@ import {
   AddChainParameter,
   ConnectionResponse,
 } from "@wallet01/core/dist/types/methodTypes";
-export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
-  static #instance: BaseConnector<CoinbaseWalletProvider>;
+export class CoinbaseConnector extends BaseConnector<
+  CoinbaseWalletProvider,
+  "coinbase"
+> {
+  static #instance: BaseConnector<CoinbaseWalletProvider, "coinbase">;
   static options: CoinbaseWalletSDKOptions;
   provider!: CoinbaseWalletProvider;
 
@@ -27,7 +30,7 @@ export class CoinbaseConnector extends BaseConnector<CoinbaseWalletProvider> {
     if (!CoinbaseConnector.#instance) {
       CoinbaseConnector.#instance = new CoinbaseConnector(
         CoinbaseConnector.options
-      ) as BaseConnector<CoinbaseWalletProvider>;
+      ) as BaseConnector<CoinbaseWalletProvider, "coinbase">;
     }
     return CoinbaseConnector.#instance;
   }

@@ -8,7 +8,7 @@ const createWalletSlice: StateCreator<
   IWalletState
 > = set => ({
   isConnected: false,
-  chainId: "default",
+  chainId: "mainnet",
   setIsConnected: isConnected => {
     set(() => ({ isConnected }));
   },

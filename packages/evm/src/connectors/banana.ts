@@ -1,6 +1,7 @@
 import {
   BaseConnector,
   ProviderNotFoundError,
+  UnknownError,
   WalletConnectionError,
   WalletNotConnectedError,
 } from "@wallet01/core";
@@ -155,11 +156,20 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   }
 
   async getChainId(): Promise<string> {
-    if (this.provider) {
-      const id = this.provider.chainId.toString();
-      return id;
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const chainId = this.provider.chainId.toString();
+      return chainId;
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getChainId",
+      });
     }
-    return "";
   }
 
   //! Currently Banana wallet has 1:1 mapping with account

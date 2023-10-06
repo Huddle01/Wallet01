@@ -1,90 +1,87 @@
-import { BaseConnector, useStore } from "@wallet01/core";
+import { BaseConnector } from "@wallet01/core";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useCallback, useContext } from "react";
+import { ClientProvider } from "../context";
+import { ClientNotFoundError, ConnectorNotFoundError } from "../utils/errors";
+import { ConnectionResponse } from "@wallet01/core/dist/types/methodTypes";
 
 type ConnectArgs = {
-  connector: BaseConnector | undefined;
-  chainId?: string;
-};
-
-type ConnectResult = {
-  address: string;
-  chain: "ethereum" | "solana" | "cosmos" | "tezos";
   connector: BaseConnector;
+  chainId?: string;
 };
 
 type UseConenctConfig = {
   onError?: UseMutationOptions<void, Error, unknown>["onError"];
-  onSuccess?: UseMutationOptions<ConnectResult, Error, unknown>["onSuccess"];
+  onConnect?: (params: ConnectionResponse) => Promise<void> | void;
 };
 
 export const useConnect = ({
   onError,
-  onSuccess,
-}: Partial<UseConenctConfig> = {}) => {
-  const {
-    connectors,
-    setActiveConnector,
-    setIsConnected,
-    setAddress,
-    setDid,
-    setChainId,
-    setActiveChain,
-  } = useStore();
+} // onConnect,
+: Partial<UseConenctConfig> = {}) => {
+  const client = useContext(ClientProvider);
 
   const { mutate, mutateAsync, isLoading, isError, error } = useMutation<
-    ConnectResult,
+    ConnectionResponse,
     Error,
     ConnectArgs,
     unknown
   >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      if (connectors.length === 0) throw new Error("Client not initialised");
+      try {
+        if (!client) throw new ClientNotFoundError();
 
-      if (!connector) throw new Error("Connector required to connect");
-      setActiveConnector(connector);
+        const connectors = client.store.getConnectors();
 
-      if (!connectors.includes(connector))
-        throw new Error("Connector not found");
+        if (!connectors.includes(connector))
+          throw new ConnectorNotFoundError({ connectorName: connector.name });
 
-      if (chainId) {
-        await connector.connect({ chainId: chainId });
-      } else {
-        await connector.connect({});
+        let connectionResult: ConnectionResponse;
+
+        if (chainId) {
+          connectionResult = await connector.connect({ chainId: chainId });
+        } else {
+          connectionResult = await connector.connect();
+        }
+
+        // if (onConnect)
+        //   client.on(
+        //     "connected",
+        //     (address, chainId, walletName, ecosystem, activeConnector) =>
+        //       onConnect({
+        //         activeConnector,
+        //         address,
+        //         chainId,
+        //         ecosystem,
+        //         walletName,
+        //       })
+        //   );
+
+        return connectionResult;
+      } catch (error) {
+        throw error;
       }
-
-      const address = (await connector.getAccount())[0];
-      const chain = connector.activeChain;
-
-      if (!address) throw new Error("No account found");
-
-      setAddress(address);
-
-      setActiveChain(connector.activeChain);
-      setIsConnected(true);
-
-      setDid(
-        await connector.resolveDid(address).catch(error => {
-          console.error({ error });
-          return null;
-        })
-      );
-      if (connector.getChainId) {
-        setChainId(await connector.getChainId());
-      }
-
-      return {
-        address,
-        chain,
-        connector,
-      };
     },
     onError,
-    onSuccess,
   });
 
+  const connect = useCallback(
+    (params?: ConnectArgs) => {
+      return mutate(params as ConnectArgs);
+    },
+    [client]
+  );
+
+  const connectAsync = useCallback(
+    (params?: ConnectArgs) => {
+      return mutateAsync(params as ConnectArgs);
+    },
+    [client]
+  );
+
   return {
-    connect: mutate,
-    connectAsync: mutateAsync,
+    connect,
+    connectAsync,
     isLoading,
     isError,
     error,

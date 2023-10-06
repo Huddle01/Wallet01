@@ -7,8 +7,7 @@ export default defineConfig({
   format: ["cjs", "esm"], // generate cjs and esm files
   bundle: true,
   skipNodeModulesBundle: true,
-  entryPoints: ["src/index.ts"],
   target: "es2020",
   outDir: "dist",
-  entry: ["src/**/*.ts"], //include all files under src
+  entry: ["src/*index.ts"], //include all files under src
 });

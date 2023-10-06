@@ -8,19 +8,19 @@ interface SVGIcons {
 }
 
 export default function Home() {
-  const { isAutoConnecting } = useClient();
+  // const { isAutoConnecting } = useClient();
   const { isConnected } = useWallet();
+
+  console.log({
+    isConnected,
+  });
 
   return (
     <div className="flex flex-col h-screen justify-center items-center">
-      {isAutoConnecting ? (
+      {/* {isAutoConnecting ? (
         <span className="text-xl text-white font-bold">AutoConnecting</span>
-      ) : null}
-      {isConnected && !isAutoConnecting ? (
-        <ConnectedModal />
-      ) : (
-        <ConnectButtons />
-      )}
+      ) : null} */}
+      {isConnected ? <ConnectedModal /> : <ConnectButtons />}
     </div>
   );
 }
