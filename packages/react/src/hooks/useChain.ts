@@ -7,14 +7,15 @@ interface useChainConfig {
   onChainChanged?: (chainId: string, activeConnector: BaseConnector) => void;
 }
 
-export const useChain = ({ onChainChanged }: useChainConfig) => {
+export const useChain = (params?: useChainConfig) => {
   const client = useContext(ClientProvider);
   const { activeConnector, chainId } = useStore();
 
   useEffect(() => {
     if (!client) throw new ClientNotFoundError();
 
-    if (onChainChanged) client.emitter.on("chainChanged", onChainChanged);
+    if (params?.onChainChanged)
+      client.emitter.on("chainChanged", params.onChainChanged);
   }, [activeConnector, client]);
 
   return {

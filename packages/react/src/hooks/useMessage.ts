@@ -30,7 +30,7 @@ interface useMessageConfig {
  * For more details visit {@link}
  */
 
-export const useMessage = ({ onError, onMessageSigned }: useMessageConfig) => {
+export const useMessage = (params?: useMessageConfig) => {
   const client = useContext(ClientProvider);
 
   const { data, isLoading, isError, mutate, mutateAsync, error } = useMutation<
@@ -47,13 +47,14 @@ export const useMessage = ({ onError, onMessageSigned }: useMessageConfig) => {
       if (!activeConnector)
         throw new NoWalletConnectedError({ methodName: "signMessage" });
 
-      if (onMessageSigned) client.emitter.on("messageSigned", onMessageSigned);
+      if (params?.onMessageSigned)
+        client.emitter.on("messageSigned", params.onMessageSigned);
 
       const response = await activeConnector.signMessage(message);
 
       return response;
     },
-    onError,
+    onError: params?.onError,
   });
 
   const signMessage = useCallback(

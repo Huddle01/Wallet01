@@ -1,14 +1,20 @@
-import { useClient, useMessage, useSwitch, useWallet } from "@wallet01/react";
+import {
+  useClient,
+  useDisconnect,
+  useMessage,
+  useSwitch,
+  useWallet,
+} from "@wallet01/react";
 import React, { useState } from "react";
 import WalletIcons from "./assets/WalletIcons";
-import { BeaconConnector } from "@wallet01/tezos";
 
 const ConnectedModal = () => {
   const [message, setMessage] = useState<string>("");
   const [chainId, setChainId] = useState<string>("");
   const { activeConnector, address, chainId: cId } = useWallet();
-  const { signMessage, hash } = useMessage({});
-  const { switchChain } = useSwitch({});
+  const { signMessage, hash } = useMessage();
+  const { disconnect } = useDisconnect();
+  const { switchChain } = useSwitch();
   const { ecosystem } = useClient();
 
   return (
@@ -36,15 +42,15 @@ const ConnectedModal = () => {
               <b className="italic truncate ">{cId}</b>
             </span>
           }
-          {activeConnector?.name === "beacon" ? (
+          {/* {activeConnector?.name === "beacon" ? (
             <span>{BeaconConnector.publicKey}</span>
-          ) : null}
-          {/* <button
+          ) : null} */}
+          <button
             className="bg-slate-600 w-fit p-3 text-medium text-lg rounded-md"
             onClick={() => disconnect()}
           >
             Disconnect
-          </button> */}
+          </button>
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex gap-4 max-w-full">

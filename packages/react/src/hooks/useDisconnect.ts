@@ -10,10 +10,7 @@ interface useDisconnectConfig {
   onDisconnect?: (walletName: string, ecosystem: TEcosystem) => void;
 }
 
-export const useDisconnect = ({
-  onDisconnect,
-  onError,
-}: useDisconnectConfig) => {
+export const useDisconnect = (params?: useDisconnectConfig) => {
   const client = useContext(ClientProvider);
 
   const { data, isLoading, isError, mutate, mutateAsync, error } = useMutation<
@@ -31,11 +28,12 @@ export const useDisconnect = ({
         throw new NoWalletConnectedError({ methodName: "disconnect" });
       const response = await activeConnector.disconnect();
 
-      if (onDisconnect) client.emitter.on("disconnected", onDisconnect);
+      if (params?.onDisconnect)
+        client.emitter.on("disconnected", params.onDisconnect);
 
       return response;
     },
-    onError,
+    onError: params?.onError,
   });
 
   const disconnect = useCallback(() => {

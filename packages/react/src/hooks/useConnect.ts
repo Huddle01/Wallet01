@@ -22,10 +22,7 @@ type UseConenctConfig = {
   ) => Promise<void> | void;
 };
 
-export const useConnect = ({
-  onError,
-  onConnect,
-}: Partial<UseConenctConfig> = {}) => {
+export const useConnect = (params?: UseConenctConfig) => {
   const client = useContext(ClientProvider);
 
   const { mutate, mutateAsync, isLoading, isError, error } = useMutation<
@@ -44,7 +41,7 @@ export const useConnect = ({
 
       let connectionResult: ConnectionResponse;
 
-      if (onConnect) client.emitter.on("connected", onConnect);
+      if (params?.onConnect) client.emitter.on("connected", params.onConnect);
       if (chainId) {
         connectionResult = await connector.connect({ chainId: chainId });
       } else {
@@ -53,7 +50,7 @@ export const useConnect = ({
 
       return connectionResult;
     },
-    onError,
+    onError: params?.onError,
   });
 
   const connect = useCallback(

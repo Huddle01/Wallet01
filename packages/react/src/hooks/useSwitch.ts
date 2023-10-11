@@ -30,7 +30,7 @@ interface useMessageConfig {
  * For more details visit {@link}
  */
 
-export const useSwitch = ({ onError, onChainSwitched }: useMessageConfig) => {
+export const useSwitch = (params?: useMessageConfig) => {
   const client = useContext(ClientProvider);
 
   const { isLoading, isError, error, mutate, mutateAsync } = useMutation<
@@ -40,36 +40,32 @@ export const useSwitch = ({ onError, onChainSwitched }: useMessageConfig) => {
     unknown
   >({
     mutationFn: async ({ chainId }: ChainSwitchArgs) => {
-      try {
-        if (!client) throw new ClientNotFoundError();
+      if (!client) throw new ClientNotFoundError();
 
-        const activeConnector = client.store.getActiveConnector();
-        const connectors = client.store.getConnectors();
+      const activeConnector = client.store.getActiveConnector();
+      const connectors = client.store.getConnectors();
 
-        if (!activeConnector)
-          throw new NoWalletConnectedError({ methodName: "switchChain" });
+      if (!activeConnector)
+        throw new NoWalletConnectedError({ methodName: "switchChain" });
 
-        if (!connectors.includes(activeConnector)) {
-          throw new Error("Connector not found");
-        }
-
-        if (!activeConnector.switchChain)
-          throw new UnsupportedFunctionCalledError({
-            methodName: "switchChain",
-            walletName: activeConnector.name,
-          });
-
-        if (onChainSwitched)
-          client.emitter.on("switchingChain", onChainSwitched);
-
-        const response = await activeConnector.switchChain(chainId);
-
-        return response;
-      } catch (error) {
-        throw error;
+      if (!connectors.includes(activeConnector)) {
+        throw new Error("Connector not found");
       }
+
+      if (!activeConnector.switchChain)
+        throw new UnsupportedFunctionCalledError({
+          methodName: "switchChain",
+          walletName: activeConnector.name,
+        });
+
+      if (params?.onChainSwitched)
+        client.emitter.on("switchingChain", params.onChainSwitched);
+
+      const response = await activeConnector.switchChain(chainId);
+
+      return response;
     },
-    onError,
+    onError: params?.onError,
   });
 
   const switchChain = useCallback(

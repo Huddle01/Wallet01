@@ -10,14 +10,15 @@ type useAccountConfig = {
   ) => Promise<void> | void;
 };
 
-export const userAccount = ({ onAccountChange }: useAccountConfig) => {
+export const userAccount = (params?: useAccountConfig) => {
   const client = useContext(ClientProvider);
   const { address, addresses, activeConnector } = useStore();
 
   useEffect(() => {
     if (!client) throw new ClientNotFoundError();
 
-    if (onAccountChange) client.emitter.on("accountsChanged", onAccountChange);
+    if (params?.onAccountChange)
+      client.emitter.on("accountsChanged", params.onAccountChange);
   }, [activeConnector, client]);
 
   return {
