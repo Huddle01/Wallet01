@@ -7,23 +7,22 @@ import {
   DisconnectionResponse,
   MessageSignedResponse,
 } from "./methodTypes";
-import { ConnectorEvents } from "./events";
+import { ClientEvents, ConnectorEvents } from "./events";
 
 export abstract class BaseConnector<
   TProvider extends {} = {},
   TWalletName extends string = string,
-> extends EnhancedEventEmitter<ConnectorEvents> {
+> {
   abstract provider: TProvider;
   readonly name: TWalletName;
   readonly ecosystem: TEcosystem;
+  readonly emitter: EnhancedEventEmitter<ConnectorEvents & ClientEvents> =
+    EnhancedEventEmitter.init();
 
   constructor(name: TWalletName, ecosystem: TEcosystem) {
-    super();
     this.name = name;
     this.ecosystem = ecosystem;
   }
-
-  abstract init(): BaseConnector<TProvider, TWalletName>;
 
   abstract connect(options?: { chainId: string }): Promise<ConnectionResponse>;
 

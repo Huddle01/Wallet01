@@ -9,5 +9,5 @@ export default defineConfig({
   skipNodeModulesBundle: true,
   target: "es2020",
   outDir: "dist",
-  entry: ["src/*index.ts"], //include all files under src
+  entry: ["src/index.ts"], //include all files under src
 });

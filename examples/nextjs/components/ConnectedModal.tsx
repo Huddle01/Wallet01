@@ -6,7 +6,7 @@ import { BeaconConnector } from "@wallet01/tezos";
 const ConnectedModal = () => {
   const [message, setMessage] = useState<string>("");
   const [chainId, setChainId] = useState<string>("");
-  const { activeConnector, address } = useWallet();
+  const { activeConnector, address, chainId: cId } = useWallet();
   const { signMessage, hash } = useMessage({});
   const { switchChain } = useSwitch({});
   const { ecosystem } = useClient();
@@ -30,6 +30,12 @@ const ConnectedModal = () => {
           ) : (
             ""
           )}
+          {
+            <span className="text-xl font-base">
+              ChainId: <br />
+              <b className="italic truncate ">{cId}</b>
+            </span>
+          }
           {activeConnector?.name === "beacon" ? (
             <span>{BeaconConnector.publicKey}</span>
           ) : null}

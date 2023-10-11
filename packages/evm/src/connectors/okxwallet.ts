@@ -27,11 +27,7 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
     super("okxwallet", "ethereum");
   }
 
-  static getInstance() {
-    return this.#instance;
-  }
-
-  init() {
+  static init() {
     if (!OkxWalletConnector.#instance) {
       OkxWalletConnector.#instance =
         new OkxWalletConnector() as BaseConnector<BrowserProvider>;
@@ -124,7 +120,7 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
         await this.provider.send("wallet_addEthereumChain", [options]);
       }
 
-      this.emit(
+      this.emitter.emit(
         "switchingChain",
         oldChainId,
         chainId,
@@ -168,7 +164,7 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
 
       const address = await this.getAccount();
 
-      this.emit(
+      this.emitter.emit(
         "connected",
         address[0]!,
         await this.getChainId(),
@@ -197,7 +193,7 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
     if (!this.provider) await this.getProvider();
     try {
       await this.provider.destroy();
-      this.emit("disconnected", this.name, this.ecosystem);
+      this.emitter.emit("disconnected", this.name, this.ecosystem);
       return {
         walletName: this.name,
         ecosystem: this.ecosystem,
@@ -229,7 +225,7 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
         throw new UserRejectedRequestError();
       }
 
-      this.emit(
+      this.emitter.emit(
         "messageSigned",
         response as string,
         OkxWalletConnector.#instance
@@ -249,18 +245,22 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    this.emit("accountsChanged", accounts, OkxWalletConnector.#instance);
+    this.emitter.emit(
+      "accountsChanged",
+      accounts,
+      OkxWalletConnector.#instance
+    );
   }
 
   protected onChainChanged(hexChainId: string): void {
     const chainId = parseInt(hexChainId, 16).toString();
-    this.emit("chainChanged", chainId, OkxWalletConnector.#instance);
+    this.emitter.emit("chainChanged", chainId, OkxWalletConnector.#instance);
   }
 
   protected onDisconnect(error: any): void {
     console.error({
       error,
     });
-    this.emit("disconnected", this.name, this.ecosystem);
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

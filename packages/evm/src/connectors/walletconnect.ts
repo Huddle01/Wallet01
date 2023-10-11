@@ -20,9 +20,7 @@ import {
   DisconnectionResponse,
 } from "@wallet01/core/dist/types/methodTypes";
 
-type WalletconnectConnectorOptions = {
-  chain?: string;
-} & EthereumProviderOptions;
+type WalletconnectConnectorOptions = EthereumProviderOptions;
 
 const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
@@ -32,13 +30,9 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider!: EthereumProvider;
   static options: EthereumProviderOptions;
 
-  constructor({
-    chain = "1",
-    chains,
-    projectId,
-    ...params
-  }: WalletconnectConnectorOptions) {
+  constructor({ chains, projectId, ...params }: WalletconnectConnectorOptions) {
     super("walletconnect", "ethereum");
+    console.log(this.emitter);
     WalletconnectConnector.options = {
       chains,
       projectId,
@@ -49,15 +43,10 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
     };
   }
 
-  static getInstance(options: WalletconnectConnectorOptions) {
-    WalletconnectConnector.options = options;
-    return this.#instance;
-  }
-
-  init() {
+  static init(options: WalletconnectConnectorOptions) {
     if (!WalletconnectConnector.#instance) {
       WalletconnectConnector.#instance = new WalletconnectConnector(
-        WalletconnectConnector.options
+        options
       ) as BaseConnector<EthereumProvider>;
     }
     return WalletconnectConnector.#instance;
@@ -147,7 +136,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
         params: [{ chainId: hexChainId }],
       });
 
-      this.emit(
+      this.emitter.emit(
         "switchingChain",
         oldChainId,
         chainId,
@@ -196,9 +185,17 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
 
       this.provider.on("disconnect", this.onDisconnect);
       this.provider.on("accountsChanged", this.onAccountsChanged);
-      this.provider.on("chainChanged", this.onChainChanged);
+      this.provider.on("chainChanged", hexChainId => {
+        const chainId = parseInt(hexChainId, 16).toString();
 
-      this.emit(
+        this.emitter.emit(
+          "chainChanged",
+          chainId,
+          WalletconnectConnector.#instance
+        );
+      });
+
+      this.emitter.emit(
         "connected",
         accounts[0]!,
         currentChainId,
@@ -226,7 +223,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
         throw new ProviderNotFoundError({ walletName: this.name });
       await this.provider.disconnect();
 
-      this.emit("disconnected", this.name, "ethereum");
+      this.emitter.emit("disconnected", this.name, "ethereum");
       return {
         walletName: this.name,
         ecosystem: "ethereum",
@@ -258,7 +255,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
         throw new UserRejectedRequestError();
       }
 
-      this.emit(
+      this.emitter.emit(
         "messageSigned",
         response as string,
         WalletconnectConnector.#instance
@@ -308,18 +305,26 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    this.emit("accountsChanged", accounts, WalletconnectConnector.#instance);
+    this.emitter.emit(
+      "accountsChanged",
+      accounts,
+      WalletconnectConnector.#instance
+    );
   }
 
   protected onChainChanged(hexChainId: string): void {
     const chainId = parseInt(hexChainId, 16).toString();
-    this.emit("chainChanged", chainId, WalletconnectConnector.#instance);
+    this.emitter.emit(
+      "chainChanged",
+      chainId,
+      WalletconnectConnector.#instance
+    );
   }
 
   protected onDisconnect(error: any): void {
     console.error({
       error,
     });
-    this.emit("disconnected", this.name, this.ecosystem);
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

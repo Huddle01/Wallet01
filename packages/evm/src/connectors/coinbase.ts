@@ -26,17 +26,12 @@ export class CoinbaseConnector extends BaseConnector<
     CoinbaseConnector.options = options;
   }
 
-  init() {
+  static init(options: CoinbaseWalletSDKOptions) {
     if (!CoinbaseConnector.#instance) {
       CoinbaseConnector.#instance = new CoinbaseConnector(
-        CoinbaseConnector.options
+        options
       ) as BaseConnector<CoinbaseWalletProvider, "coinbase">;
     }
-    return CoinbaseConnector.#instance;
-  }
-
-  static getInstance(options: CoinbaseWalletSDKOptions) {
-    this.options = options;
     return CoinbaseConnector.#instance;
   }
 
@@ -121,7 +116,7 @@ export class CoinbaseConnector extends BaseConnector<
         });
       }
 
-      this.emit(
+      this.emitter.emit(
         "switchingChain",
         oldChainId,
         chainId,
@@ -167,7 +162,7 @@ export class CoinbaseConnector extends BaseConnector<
 
       const address = await this.getAccount();
 
-      this.emit(
+      this.emitter.emit(
         "connected",
         address[0]!,
         currentId,
@@ -196,7 +191,7 @@ export class CoinbaseConnector extends BaseConnector<
     if (!this.provider) await this.getProvider();
     try {
       await this.provider.disconnect();
-      this.emit("disconnected", this.name, this.ecosystem);
+      this.emitter.emit("disconnected", this.name, this.ecosystem);
       return {
         walletName: this.name,
         ecosystem: this.ecosystem,
@@ -228,7 +223,7 @@ export class CoinbaseConnector extends BaseConnector<
         throw new UserRejectedRequestError();
       }
 
-      this.emit(
+      this.emitter.emit(
         "messageSigned",
         response as string,
         CoinbaseConnector.#instance
@@ -248,18 +243,18 @@ export class CoinbaseConnector extends BaseConnector<
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    this.emit("accountsChanged", accounts, CoinbaseConnector.#instance);
+    this.emitter.emit("accountsChanged", accounts, CoinbaseConnector.#instance);
   }
 
   protected onChainChanged(hexChainId: string): void {
     const chainId = parseInt(hexChainId, 16).toString();
-    this.emit("chainChanged", chainId, CoinbaseConnector.#instance);
+    this.emitter.emit("chainChanged", chainId, CoinbaseConnector.#instance);
   }
 
   protected onDisconnect(error: any): void {
     console.error({
       error,
     });
-    this.emit("disconnected", this.name, this.ecosystem);
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

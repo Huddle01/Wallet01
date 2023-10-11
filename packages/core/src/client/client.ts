@@ -3,16 +3,18 @@ import { ClientConfig } from "../types/methodTypes";
 import { EnhancedEventEmitter } from "../utils/EnhancedEventEmitter";
 import { Wallet01Store } from "./store";
 
-export default class Wallet01Client extends EnhancedEventEmitter<
-  ClientEvents & ConnectorEvents
-> {
+export default class Wallet01Client {
   static #instance: Wallet01Client;
+  public readonly emitter: EnhancedEventEmitter<ConnectorEvents & ClientEvents>;
 
   public store: Wallet01Store = Wallet01Store.init();
 
   constructor({ autoConnect = false, connectors }: ClientConfig) {
-    super();
+    this.emitter = EnhancedEventEmitter.init();
     this.store.setConnectors(connectors);
+
+    console.log("Creating client class");
+
     this.registerEventListeners();
 
     if (localStorage.getItem("autoConnect") === null)
@@ -45,7 +47,7 @@ export default class Wallet01Client extends EnhancedEventEmitter<
 
   private registerEventListeners() {
     // this.on("isAutoConnecting", (ecosystem) => {})
-    this.on(
+    this.emitter.on(
       "connected",
       (address, chainId, walletName, ecosystem, activeConnector) => {
         localStorage.setItem("lastUsedConnector", walletName);
@@ -57,21 +59,20 @@ export default class Wallet01Client extends EnhancedEventEmitter<
       }
     );
 
-    this.on("disconnected", () => {
+    this.emitter.on("disconnected", () => {
       localStorage.removeItem("lastUsedConnector");
       this.store.setActiveConnector(null);
       this.store.setAddress(null);
       this.store.setChainId(null);
       this.store.setEcosystem(null);
       this.store.setIsConnected(false);
-      this.removeAllListeners();
     });
 
-    this.on("chainChanged", chainId => {
+    this.emitter.on("chainChanged", chainId => {
       this.store.setChainId(chainId);
     });
 
-    this.on("accountsChanged", addresses => {
+    this.emitter.on("accountsChanged", addresses => {
       this.store.setAddresses(addresses);
     });
   }
@@ -102,9 +103,12 @@ export default class Wallet01Client extends EnhancedEventEmitter<
     const activeConnector = this.store.getActiveConnector();
 
     if (activeConnector) {
-      this.emit("isAutoConnecting", activeConnector.ecosystem, activeConnector);
+      this.emitter.emit(
+        "isAutoConnecting",
+        activeConnector.ecosystem,
+        activeConnector
+      );
 
-      await activeConnector.init();
       await activeConnector.connect();
     }
   }

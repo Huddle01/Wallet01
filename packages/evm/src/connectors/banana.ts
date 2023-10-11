@@ -29,16 +29,12 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     super("banana", "ethereum");
   }
 
-  init() {
+  static init() {
     if (!BananaConnector.#instance) {
       BananaConnector.#instance =
         new BananaConnector() as BaseConnector<Banana4337Provider>;
     }
     return BananaConnector.#instance;
-  }
-
-  static getInstance() {
-    return this.#instance;
   }
 
   async getProvider(): Promise<Banana4337Provider> {
@@ -76,13 +72,13 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     const address = await this.wallet.getAddress();
     const chainId = await this.getChainId();
 
-    this.emit(
+    this.emitter.emit(
       "connected",
       address,
       chainId,
       this.name,
       this.ecosystem,
-      BananaConnector.getInstance()
+      BananaConnector.#instance
     );
 
     return {
@@ -90,7 +86,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
       walletName: this.name,
       chainId,
       ecosystem: this.ecosystem,
-      activeConnector: BananaConnector.getInstance(),
+      activeConnector: BananaConnector.#instance,
     };
   }
 
@@ -108,7 +104,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     // connect to same wallet with new configs
     const connection = await this.connect();
 
-    this.emit("chainChanged", chainId, BananaConnector.getInstance());
+    this.emitter.emit("chainChanged", chainId, BananaConnector.#instance);
 
     return {
       fromChainId: oldChainId,
@@ -125,7 +121,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
 
       return {
         signature: hash,
-        activeConnector: BananaConnector.getInstance(),
+        activeConnector: BananaConnector.#instance,
       };
     } catch (error) {
       console.error(error);
@@ -182,6 +178,6 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   }
 
   protected onDisconnect(): void {
-    this.emit("disconnected", this.name, this.ecosystem);
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

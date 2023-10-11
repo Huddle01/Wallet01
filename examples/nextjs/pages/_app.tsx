@@ -20,17 +20,16 @@ export default function App({ Component, pageProps }: AppProps) {
     <Wallet01
       autoConnect={true}
       connectors={() => [
-        new InjectedConnector(),
-        new WalletconnectConnector({
-          chain: "1",
+        InjectedConnector.init(),
+        WalletconnectConnector.init({
           chains: [1],
           optionalChains: [137, 80001],
           projectId: "cef77f9c3969fb563468d997449c92d2",
           showQrModal: true,
         }),
-        new BananaConnector(),
-        new OkxWalletConnector(),
-        new CoinbaseConnector({
+        BananaConnector.init(),
+        OkxWalletConnector.init(),
+        CoinbaseConnector.init({
           appName: "Wallet01",
         }),
         // new PhantomConnector({

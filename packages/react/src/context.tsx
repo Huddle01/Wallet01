@@ -28,6 +28,8 @@ const Wallet01: FunctionComponent<Props> = ({
       connectors: typeof connectors === "function" ? connectors() : connectors,
     });
 
+    console.log("setting client");
+
     setWalletClient(client);
   }, [connectors]);
 

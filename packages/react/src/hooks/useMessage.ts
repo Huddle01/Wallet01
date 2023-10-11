@@ -2,17 +2,25 @@ import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { useCallback, useContext } from "react";
 import { ClientProvider } from "../context";
 import { ClientNotFoundError, NoWalletConnectedError } from "../utils/errors";
-import { MessageSignedResponse } from "@wallet01/core/dist/types/methodTypes";
+import {
+  MessageSignedResponse,
+  SignatureHash,
+} from "@wallet01/core/dist/types/methodTypes";
+import { BaseConnector } from "@wallet01/core";
 interface SignMessageArgs {
   message: string;
 }
 
 interface useMessageConfig {
-  onError?: UseMutationOptions<void, Error, unknown>["onError"];
-  onMessageSigned?: ({
-    activeConnector,
-    signature,
-  }: MessageSignedResponse) => void;
+  onError?: UseMutationOptions<
+    MessageSignedResponse,
+    Error,
+    SignMessageArgs
+  >["onError"];
+  onMessageSigned?: (
+    signature: SignatureHash,
+    activeConnector: BaseConnector
+  ) => void;
 }
 /**
  * @description This hooks will return signMessage function that helps sign messages from desired wallet.
@@ -22,7 +30,7 @@ interface useMessageConfig {
  * For more details visit {@link}
  */
 
-export const useMessage = ({ onError }: useMessageConfig) => {
+export const useMessage = ({ onError, onMessageSigned }: useMessageConfig) => {
   const client = useContext(ClientProvider);
 
   const { data, isLoading, isError, mutate, mutateAsync, error } = useMutation<
@@ -32,25 +40,18 @@ export const useMessage = ({ onError }: useMessageConfig) => {
     unknown
   >({
     mutationFn: async ({ message }: SignMessageArgs) => {
-      try {
-        if (!client) throw new ClientNotFoundError();
+      if (!client) throw new ClientNotFoundError();
 
-        const activeConnector = client.store.getActiveConnector();
+      const activeConnector = client.store.getActiveConnector();
 
-        if (!activeConnector)
-          throw new NoWalletConnectedError({ methodName: "signMessage" });
+      if (!activeConnector)
+        throw new NoWalletConnectedError({ methodName: "signMessage" });
 
-        const response = await activeConnector.signMessage(message);
+      if (onMessageSigned) client.emitter.on("messageSigned", onMessageSigned);
 
-        // if (onMessageSigned)
-        //   client.on("messageSigned", (signature, activeConnector) =>
-        //     onMessageSigned({ signature, activeConnector })
-        //   );
+      const response = await activeConnector.signMessage(message);
 
-        return response;
-      } catch (error) {
-        throw error;
-      }
+      return response;
     },
     onError,
   });

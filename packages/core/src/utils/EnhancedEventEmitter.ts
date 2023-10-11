@@ -1,14 +1,24 @@
 import { EventEmitter } from "events";
+import { ClientEvents, ConnectorEvents } from "../types/events";
 
 export type Events = Record<string, unknown[]>;
 
-class EnhancedEventEmitter<E extends Events = Events> {
+class EnhancedEventEmitter<E extends Events = ConnectorEvents & ClientEvents> {
+  static #instance: EnhancedEventEmitter<Events>;
   private emitter: EventEmitter;
 
   constructor() {
     this.emitter = new EventEmitter();
     this.emitter.setMaxListeners(Infinity);
   }
+
+  static init = () => {
+    if (!EnhancedEventEmitter.#instance)
+      EnhancedEventEmitter.#instance = new EnhancedEventEmitter<
+        ConnectorEvents & ClientEvents
+      >();
+    return EnhancedEventEmitter.#instance;
+  };
 
   public on<K extends keyof E>(
     eventName: K,

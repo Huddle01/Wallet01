@@ -4,6 +4,7 @@ import { useCallback, useContext } from "react";
 import { ClientProvider } from "../context";
 import { ClientNotFoundError, ConnectorNotFoundError } from "../utils/errors";
 import { ConnectionResponse } from "@wallet01/core/dist/types/methodTypes";
+import { TEcosystem } from "@wallet01/core/dist/store/storeTypes";
 
 type ConnectArgs = {
   connector: BaseConnector;
@@ -11,14 +12,20 @@ type ConnectArgs = {
 };
 
 type UseConenctConfig = {
-  onError?: UseMutationOptions<void, Error, unknown>["onError"];
-  onConnect?: (params: ConnectionResponse) => Promise<void> | void;
+  onError?: UseMutationOptions<void, Error, ConnectArgs>["onError"];
+  onConnect?: (
+    address: string,
+    chainId: string,
+    walletName: string,
+    ecosystem: TEcosystem,
+    activeConnector: BaseConnector
+  ) => Promise<void> | void;
 };
 
 export const useConnect = ({
   onError,
-} // onConnect,
-: Partial<UseConenctConfig> = {}) => {
+  onConnect,
+}: Partial<UseConenctConfig> = {}) => {
   const client = useContext(ClientProvider);
 
   const { mutate, mutateAsync, isLoading, isError, error } = useMutation<
@@ -28,39 +35,23 @@ export const useConnect = ({
     unknown
   >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      try {
-        if (!client) throw new ClientNotFoundError();
+      if (!client) throw new ClientNotFoundError();
 
-        const connectors = client.store.getConnectors();
+      const connectors = client.store.getConnectors();
 
-        if (!connectors.includes(connector))
-          throw new ConnectorNotFoundError({ connectorName: connector.name });
+      if (!connectors.includes(connector))
+        throw new ConnectorNotFoundError({ connectorName: connector.name });
 
-        let connectionResult: ConnectionResponse;
+      let connectionResult: ConnectionResponse;
 
-        if (chainId) {
-          connectionResult = await connector.connect({ chainId: chainId });
-        } else {
-          connectionResult = await connector.connect();
-        }
-
-        // if (onConnect)
-        //   client.on(
-        //     "connected",
-        //     (address, chainId, walletName, ecosystem, activeConnector) =>
-        //       onConnect({
-        //         activeConnector,
-        //         address,
-        //         chainId,
-        //         ecosystem,
-        //         walletName,
-        //       })
-        //   );
-
-        return connectionResult;
-      } catch (error) {
-        throw error;
+      if (onConnect) client.emitter.on("connected", onConnect);
+      if (chainId) {
+        connectionResult = await connector.connect({ chainId: chainId });
+      } else {
+        connectionResult = await connector.connect();
       }
+
+      return connectionResult;
     },
     onError,
   });

@@ -21,11 +21,7 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
     super("injected", "ethereum");
   }
 
-  static getInstance() {
-    return this.#instance;
-  }
-
-  init() {
+  static init() {
     if (!InjectedConnector.#instance) {
       InjectedConnector.#instance =
         new InjectedConnector() as BaseConnector<BrowserProvider>;
@@ -121,7 +117,7 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
         await this.provider.send("wallet_addEthereumChain", [options]);
       }
 
-      this.emit(
+      this.emitter.emit(
         "switchingChain",
         oldChainId,
         chainId,
@@ -165,7 +161,7 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
 
       const address = await this.getAccount();
 
-      this.emit(
+      this.emitter.emit(
         "connected",
         address[0]!,
         currentId,
@@ -194,7 +190,7 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
     if (!this.provider) await this.getProvider();
     try {
       await this.provider.destroy();
-      this.emit("disconnected", this.name, this.ecosystem);
+      this.emitter.emit("disconnected", this.name, this.ecosystem);
       return {
         walletName: this.name,
         ecosystem: this.ecosystem,
@@ -226,7 +222,7 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
         throw new UserRejectedRequestError();
       }
 
-      this.emit(
+      this.emitter.emit(
         "messageSigned",
         response as string,
         InjectedConnector.#instance
@@ -246,18 +242,18 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
   }
 
   protected onAccountsChanged(accounts: string[]): void {
-    this.emit("accountsChanged", accounts, InjectedConnector.#instance);
+    this.emitter.emit("accountsChanged", accounts, InjectedConnector.#instance);
   }
 
   protected onChainChanged(hexChainId: string): void {
     const chainId = parseInt(hexChainId, 16).toString();
-    this.emit("chainChanged", chainId, InjectedConnector.#instance);
+    this.emitter.emit("chainChanged", chainId, InjectedConnector.#instance);
   }
 
   protected onDisconnect(error: any): void {
     console.error({
       error,
     });
-    this.emit("disconnected", this.name, this.ecosystem);
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

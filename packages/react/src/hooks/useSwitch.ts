@@ -7,14 +7,19 @@ import {
   NoWalletConnectedError,
   UnsupportedFunctionCalledError,
 } from "../utils/errors";
+import { BaseConnector } from "@wallet01/core";
 
 interface ChainSwitchArgs {
   chainId: string;
 }
 
 interface useMessageConfig {
-  onError?: UseMutationOptions<void, Error, unknown>["onError"];
-  onChainSwitched?: (params: ChainSwitchResponse) => void;
+  onError?: UseMutationOptions<void, Error, ChainSwitchArgs>["onError"];
+  onChainSwitched?: (
+    fromChainId: string | "mainnet",
+    toChainId: string | "mainnet",
+    activeConnector: BaseConnector
+  ) => void;
 }
 
 /**
@@ -25,7 +30,7 @@ interface useMessageConfig {
  * For more details visit {@link}
  */
 
-export const useSwitch = ({ onError }: useMessageConfig) => {
+export const useSwitch = ({ onError, onChainSwitched }: useMessageConfig) => {
   const client = useContext(ClientProvider);
 
   const { isLoading, isError, error, mutate, mutateAsync } = useMutation<
@@ -54,12 +59,8 @@ export const useSwitch = ({ onError }: useMessageConfig) => {
             walletName: activeConnector.name,
           });
 
-        // if (onChainSwitched)
-        //   client.on(
-        //     "switchingChain",
-        //     (fromChainId, toChainId, activeConnector) =>
-        //       onChainSwitched({ fromChainId, toChainId, activeConnector })
-        //   );
+        if (onChainSwitched)
+          client.emitter.on("switchingChain", onChainSwitched);
 
         const response = await activeConnector.switchChain(chainId);
 
