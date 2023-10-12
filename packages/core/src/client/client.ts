@@ -68,6 +68,16 @@ export default class Wallet01Client {
       this.store.setIsConnected(false);
     });
 
+    this.emitter.on(
+      "switchingChain",
+      async (_f, toChainId, activeConnector) => {
+        const accounts = await activeConnector.getAccount();
+        if (accounts[0]) this.store.setAddress(accounts[0]);
+        this.store.setActiveConnector(activeConnector);
+        this.store.setChainId(toChainId);
+      }
+    );
+
     this.emitter.on("chainChanged", chainId => {
       this.store.setChainId(chainId);
     });

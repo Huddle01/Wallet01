@@ -9,7 +9,7 @@ import {
   BananaConnector,
   OkxWalletConnector,
 } from "@wallet01/evm";
-// import { KeplrConnector } from "@wallet01/cosmos";
+import { KeplrConnector } from "@wallet01/cosmos";
 // import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
 // import { BeaconConnector, TempleConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
@@ -38,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
         // new SolflareConnector({
         //   rpcUrl: "https://api.mainnet-beta.solana.com",
         // }),
-        // new KeplrConnector(),
+        KeplrConnector.init("osmosis"),
         // new TempleConnector({ projectName: "Wallet01" }),
         // new BeaconConnector({
         //   name: "Wallet01",

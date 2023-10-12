@@ -14,6 +14,7 @@
     "@wallet01/core": "workspace:*",
     "@wallet01/evm": "workspace:*",
     "@wallet01/react": "workspace:*",
+    "@wallet01/cosmos": "workspace:*",
     "ethers": "^5.7.2",
     "next": "13.0.3",
     "react": "18.2.0",
