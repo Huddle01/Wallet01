@@ -16,7 +16,7 @@ export abstract class BaseConnector<
   abstract provider: TProvider;
   readonly name: TWalletName;
   readonly ecosystem: TEcosystem;
-  readonly emitter: EnhancedEventEmitter<ConnectorEvents & ClientEvents> =
+  protected emitter: EnhancedEventEmitter<ConnectorEvents & ClientEvents> =
     EnhancedEventEmitter.init();
 
   constructor(name: TWalletName, ecosystem: TEcosystem) {

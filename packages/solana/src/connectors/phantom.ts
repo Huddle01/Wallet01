@@ -137,12 +137,12 @@ export class PhantomConnector extends BaseConnector<PhantomProvider> {
     }
   }
 
-  protected onAccountsChanged(accounts: string[]): void {
+  protected onAccountsChanged = (accounts: string[]) => {
     this.emitter.emit("accountsChanged", accounts, PhantomConnector.#instance);
-  }
+  };
 
-  protected onDisconnect(error: any): void {
+  protected onDisconnect = (error: any) => {
     console.error(error);
     this.emitter.emit("disconnected", this.name, this.ecosystem);
-  }
+  };
 }

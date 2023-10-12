@@ -151,9 +151,9 @@ export class CoinbaseConnector extends BaseConnector<
         throw new UserRejectedRequestError();
       }
 
-      this.provider.on("accountsChanged", this.onAccountsChanged);
-      this.provider.on("disconnect", this.onDisconnect);
-      this.provider.on("chainChanged", this.onChainChanged);
+      this.provider.on("accountsChanged", this._onAccountsChanged);
+      this.provider.on("disconnect", this._onDisconnect);
+      this.provider.on("chainChanged", this._onChainChanged);
 
       const currentId = await this.getChainId();
       if (options?.chainId && currentId !== options.chainId) {
@@ -192,6 +192,11 @@ export class CoinbaseConnector extends BaseConnector<
     try {
       await this.provider.disconnect();
       this.emitter.emit("disconnected", this.name, this.ecosystem);
+
+      this.provider.removeListener("accountsChanged", this._onAccountsChanged);
+      this.provider.removeListener("disconnect", this._onDisconnect);
+      this.provider.removeListener("chainChanged", this._onChainChanged);
+
       return {
         walletName: this.name,
         ecosystem: this.ecosystem,
@@ -242,19 +247,19 @@ export class CoinbaseConnector extends BaseConnector<
     }
   }
 
-  protected onAccountsChanged(accounts: string[]): void {
+  protected _onAccountsChanged = (accounts: string[]) => {
     this.emitter.emit("accountsChanged", accounts, CoinbaseConnector.#instance);
-  }
+  };
 
-  protected onChainChanged(hexChainId: string): void {
+  protected _onChainChanged = (hexChainId: string) => {
     const chainId = parseInt(hexChainId, 16).toString();
     this.emitter.emit("chainChanged", chainId, CoinbaseConnector.#instance);
-  }
+  };
 
-  protected onDisconnect(error: any): void {
+  protected _onDisconnect = (error: any) => {
     console.error({
       error,
     });
     this.emitter.emit("disconnected", this.name, this.ecosystem);
-  }
+  };
 }

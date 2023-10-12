@@ -83,7 +83,9 @@ export default class Wallet01Client {
     });
 
     this.emitter.on("accountsChanged", addresses => {
+      console.log("accountsChanged", addresses);
       this.store.setAddresses(addresses);
+      if (addresses[0]) this.store.setAddress(addresses[0]);
     });
   }
 

@@ -136,15 +136,15 @@ export class SolflareConnector extends BaseConnector<SolflareProvider> {
     }
   }
 
-  protected onAccountsChanged(address: string): void {
+  protected onAccountsChanged = (address: string) => {
     this.emitter.emit(
       "accountsChanged",
       [address],
       SolflareConnector.#instance
     );
-  }
+  };
 
-  protected onDisconnect(): void {
+  protected onDisconnect = () => {
     this.emitter.emit("disconnected", this.name, this.ecosystem);
-  }
+  };
 }
