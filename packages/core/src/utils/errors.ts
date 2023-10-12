@@ -97,3 +97,18 @@ export class UnrecognisedChainError extends Error {
     );
   }
 }
+
+export class AddressNotFoundError extends Error {
+  name = "AddressNotFoundError";
+  constructor({ walletName }: { walletName: string }) {
+    super(`Address not found in ${walletName} wallet.`);
+  }
+}
+
+export class WalletNotInstalledError extends Error {
+  name = "WalletNotInstalledError";
+
+  constructor({ walletName }: { walletName: string }) {
+    super(`${walletName} wallet is not installed.`);
+  }
+}

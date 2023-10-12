@@ -20,7 +20,6 @@
     "@walletconnect/ethereum-provider": "^2.8.2",
     "@walletconnect/modal": "^2.5.2",
     "@web3modal/core": "^2.2.2",
-    "@web3modal/standalone": "^2.2.2",
     "ethers": "^5.7.2",
     "eventemitter3": "^4.0.7"
   },

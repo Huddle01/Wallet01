@@ -1,118 +1,150 @@
-import { Connection, PublicKey } from "@solana/web3.js";
-import { performReverseLookup, getAllDomains } from "@bonfida/spl-name-service";
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import {
+  AddressNotFoundError,
+  BaseConnector,
+  ProviderNotFoundError,
+  WalletNotConnectedError,
+} from "@wallet01/core";
 
-import { SolflareProvider } from "../providers/solflareProvider";
-import emitter from "../utils/emiter";
-
-declare const window: {
-  solflare: SolflareProvider;
-};
-
-interface SolflareConnectorOptions {
-  rpcUrl: string;
-}
+import SolflareProvider from "@solflare-wallet/sdk";
+import { SolanaErrorHandler } from "../utils/utils";
+import {
+  ConnectionResponse,
+  DisconnectionResponse,
+  MessageSignedResponse,
+} from "@wallet01/core/dist/types/methodTypes";
+import { WalletNotInstalledError } from "@wallet01/core";
 
 export class SolflareConnector extends BaseConnector<SolflareProvider> {
+  static #instance: BaseConnector<SolflareProvider>;
   provider!: SolflareProvider;
-  private rpcUrl: string;
 
-  constructor({ rpcUrl }: SolflareConnectorOptions) {
-    super("", "solflare", "solana");
+  private constructor() {
+    super("solflare", "solana");
+  }
 
-    this.rpcUrl = rpcUrl;
+  static init() {
+    if (!SolflareConnector.#instance) {
+      SolflareConnector.#instance =
+        new SolflareConnector() as BaseConnector<SolflareProvider>;
+    }
+    return SolflareConnector.#instance;
   }
 
   async getProvider(): Promise<SolflareProvider> {
-    if (
-      typeof window !== "undefined" &&
-      window.solflare &&
-      window.solflare.isSolflare
-    ) {
-      this.provider = window.solflare;
+    try {
+      const provider = new SolflareProvider();
+      const isWalletInstalled = await provider.detectWallet();
+      if (!isWalletInstalled)
+        throw new WalletNotInstalledError({ walletName: this.name });
+      this.provider = provider;
       return this.provider;
-    } else {
-      throw new Error("Wallet Not Installed");
+    } catch (error) {
+      console.error(error);
+      throw SolanaErrorHandler(error, "getProvider", this.name);
     }
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) throw new Error("Provider Undefined");
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
     try {
-      await this.provider.connect();
-      const accounts = this.provider.publicKey;
-      return [String(accounts)];
+      const account = this.provider.publicKey?.toString();
+      if (!account) throw new AddressNotFoundError({ walletName: this.name });
+      return [account];
     } catch (error) {
       console.error(error);
-      throw error;
+      throw SolanaErrorHandler(error, "getAccount", this.name);
     }
   }
 
-  async connect({}): Promise<void> {
+  async connect(): Promise<ConnectionResponse> {
+    if (!this.provider) await this.getProvider();
     try {
-      const provider = await this.getProvider();
-      if (!provider) throw new Error("Solflare is not installed");
-
-      if (provider.on) {
-        provider.on("accountChanged", this.onAccountsChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
 
       await this.provider.connect();
-      setLastUsedConnector(this.name);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
 
-  async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error("No wallet Conencted");
-    this.provider.disconnect();
-    emitter.emit("disconnected");
-  }
+      this.provider.on("accountChanged", this.onAccountsChanged);
+      this.provider.on("disconnect", this.onDisconnect);
 
-  async resolveDid(address: string): Promise<string | null> {
-    if (!this.provider) throw new Error("No wallet Connected");
-    const connection = new Connection(this.rpcUrl);
+      const address = this.provider.publicKey?.toString()!;
+      const chainId = "mainnet";
 
-    try {
-      const ownerWallet = new PublicKey(address);
-      const allDomainKeys = await getAllDomains(connection, ownerWallet);
-      const allDomainNames = await Promise.all(
-        allDomainKeys.map(key => {
-          return performReverseLookup(connection, key);
-        })
+      this.emitter.emit(
+        "connected",
+        address,
+        chainId,
+        this.name,
+        this.ecosystem,
+        SolflareConnector.#instance
       );
-      if (!allDomainNames[0]) return null;
-      return allDomainNames[0];
+
+      return {
+        address,
+        chainId,
+        ecosystem: this.ecosystem,
+        walletName: this.name,
+        activeConnector: SolflareConnector.#instance,
+      };
     } catch (error) {
       console.error(error);
-      throw error;
+      throw SolanaErrorHandler(error, "connect", this.name);
     }
   }
 
-  async signMessage(message: string): Promise<string> {
-    if (!this.provider) throw new Error("No wallet Connected");
+  async disconnect(): Promise<DisconnectionResponse> {
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
     try {
-      const _message = new TextEncoder().encode(message);
-      const hash = await this.provider.signMessage(_message, "utf8");
-      return new TextDecoder("utf-8").decode(hash);
+      this.provider.disconnect();
+
+      this.provider.removeListener("accountChanged", this.onAccountsChanged);
+      this.provider.removeListener("disconnect", this.onDisconnect);
+
+      this.emitter.emit("disconnected", this.name, this.ecosystem);
+      return {
+        walletName: this.name,
+        ecosystem: this.ecosystem,
+      };
+    } catch (error) {
+      console.error(error);
+      throw SolanaErrorHandler(error, "disconnect", this.name);
+    }
+  }
+
+  async signMessage(message: string): Promise<MessageSignedResponse> {
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
+    try {
+      const encodedMessage = new TextEncoder().encode(message);
+      const signature = await this.provider.signMessage(encodedMessage, "utf8");
+
+      this.emitter.emit(
+        "messageSigned",
+        signature,
+        SolflareConnector.#instance
+      );
+
+      return {
+        signature,
+        activeConnector: SolflareConnector.#instance,
+      };
     } catch (err) {
       console.error(err);
-      throw err;
+      throw SolanaErrorHandler(err, "signMessage", this.name);
     }
   }
 
-  protected onAccountsChanged(): void {
-    console.log("Account Changed");
-  }
-
-  protected onChainChanged(_chain: string | number): void {
-    console.log("Chain Changed");
+  protected onAccountsChanged(address: string): void {
+    this.emitter.emit(
+      "accountsChanged",
+      [address],
+      SolflareConnector.#instance
+    );
   }
 
   protected onDisconnect(): void {
-    console.log("Wallet disconnected");
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

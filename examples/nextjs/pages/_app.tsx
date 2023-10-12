@@ -10,7 +10,7 @@ import {
   OkxWalletConnector,
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
-// import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
+import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
 // import { BeaconConnector, TempleConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
 // import { ColorMode } from "@wallet01/tezos/dist/types";
@@ -32,12 +32,8 @@ export default function App({ Component, pageProps }: AppProps) {
         CoinbaseConnector.init({
           appName: "Wallet01",
         }),
-        // new PhantomConnector({
-        //   rpcUrl: "https://api.mainnet-beta.solana.com",
-        // }),
-        // new SolflareConnector({
-        //   rpcUrl: "https://api.mainnet-beta.solana.com",
-        // }),
+        PhantomConnector.init(),
+        SolflareConnector.init(),
         KeplrConnector.init("osmosis"),
         // new TempleConnector({ projectName: "Wallet01" }),
         // new BeaconConnector({
