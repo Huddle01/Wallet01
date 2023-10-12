@@ -5,7 +5,7 @@ import { BaseConnector } from "../types";
 export class Wallet01Store {
   static #instance: Wallet01Store;
 
-  constructor() {
+  private constructor() {
     this.getState = getState;
   }
 

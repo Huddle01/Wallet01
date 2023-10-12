@@ -7,7 +7,7 @@ class EnhancedEventEmitter<E extends Events = ConnectorEvents & ClientEvents> {
   static #instance: EnhancedEventEmitter<Events>;
   private emitter: EventEmitter;
 
-  constructor() {
+  private constructor() {
     this.emitter = new EventEmitter();
     this.emitter.setMaxListeners(Infinity);
   }

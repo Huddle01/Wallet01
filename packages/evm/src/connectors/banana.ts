@@ -1,8 +1,11 @@
 import {
   BaseConnector,
+  MessageSignError,
   ProviderNotFoundError,
   UnknownError,
+  UnsupportedChainError,
   WalletConnectionError,
+  WalletCreationError,
   WalletNotConnectedError,
 } from "@wallet01/core";
 import {
@@ -12,11 +15,6 @@ import {
   Chains,
 } from "@rize-labs/banana-wallet-sdk";
 import { isBananSupported, getBananaSupportedChain } from "../utils/helpers";
-import {
-  MessageSignError,
-  UnsupportedChainError,
-  WalletCreationError,
-} from "../utils/errors";
 
 export class BananaConnector extends BaseConnector<Banana4337Provider> {
   static #instance: BaseConnector<Banana4337Provider>;
@@ -25,7 +23,7 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   private BananaInstance!: Banana;
   private wallet!: Wallet;
 
-  constructor() {
+  private constructor() {
     super("banana", "ethereum");
   }
 

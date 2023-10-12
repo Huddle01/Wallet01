@@ -1,9 +1,11 @@
-import { toQuantity, BrowserProvider, hexlify, toUtf8Bytes } from "ethers";
+import { hexValue, toUtf8Bytes, hexlify } from "ethers/lib/utils.js";
+import { Web3Provider } from "@ethersproject/providers";
 
 import {
   BaseConnector,
   ProviderNotFoundError,
   UnknownError,
+  UnrecognisedChainError,
   UserRejectedRequestError,
 } from "@wallet01/core";
 
@@ -11,7 +13,6 @@ import {
   AddChainParameter,
   ChainSwitchResponse,
 } from "@wallet01/core/dist/types/methodTypes";
-import { UnrecognisedChainError } from "../utils/errors";
 
 interface OkxWalletWindow extends Window {
   okxwallet?: any;
@@ -19,18 +20,18 @@ interface OkxWalletWindow extends Window {
 
 declare const window: OkxWalletWindow;
 
-export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
-  static #instance: BaseConnector<BrowserProvider>;
-  provider!: BrowserProvider;
+export class OkxWalletConnector extends BaseConnector<Web3Provider> {
+  static #instance: BaseConnector<Web3Provider>;
+  provider!: Web3Provider;
 
-  constructor() {
+  private constructor() {
     super("okxwallet", "ethereum");
   }
 
   static init() {
     if (!OkxWalletConnector.#instance) {
       OkxWalletConnector.#instance =
-        new OkxWalletConnector() as BaseConnector<BrowserProvider>;
+        new OkxWalletConnector() as BaseConnector<Web3Provider>;
     }
     return OkxWalletConnector.#instance;
   }
@@ -42,7 +43,7 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
       if (!windowProvider)
         throw new ProviderNotFoundError({ walletName: this.name });
 
-      const provider = new BrowserProvider(windowProvider);
+      const provider = new Web3Provider(windowProvider);
       this.provider = provider;
       return this.provider;
     } catch (error) {
@@ -104,7 +105,7 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
         throw new ProviderNotFoundError({ walletName: this.name });
 
       const oldChainId = await this.getChainId();
-      const hexChainId = toQuantity(Number(chainId));
+      const hexChainId = hexValue(Number(chainId));
       const params = [{ chainId: hexChainId }];
 
       const response = await this.provider.send(
@@ -192,7 +193,13 @@ export class OkxWalletConnector extends BaseConnector<BrowserProvider> {
   async disconnect() {
     if (!this.provider) await this.getProvider();
     try {
-      await this.provider.destroy();
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      this.provider.removeListener("accountsChanged", this.onAccountsChanged);
+      this.provider.removeListener("chainChanged", this.onChainChanged);
+      this.provider.removeListener("disconnect", this.onDisconnect);
+
       this.emitter.emit("disconnected", this.name, this.ecosystem);
       return {
         walletName: this.name,

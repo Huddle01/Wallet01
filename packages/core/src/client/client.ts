@@ -9,7 +9,7 @@ export default class Wallet01Client {
 
   public store: Wallet01Store = Wallet01Store.init();
 
-  constructor({ autoConnect = false, connectors }: ClientConfig) {
+  private constructor({ autoConnect = false, connectors }: ClientConfig) {
     this.emitter = EnhancedEventEmitter.init();
     this.store.setConnectors(connectors);
 

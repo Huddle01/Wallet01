@@ -1,4 +1,4 @@
-import { hexlify, toQuantity, toUtf8Bytes } from "ethers";
+import { hexlify, hexValue, toUtf8Bytes } from "ethers/lib/utils.js";
 
 import {
   BaseConnector,
@@ -30,7 +30,11 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
   provider!: EthereumProvider;
   static options: EthereumProviderOptions;
 
-  constructor({ chains, projectId, ...params }: WalletconnectConnectorOptions) {
+  private constructor({
+    chains,
+    projectId,
+    ...params
+  }: WalletconnectConnectorOptions) {
     super("walletconnect", "ethereum");
     console.log(this.emitter);
     WalletconnectConnector.options = {
@@ -111,7 +115,7 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
         throw new ProviderNotFoundError({ walletName: this.name });
 
       const oldChainId = await this.getChainId();
-      const hexChainId = toQuantity(Number(chainId));
+      const hexChainId = hexValue(Number(chainId));
       const namespaceChains = this.getNamespaceChainsIds();
       const namespaceMethods = this.getNamespaceMethods();
       const isChainApproved = namespaceChains.includes(chainId);

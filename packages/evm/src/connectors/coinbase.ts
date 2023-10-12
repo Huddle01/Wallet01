@@ -2,13 +2,13 @@ import {
   BaseConnector,
   ProviderNotFoundError,
   UnknownError,
+  UnrecognisedChainError,
   UserRejectedRequestError,
 } from "@wallet01/core";
 import { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
-import { hexlify, toUtf8Bytes, toQuantity } from "ethers";
+import { hexlify, toUtf8Bytes, hexValue } from "ethers/lib/utils.js";
 import { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import { UnrecognisedChainError } from "../utils/errors";
 import {
   AddChainParameter,
   ConnectionResponse,
@@ -21,7 +21,7 @@ export class CoinbaseConnector extends BaseConnector<
   static options: CoinbaseWalletSDKOptions;
   provider!: CoinbaseWalletProvider;
 
-  constructor(options: CoinbaseWalletSDKOptions) {
+  private constructor(options: CoinbaseWalletSDKOptions) {
     super("coinbase", "ethereum");
     CoinbaseConnector.options = options;
   }
@@ -97,7 +97,7 @@ export class CoinbaseConnector extends BaseConnector<
         throw new ProviderNotFoundError({ walletName: this.name });
 
       const oldChainId = await this.getChainId();
-      const hexChainId = toQuantity(Number(chainId));
+      const hexChainId = hexValue(Number(chainId));
       const params = [{ chainId: hexChainId }];
 
       const response = await this.provider.request({

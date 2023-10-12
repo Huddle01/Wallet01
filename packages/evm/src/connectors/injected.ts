@@ -1,30 +1,32 @@
-import { toQuantity, BrowserProvider, hexlify, toUtf8Bytes } from "ethers";
+import { hexValue, toUtf8Bytes, hexlify } from "ethers/lib/utils.js";
+import { Web3Provider } from "@ethersproject/providers";
 
 import {
   BaseConnector,
   ProviderNotFoundError,
   UnknownError,
+  UnrecognisedChainError,
   UserRejectedRequestError,
 } from "@wallet01/core";
 
-import { UnrecognisedChainError } from "../utils/errors";
 import {
   AddChainParameter,
   ChainSwitchResponse,
 } from "@wallet01/core/dist/types/methodTypes";
+import { ProviderRpcError } from "@walletconnect/ethereum-provider/dist/types/types";
 
-export class InjectedConnector extends BaseConnector<BrowserProvider> {
-  static #instance: BaseConnector<BrowserProvider>;
-  provider!: BrowserProvider;
+export class InjectedConnector extends BaseConnector<Web3Provider> {
+  static #instance: BaseConnector<Web3Provider>;
+  provider!: Web3Provider;
 
-  constructor() {
+  private constructor() {
     super("injected", "ethereum");
   }
 
   static init() {
     if (!InjectedConnector.#instance) {
       InjectedConnector.#instance =
-        new InjectedConnector() as BaseConnector<BrowserProvider>;
+        new InjectedConnector() as BaseConnector<Web3Provider>;
     }
     return InjectedConnector.#instance;
   }
@@ -38,7 +40,7 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
       if (!windowProvider)
         throw new ProviderNotFoundError({ walletName: this.name });
 
-      const provider = new BrowserProvider(windowProvider);
+      const provider = new Web3Provider(windowProvider);
 
       this.provider = provider;
       return this.provider;
@@ -101,20 +103,25 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
         throw new ProviderNotFoundError({ walletName: this.name });
 
       const oldChainId = await this.getChainId();
-      const hexChainId = toQuantity(Number(chainId));
+      const hexChainId = hexValue(Number(chainId));
       const params = [{ chainId: hexChainId }];
 
-      const response = await this.provider.send(
-        "wallet_switchEthereumChain",
-        params
-      );
+      try {
+        await this.provider.send("wallet_switchEthereumChain", params);
+      } catch (error) {
+        if (
+          (error as ProviderRpcError).code &&
+          (error as ProviderRpcError).code === 4902
+        ) {
+          if (!options) {
+            throw new UnrecognisedChainError({
+              walletName: this.name,
+              chainId,
+            });
+          }
 
-      if ((response as any).code === 4902) {
-        if (!options) {
-          throw new UnrecognisedChainError({ walletName: this.name, chainId });
+          await this.provider.send("wallet_addEthereumChain", [options]);
         }
-
-        await this.provider.send("wallet_addEthereumChain", [options]);
       }
 
       this.emitter.emit(
@@ -189,7 +196,13 @@ export class InjectedConnector extends BaseConnector<BrowserProvider> {
   async disconnect() {
     if (!this.provider) await this.getProvider();
     try {
-      await this.provider.destroy();
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      this.provider.removeListener("accountsChanged", this.onAccountsChanged);
+      this.provider.removeListener("chainChanged", this.onChainChanged);
+      this.provider.removeListener("disconnect", this.onDisconnect);
+
       this.emitter.emit("disconnected", this.name, this.ecosystem);
       return {
         walletName: this.name,
