@@ -4,7 +4,7 @@ import WalletIcons from "./assets/WalletIcons";
 
 const ConnectButtons = () => {
   const { connectors } = useClient();
-  const { activeConnector, isConnected, address } = useWallet();
+  const { activeConnector, isConnected } = useWallet();
   const { connect, isError, error } = useConnect();
 
   if (isError && error) {

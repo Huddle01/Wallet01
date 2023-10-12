@@ -11,9 +11,9 @@ import {
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
-// import { BeaconConnector, TempleConnector } from "@wallet01/tezos";
+import { BeaconConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
-// import { ColorMode } from "@wallet01/tezos/dist/types";
+import { ColorMode } from "@wallet01/tezos/dist/types";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -35,12 +35,11 @@ export default function App({ Component, pageProps }: AppProps) {
         PhantomConnector.init(),
         SolflareConnector.init(),
         KeplrConnector.init("osmosis"),
-        // new TempleConnector({ projectName: "Wallet01" }),
-        // new BeaconConnector({
-        //   name: "Wallet01",
-        //   featuredWallets: ["temple", "umami", "kukai", "naan"],
-        //   colorMode: ColorMode.DARK,
-        // }),
+        BeaconConnector.init({
+          name: "Wallet01",
+          featuredWallets: ["temple", "umami", "kukai", "naan"],
+          colorMode: ColorMode.DARK,
+        }),
       ]}
     >
       <Layout>
