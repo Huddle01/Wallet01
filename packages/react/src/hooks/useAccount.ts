@@ -1,7 +1,6 @@
 import { BaseConnector, useStore } from "@wallet01/core";
 import { ClientProvider } from "../context";
 import { useContext, useEffect } from "react";
-import { ClientNotFoundError } from "../utils/errors";
 
 type useAccountConfig = {
   onAccountChange?: (
@@ -15,10 +14,13 @@ export const useAccount = (params?: useAccountConfig) => {
   const { address, addresses, activeConnector } = useStore();
 
   useEffect(() => {
-    if (!client) throw new ClientNotFoundError("useAccount");
-
-    if (params?.onAccountChange)
+    if (params?.onAccountChange && client)
       client.emitter.on("accountsChanged", params.onAccountChange);
+
+    return () => {
+      if (params?.onAccountChange && client)
+        client.emitter.off("accountsChanged", params.onAccountChange);
+    };
   }, [activeConnector, client]);
 
   return {

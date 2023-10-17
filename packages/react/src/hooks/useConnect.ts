@@ -13,6 +13,11 @@ type ConnectArgs = {
 
 type UseConenctConfig = {
   onError?: UseMutationOptions<void, Error, ConnectArgs>["onError"];
+  onSuccessfulConnect?: UseMutationOptions<
+    ConnectionResponse,
+    Error,
+    ConnectArgs
+  >["onSuccess"];
   onConnect?: (
     address: string,
     chainId: string,
@@ -49,6 +54,7 @@ export const useConnect = (params?: UseConenctConfig) => {
 
       return connectionResult;
     },
+    onSuccess: params?.onSuccessfulConnect,
     onError: params?.onError,
   });
 
@@ -67,8 +73,13 @@ export const useConnect = (params?: UseConenctConfig) => {
   );
 
   useEffect(() => {
-    if (!client) throw new ClientNotFoundError("useConnect");
-    if (params?.onConnect) client.emitter.on("connected", params.onConnect);
+    if (params?.onConnect && client)
+      client.emitter.on("connected", params.onConnect);
+
+    return () => {
+      if (params?.onConnect && client)
+        client.emitter.off("connected", params.onConnect);
+    };
   }, [client]);
 
   return {

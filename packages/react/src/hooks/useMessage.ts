@@ -17,6 +17,11 @@ interface useMessageConfig {
     Error,
     SignMessageArgs
   >["onError"];
+  onSuccessfulMessageSigned?: UseMutationOptions<
+    MessageSignedResponse,
+    Error,
+    SignMessageArgs
+  >["onSuccess"];
   onMessageSigned?: (
     signature: SignatureHash,
     activeConnector: BaseConnector
@@ -51,6 +56,7 @@ export const useMessage = (params?: useMessageConfig) => {
 
       return response;
     },
+    onSuccess: params?.onSuccessfulMessageSigned,
     onError: params?.onError,
   });
 
@@ -69,9 +75,13 @@ export const useMessage = (params?: useMessageConfig) => {
   );
 
   useEffect(() => {
-    if (!client) throw new ClientNotFoundError("useMessage");
-    if (params?.onMessageSigned)
+    if (params?.onMessageSigned && client)
       client.emitter.on("messageSigned", params.onMessageSigned);
+
+    return () => {
+      if (params?.onMessageSigned && client)
+        client.emitter.off("messageSigned", params.onMessageSigned);
+    };
   }, [client]);
 
   return {

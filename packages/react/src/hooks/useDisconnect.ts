@@ -7,6 +7,11 @@ import { TEcosystem } from "@wallet01/core/dist/store/storeTypes";
 
 interface useDisconnectConfig {
   onError?: UseMutationOptions<void, Error, unknown>["onError"];
+  onSuccessfulDisconnect?: UseMutationOptions<
+    DisconnectionResponse,
+    Error,
+    void
+  >["onSuccess"];
   onDisconnect?: (walletName: string, ecosystem: TEcosystem) => void;
 }
 
@@ -30,6 +35,7 @@ export const useDisconnect = (params?: useDisconnectConfig) => {
 
       return response;
     },
+    onSuccess: params?.onSuccessfulDisconnect,
     onError: params?.onError,
   });
 
@@ -42,9 +48,13 @@ export const useDisconnect = (params?: useDisconnectConfig) => {
   }, [client]);
 
   useEffect(() => {
-    if (!client) throw new ClientNotFoundError("useDisconnect");
-    if (params?.onDisconnect)
+    if (params?.onDisconnect && client)
       client.emitter.on("disconnected", params.onDisconnect);
+
+    return () => {
+      if (params?.onDisconnect && client)
+        client.emitter.off("disconnected", params.onDisconnect);
+    };
   }, [client]);
 
   return {

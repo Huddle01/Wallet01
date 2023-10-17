@@ -15,6 +15,11 @@ interface ChainSwitchArgs {
 
 interface useMessageConfig {
   onError?: UseMutationOptions<void, Error, ChainSwitchArgs>["onError"];
+  onSuccessfulChainSwitched?: UseMutationOptions<
+    ChainSwitchResponse,
+    Error,
+    ChainSwitchArgs
+  >["onSuccess"];
   onChainSwitched?: (
     fromChainId: string | "mainnet",
     toChainId: string | "mainnet",
@@ -62,6 +67,7 @@ export const useSwitch = (params?: useMessageConfig) => {
 
       return response;
     },
+    onSuccess: params?.onSuccessfulChainSwitched,
     onError: params?.onError,
   });
 
@@ -80,9 +86,13 @@ export const useSwitch = (params?: useMessageConfig) => {
   );
 
   useEffect(() => {
-    if (!client) throw new ClientNotFoundError("useSwitch");
-    if (params?.onChainSwitched)
+    if (params?.onChainSwitched && client)
       client.emitter.on("switchingChain", params.onChainSwitched);
+
+    return () => {
+      if (params?.onChainSwitched && client)
+        client.emitter.off("switchingChain", params.onChainSwitched);
+    };
   }, [client]);
 
   return {
