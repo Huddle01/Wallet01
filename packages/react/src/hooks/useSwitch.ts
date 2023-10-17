@@ -1,6 +1,6 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { ChainSwitchResponse } from "@wallet01/core/dist/types/methodTypes";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ClientProvider } from "../context";
 import {
   ClientNotFoundError,
@@ -40,7 +40,7 @@ export const useSwitch = (params?: useMessageConfig) => {
     unknown
   >({
     mutationFn: async ({ chainId }: ChainSwitchArgs) => {
-      if (!client) throw new ClientNotFoundError();
+      if (!client) throw new ClientNotFoundError("useSwitch");
 
       const activeConnector = client.store.getActiveConnector();
       const connectors = client.store.getConnectors();
@@ -57,9 +57,6 @@ export const useSwitch = (params?: useMessageConfig) => {
           methodName: "switchChain",
           walletName: activeConnector.name,
         });
-
-      if (params?.onChainSwitched)
-        client.emitter.on("switchingChain", params.onChainSwitched);
 
       const response = await activeConnector.switchChain(chainId);
 
@@ -81,6 +78,12 @@ export const useSwitch = (params?: useMessageConfig) => {
     },
     [client]
   );
+
+  useEffect(() => {
+    if (!client) throw new ClientNotFoundError("useSwitch");
+    if (params?.onChainSwitched)
+      client.emitter.on("switchingChain", params.onChainSwitched);
+  }, [client]);
 
   return {
     isLoading,

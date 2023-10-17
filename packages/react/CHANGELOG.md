@@ -1,5 +1,12 @@
 # @wallet01/react
 
+## 1.0.0-beta.3
+
+### Patch Changes
+
+- 82d8693: build then publish
+- updating client error with hook name
+
 ## 1.0.0-beta.1
 
 ### Patch Changes

@@ -1,4 +1,3 @@
-"use client";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BaseConnector, Client } from "@wallet01/core";
@@ -19,7 +18,7 @@ const Wallet01: FunctionComponent<Props> = ({
   connectors,
 }) => {
   // if (typeof window === 'undefined') <>{children}</>;
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient());
   const [wallet01Client, setWalletClient] = useState<Client | null>(null);
 
   useEffect(() => {

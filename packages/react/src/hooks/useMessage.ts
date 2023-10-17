@@ -1,5 +1,5 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ClientProvider } from "../context";
 import { ClientNotFoundError, NoWalletConnectedError } from "../utils/errors";
 import {
@@ -40,15 +40,12 @@ export const useMessage = (params?: useMessageConfig) => {
     unknown
   >({
     mutationFn: async ({ message }: SignMessageArgs) => {
-      if (!client) throw new ClientNotFoundError();
+      if (!client) throw new ClientNotFoundError("useMessage");
 
       const activeConnector = client.store.getActiveConnector();
 
       if (!activeConnector)
         throw new NoWalletConnectedError({ methodName: "signMessage" });
-
-      if (params?.onMessageSigned)
-        client.emitter.on("messageSigned", params.onMessageSigned);
 
       const response = await activeConnector.signMessage(message);
 
@@ -70,6 +67,12 @@ export const useMessage = (params?: useMessageConfig) => {
     },
     [client]
   );
+
+  useEffect(() => {
+    if (!client) throw new ClientNotFoundError("useMessage");
+    if (params?.onMessageSigned)
+      client.emitter.on("messageSigned", params.onMessageSigned);
+  }, [client]);
 
   return {
     hash: data?.signature,

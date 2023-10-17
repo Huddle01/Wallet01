@@ -12,7 +12,7 @@ export const useChain = (params?: useChainConfig) => {
   const { activeConnector, chainId } = useStore();
 
   useEffect(() => {
-    if (!client) throw new ClientNotFoundError();
+    if (!client) throw new ClientNotFoundError("useChain");
 
     if (params?.onChainChanged)
       client.emitter.on("chainChanged", params.onChainChanged);

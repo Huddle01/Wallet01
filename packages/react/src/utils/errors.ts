@@ -1,8 +1,8 @@
 export class ClientNotFoundError extends Error {
   name = "ClientNotFoundError";
-  constructor() {
+  constructor(hookName: string) {
     super(
-      "Wallet01Client has not been initialised. Please initialise the client to use the hooks."
+      `Wallet01Client has not been initialised. Please initialise the client to use the ${hookName} hooks.`
     );
   }
 }

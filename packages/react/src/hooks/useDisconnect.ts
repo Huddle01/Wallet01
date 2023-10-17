@@ -1,7 +1,7 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { DisconnectionResponse } from "@wallet01/core/dist/types/methodTypes";
 import { ClientProvider } from "../context";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ClientNotFoundError, NoWalletConnectedError } from "../utils/errors";
 import { TEcosystem } from "@wallet01/core/dist/store/storeTypes";
 
@@ -20,16 +20,13 @@ export const useDisconnect = (params?: useDisconnectConfig) => {
     unknown
   >({
     mutationFn: async () => {
-      if (!client) throw new ClientNotFoundError();
+      if (!client) throw new ClientNotFoundError("useDisconnect");
 
       const activeConnector = client.store.getActiveConnector();
 
       if (!activeConnector)
         throw new NoWalletConnectedError({ methodName: "disconnect" });
       const response = await activeConnector.disconnect();
-
-      if (params?.onDisconnect)
-        client.emitter.on("disconnected", params.onDisconnect);
 
       return response;
     },
@@ -42,6 +39,12 @@ export const useDisconnect = (params?: useDisconnectConfig) => {
 
   const disconnectAsync = useCallback(() => {
     return mutateAsync();
+  }, [client]);
+
+  useEffect(() => {
+    if (!client) throw new ClientNotFoundError("useDisconnect");
+    if (params?.onDisconnect)
+      client.emitter.on("disconnected", params.onDisconnect);
   }, [client]);
 
   return {

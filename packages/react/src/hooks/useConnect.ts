@@ -1,6 +1,6 @@
 import { BaseConnector } from "@wallet01/core";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ClientProvider } from "../context";
 import { ClientNotFoundError, ConnectorNotFoundError } from "../utils/errors";
 import { ConnectionResponse } from "@wallet01/core/dist/types/methodTypes";
@@ -32,7 +32,7 @@ export const useConnect = (params?: UseConenctConfig) => {
     unknown
   >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      if (!client) throw new ClientNotFoundError();
+      if (!client) throw new ClientNotFoundError("useConnect");
 
       const connectors = client.store.getConnectors();
 
@@ -41,7 +41,6 @@ export const useConnect = (params?: UseConenctConfig) => {
 
       let connectionResult: ConnectionResponse;
 
-      if (params?.onConnect) client.emitter.on("connected", params.onConnect);
       if (chainId) {
         connectionResult = await connector.connect({ chainId: chainId });
       } else {
@@ -66,6 +65,11 @@ export const useConnect = (params?: UseConenctConfig) => {
     },
     [client]
   );
+
+  useEffect(() => {
+    if (!client) throw new ClientNotFoundError("useConnect");
+    if (params?.onConnect) client.emitter.on("connected", params.onConnect);
+  }, [client]);
 
   return {
     connect,

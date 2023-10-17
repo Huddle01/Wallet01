@@ -5,7 +5,7 @@ import { useClient } from "./useClient";
 import { useWallet } from "./useWallet";
 import { useDisconnect } from "./useDisconnect";
 import { useChain } from "./useChain";
-import { userAccount } from "./useAccount";
+import { useAccount } from "./useAccount";
 
 export {
   useConnect,
@@ -15,5 +15,5 @@ export {
   useWallet,
   useDisconnect,
   useChain,
-  userAccount,
+  useAccount,
 };
