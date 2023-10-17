@@ -121,7 +121,15 @@ export default class Wallet01Client {
         activeConnector
       );
 
-      await activeConnector.connect();
+      this.store.setIsAutoConnecting(true);
+      await activeConnector
+        .connect()
+        .then(() => {
+          this.store.setIsAutoConnecting(false);
+        })
+        .catch(() => {
+          this.store.setIsAutoConnecting(false);
+        });
     }
   }
 }

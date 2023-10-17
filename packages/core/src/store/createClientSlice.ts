@@ -7,9 +7,13 @@ const createClientSlice: StateCreator<
   [],
   IClientState
 > = set => ({
+  isAutoConnecting: false,
   ecosystem: null,
   connectors: [],
   activeConnector: null,
+  setAutoConnecting: val => {
+    set(() => ({ isAutoConnecting: val }));
+  },
   setEcosystem: ecosystem => {
     set(() => ({ ecosystem }));
   },

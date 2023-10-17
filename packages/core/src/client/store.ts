@@ -23,6 +23,11 @@ export class Wallet01Store {
     return ecosystem;
   }
 
+  getIsAutoConnecting() {
+    const { isAutoConnecting } = getState();
+    return isAutoConnecting;
+  }
+
   getAddress() {
     const { address } = getState();
     return address;
@@ -56,6 +61,11 @@ export class Wallet01Store {
   setEcosystem(ecosystem: "ethereum" | "solana" | "cosmos" | "tezos" | null) {
     const { setEcosystem } = getState();
     setEcosystem(ecosystem);
+  }
+
+  setIsAutoConnecting(val: boolean) {
+    const { setAutoConnecting } = getState();
+    setAutoConnecting(val);
   }
 
   setAddress(address: string | null) {

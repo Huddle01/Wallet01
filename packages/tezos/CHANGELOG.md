@@ -1,5 +1,12 @@
 # @wallet01/tezos
 
+## 0.3.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@1.0.0-beta.1
+
 ## 0.3.0-beta.0
 
 ### Minor Changes

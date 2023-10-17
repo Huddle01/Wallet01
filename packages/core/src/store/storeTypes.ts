@@ -17,9 +17,11 @@ export interface IWalletState {
 }
 
 export interface IClientState {
+  isAutoConnecting: boolean;
   ecosystem: TEcosystem | null;
   connectors: BaseConnector[];
   activeConnector: BaseConnector | null;
+  setAutoConnecting: (val: boolean) => void;
   setEcosystem: (val: TEcosystem | null) => void;
   setConnectors: (connectors: BaseConnector[]) => void;
   setActiveConnector: (connector: BaseConnector | null) => void;
