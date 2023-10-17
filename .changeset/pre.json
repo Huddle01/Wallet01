@@ -1,0 +1,19 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "eslint-config-custom": "0.0.0",
+    "tsconfig": "0.0.0",
+    "example-nextjs": "0.1.40-beta.4",
+    "exmaple-vite-react": "0.0.41",
+    "@wallet01/core": "0.6.5",
+    "@wallet01/cosmos": "0.7.5",
+    "@wallet01/evm": "0.11.1",
+    "@wallet01/react": "0.8.7",
+    "@wallet01/solana": "0.6.6",
+    "@wallet01/tezos": "0.2.1"
+  },
+  "changesets": [
+    "happy-schools-add"
+  ]
+}

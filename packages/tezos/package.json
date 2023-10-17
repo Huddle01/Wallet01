@@ -1,6 +1,6 @@
 {
   "name": "@wallet01/tezos",
-  "version": "0.2.1",
+  "version": "0.3.0-beta.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

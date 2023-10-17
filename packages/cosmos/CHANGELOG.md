@@ -1,5 +1,16 @@
 # @wallet01/cosmos
 
+## 0.8.0-beta.0
+
+### Minor Changes
+
+- New events based architecture Wallet01; updated connectors and react package
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@1.0.0-beta.0
+
 ## 0.7.5
 
 ### Patch Changes

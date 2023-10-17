@@ -1,5 +1,16 @@
 # @wallet01/react
 
+## 1.0.0-beta.0
+
+### Major Changes
+
+- New events based architecture Wallet01; updated connectors and react package
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@1.0.0-beta.0
+
 ## 0.8.7
 
 ### Patch Changes

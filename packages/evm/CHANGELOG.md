@@ -1,5 +1,16 @@
 # @wallet01/evm
 
+## 0.12.0-beta.0
+
+### Minor Changes
+
+- New events based architecture Wallet01; updated connectors and react package
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@1.0.0-beta.0
+
 ## 0.11.1
 
 ### Patch Changes
