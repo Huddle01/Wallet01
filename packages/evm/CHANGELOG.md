@@ -1,5 +1,11 @@
 # @wallet01/evm
 
+## 0.12.0-beta.2
+
+### Patch Changes
+
+- Adding metamask connector
+
 ## 0.12.0-beta.1
 
 ### Patch Changes

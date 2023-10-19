@@ -1,6 +1,6 @@
 {
   "name": "@wallet01/evm",
-  "version": "0.12.0-beta.1",
+  "version": "0.12.0-beta.2",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "import": "dist/index.js",
@@ -21,8 +21,7 @@
     "@walletconnect/modal": "^2.5.2",
     "@web3modal/core": "^2.2.2",
     "ethers": "^5.7.2",
-    "eventemitter3": "^4.0.7",
-    "viem": "^1.16.4"
+    "eventemitter3": "^4.0.7"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
