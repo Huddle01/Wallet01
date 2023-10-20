@@ -1,53 +1,75 @@
-import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import { hexlify, hexValue, toUtf8Bytes } from "ethers/lib/utils.js";
+
+import {
+  BaseConnector,
+  ProviderNotFoundError,
+  UnknownError,
+  UserRejectedRequestError,
+} from "@wallet01/core";
+
 import EthereumProvider, {
   OPTIONAL_METHODS,
   REQUIRED_METHODS,
 } from "@walletconnect/ethereum-provider";
 import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider";
-// import { hexValue } from "ethers/lib/utils.js";
-import { chainData } from "../utils/chains";
-import { hexlify } from "ethers/lib/utils";
 
-type WalletconnectConnectorOptions = {
-  chain?: string;
-} & EthereumProviderOptions;
+import {
+  AddChainParameter,
+  ChainSwitchResponse,
+  ConnectionResponse,
+  DisconnectionResponse,
+} from "@wallet01/core/dist/types/methodTypes";
+
+type WalletconnectConnectorOptions = EthereumProviderOptions;
 
 const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
 export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
-  provider?: EthereumProvider;
-  private options: EthereumProviderOptions;
+  static #instance: BaseConnector<EthereumProvider>;
+  provider!: EthereumProvider;
+  static options: EthereumProviderOptions;
 
-  constructor({
-    chain = "1",
+  private constructor({
     chains,
     projectId,
-    ...options
+    ...params
   }: WalletconnectConnectorOptions) {
-    super(chain, "walletconnect", "ethereum");
-    this.options = {
+    super("walletconnect", "ethereum");
+    console.log(this.emitter);
+    WalletconnectConnector.options = {
       chains,
       projectId,
-      optionalChains: options.optionalChains ?? [],
-      methods: options.methods ?? REQUIRED_METHODS,
-      optionalMethods: options.optionalMethods ?? OPTIONAL_METHODS,
-      ...options,
+      optionalChains: params.optionalChains ?? [],
+      methods: params.methods ?? REQUIRED_METHODS,
+      optionalMethods: params.optionalMethods ?? OPTIONAL_METHODS,
+      ...params,
     };
+  }
 
-    this.getProvider();
+  static init(options: WalletconnectConnectorOptions) {
+    if (!WalletconnectConnector.#instance) {
+      WalletconnectConnector.#instance = new WalletconnectConnector(
+        options
+      ) as BaseConnector<EthereumProvider>;
+    }
+    return WalletconnectConnector.#instance;
   }
 
   async getProvider(): Promise<EthereumProvider> {
     try {
-      const _provider = await EthereumProvider.init(this.options);
+      const provider = await EthereumProvider.init(
+        WalletconnectConnector.options
+      );
 
-      this.provider = _provider;
+      this.provider = provider;
       return this.provider;
     } catch (error) {
       console.error(error);
-      throw error;
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getProvider",
+      });
     }
   }
 
@@ -59,118 +81,200 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
       return result;
     } catch (error) {
       console.error(error);
-      throw error;
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getAccount",
+      });
     }
   }
 
-  async getChainId(): Promise<string> {
-    if (this.provider) {
-      const chainId = this.provider.chainId.toString();
-      this.chain = chainId;
-      return chainId;
-    }
-    return "";
-  }
-
-  async switchChain(chainId: string): Promise<void> {
+  async getChainId() {
     if (!this.provider) await this.getProvider();
-    const _id = hexlify(Number(chainId));
-
     try {
-      if (!this.provider) throw new Error("Provider not found");
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const result = await this.provider.chainId.toString();
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getChainId",
+      });
+    }
+  }
+
+  async switchChain(
+    chainId: string,
+    options?: AddChainParameter | undefined
+  ): Promise<ChainSwitchResponse> {
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const oldChainId = await this.getChainId();
+      const hexChainId = hexValue(Number(chainId));
       const namespaceChains = this.getNamespaceChainsIds();
       const namespaceMethods = this.getNamespaceMethods();
       const isChainApproved = namespaceChains.includes(chainId);
 
       if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
+        if (!namespaceMethods.includes(ADD_ETH_CHAIN_METHOD))
+          throw new Error(
+            `${ADD_ETH_CHAIN_METHOD} method was not passed in the options object`
+          );
+        if (!options)
+          throw new Error(
+            `Given chainId ${chainId} is not approved and no options object was passed to add the chain`
+          );
         await this.provider.request({
           method: ADD_ETH_CHAIN_METHOD,
-          params: [
-            {
-              ...chainData[chainId],
-            },
-          ],
+          params: [options],
         });
       }
 
       await this.provider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: _id }],
+        params: [{ chainId: hexChainId }],
       });
 
-      this.chain = chainId;
-    } catch (error) {
-      console.error({ error });
+      this.emitter.emit(
+        "switchingChain",
+        oldChainId,
+        chainId,
+        WalletconnectConnector.#instance
+      );
 
-      throw error;
+      return {
+        fromChainId: oldChainId,
+        toChainId: chainId,
+        activeConnector: WalletconnectConnector.#instance,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "switchChain",
+      });
     }
   }
 
-  async connect({ chainId }: { chainId?: string | undefined }): Promise<void> {
+  async connect(options?: { chainId: string }): Promise<ConnectionResponse> {
+    if (!this.provider) await this.getProvider();
     try {
-      const provider = await this.getProvider();
-      const isStaleChain = this.isChainsStale();
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+      const isStaleChain = await this.isChainsStale();
 
-      if (provider.session && isStaleChain) await provider.disconnect();
+      if (this.provider.session && isStaleChain)
+        await this.provider.disconnect();
 
-      if (!provider.session || isStaleChain) {
-        const _chainId = Number(chainId || this.chain);
-        await provider.connect({
-          chains: [_chainId],
-          optionalChains: this.options.optionalChains,
+      if (!this.provider.session || isStaleChain) {
+        const chainIdToConnect = Number(options?.chainId || 1);
+        await this.provider.connect({
+          chains: [chainIdToConnect],
+          optionalChains: WalletconnectConnector.options.optionalChains,
         });
-
-        this.chain = _chainId.toString();
+      } else {
+        await this.provider.enable();
+        if (options?.chainId && (await this.getChainId()) !== options.chainId) {
+          await this.switchChain(options.chainId);
+        }
       }
 
-      await provider.enable();
-      this.chain = await this.getChainId();
-      const currentId = this.chain;
-      if (chainId && currentId !== chainId) {
-        await this.switchChain(chainId);
-      }
+      const accounts = this.provider.accounts;
+      const currentChainId = await this.getChainId();
 
-      setLastUsedConnector(this.name);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
+      this.provider.on("disconnect", this.onDisconnect);
+      this.provider.on("accountsChanged", this.onAccountsChanged);
+      this.provider.on("chainChanged", hexChainId => {
+        const chainId = parseInt(hexChainId, 16).toString();
 
-  async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error("Wallet already disconnected");
-    await this.provider.disconnect();
-    this.provider = undefined;
-  }
-
-  async resolveDid(address: string): Promise<string | null> {
-    try {
-      if (!this.provider) throw new Error("Wallet not connected");
-      if ((await this.getChainId()) !== "1") return null;
-
-      const _provider = new Web3Provider(this.provider as ExternalProvider);
-      const name = await _provider.lookupAddress(address);
-      return name;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  async signMessage(message: string): Promise<string> {
-    try {
-      if (!this.provider) throw new Error("Wallet not Connected!");
-      const _address = await this.getAccount();
-
-      const hash = await this.provider.request<string>({
-        method: "personal_sign",
-        params: [_address[0], message],
+        this.emitter.emit(
+          "chainChanged",
+          chainId,
+          WalletconnectConnector.#instance
+        );
       });
 
-      return hash;
+      this.emitter.emit(
+        "connected",
+        accounts[0]!,
+        currentChainId,
+        this.name,
+        "ethereum",
+        WalletconnectConnector.#instance
+      );
+      return {
+        address: accounts[0]!,
+        chainId: currentChainId,
+        walletName: this.name,
+        ecosystem: "ethereum",
+        activeConnector: WalletconnectConnector.#instance,
+      };
     } catch (error) {
       console.error(error);
       throw error;
+    }
+  }
+
+  async disconnect(): Promise<DisconnectionResponse> {
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+      await this.provider.disconnect();
+
+      this.emitter.emit("disconnected", this.name, "ethereum");
+      return {
+        walletName: this.name,
+        ecosystem: "ethereum",
+      };
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "disconnect",
+      });
+    }
+  }
+
+  async signMessage(message: string) {
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+      const address = await this.getAccount();
+
+      const hexMessage = hexlify(toUtf8Bytes(message));
+
+      const response = await this.provider.request({
+        method: "personal_sign",
+        params: [hexMessage, address[0]],
+      });
+
+      if ((response as any).code === 4001) {
+        throw new UserRejectedRequestError();
+      }
+
+      this.emitter.emit(
+        "messageSigned",
+        response as string,
+        WalletconnectConnector.#instance
+      );
+
+      return {
+        signature: response as string,
+        activeConnector: WalletconnectConnector.#instance,
+      };
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "signMessage",
+      });
     }
   }
 
@@ -188,31 +292,43 @@ export class WalletconnectConnector extends BaseConnector<EthereumProvider> {
     return methods ?? [];
   }
 
-  private isChainsStale() {
+  private async isChainsStale() {
     const namespaceMethods = this.getNamespaceMethods();
     if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) return false;
 
-    const connectorChains = this.chain;
+    const connectorChains = await this.getChainId();
     const namespaceChains = this.getNamespaceChainsIds();
 
     if (
       namespaceChains.length &&
-      !namespaceChains.some(id => id === this.chain)
+      !namespaceChains.some(async id => id === (await this.getChainId()))
     )
       return false;
 
-    return !connectorChains.includes(this.chain);
+    return !connectorChains.includes(await this.getChainId());
   }
 
-  protected onAccountsChanged(): void {
-    console.log("Account Changed");
+  protected onAccountsChanged(accounts: string[]): void {
+    this.emitter.emit(
+      "accountsChanged",
+      accounts,
+      WalletconnectConnector.#instance
+    );
   }
 
-  protected onChainChanged(_chain: string): void {
-    console.log("Chain Changed");
+  protected onChainChanged(hexChainId: string): void {
+    const chainId = parseInt(hexChainId, 16).toString();
+    this.emitter.emit(
+      "chainChanged",
+      chainId,
+      WalletconnectConnector.#instance
+    );
   }
 
-  protected onDisconnect(): void {
-    console.log("Wallet disconnected");
+  protected onDisconnect(error: any): void {
+    console.error({
+      error,
+    });
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

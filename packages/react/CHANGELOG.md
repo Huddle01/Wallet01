@@ -1,5 +1,56 @@
 # @wallet01/react
 
+## 1.0.0-beta.8
+
+### Patch Changes
+
+- adding succes handlers to all the hooks
+
+## 1.0.0-beta.7
+
+### Patch Changes
+
+- add onsuccessful connect option
+
+## 1.0.0-beta.6
+
+### Patch Changes
+
+- removing listeners in useEffect
+
+## 1.0.0-beta.5
+
+### Patch Changes
+
+- Adding alternative way of handling event listeners
+- removing unnecesary errors
+
+## 1.0.0-beta.3
+
+### Patch Changes
+
+- 82d8693: build then publish
+- updating client error with hook name
+
+## 1.0.0-beta.1
+
+### Patch Changes
+
+- adding isAutoConnecting variable
+- Updated dependencies
+  - @wallet01/core@1.0.0-beta.1
+
+## 1.0.0-beta.0
+
+### Major Changes
+
+- New events based architecture Wallet01; updated connectors and react package
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/core@1.0.0-beta.0
+
 ## 0.8.7
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @wallet01/core
 
+## 1.0.0-beta.1
+
+### Patch Changes
+
+- adding isAutoConnecting variable
+
+## 1.0.0-beta.0
+
+### Major Changes
+
+- New events based architecture Wallet01; updated connectors and react package
+
 ## 0.6.5
 
 ### Patch Changes

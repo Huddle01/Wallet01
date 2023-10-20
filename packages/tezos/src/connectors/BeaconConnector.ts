@@ -1,119 +1,149 @@
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import {
+  AddressNotFoundError,
+  BaseConnector,
+  ProviderNotFoundError,
+  UnknownError,
+  WalletNotConnectedError,
+} from "@wallet01/core";
 import { TezosToolkit } from "@taquito/taquito";
 import { BeaconWallet } from "@taquito/beacon-wallet";
 
 import { formatMessage } from "../utils/formatMessage";
 import { isNetwork } from "../utils/isNetwork";
 import { PermissionScope, SigningType, DAppClientOptions } from "../types";
+import {
+  ConnectionResponse,
+  DisconnectionResponse,
+  MessageSignedResponse,
+} from "@wallet01/core/dist/types/methodTypes";
 
 type BeaconConnectorOptions = {
-  chain?: string;
   name: string;
   rpcUrl?: string;
 } & DAppClientOptions;
 
 export class BeaconConnector extends BaseConnector<BeaconWallet> {
-  provider?: BeaconWallet | undefined;
-  private projectName: string;
+  static #instance: BaseConnector<BeaconWallet>;
+  provider!: BeaconWallet;
   private rpcUrl: string;
-  private featuredWallets?: string[];
-  private toolkit: TezosToolkit;
+  private toolkit!: TezosToolkit;
+  private isConnected = false;
+  private options: DAppClientOptions;
 
-  static publicKey?: string;
-
-  constructor({
-    chain = "mainnet",
-    name,
-    rpcUrl,
-    featuredWallets,
-  }: BeaconConnectorOptions) {
-    super(chain, "beacon", "tezos");
-    this.projectName = name;
-    this.featuredWallets = featuredWallets;
+  private constructor({ rpcUrl, ...options }: BeaconConnectorOptions) {
+    super("beacon", "tezos");
+    this.options = options;
 
     if (rpcUrl) {
       this.rpcUrl = rpcUrl;
     } else {
       this.rpcUrl = "https://mainnet.api.tez.ie/";
     }
+  }
 
-    this.toolkit = new TezosToolkit(this.rpcUrl);
+  static init(options: BeaconConnectorOptions) {
+    if (!BeaconConnector.#instance) {
+      BeaconConnector.#instance = new BeaconConnector(
+        options
+      ) as BaseConnector<BeaconWallet>;
+    }
+    return BeaconConnector.#instance;
   }
 
   async getProvider(): Promise<BeaconWallet> {
     try {
-      if (!this.provider) {
-        const provider = new BeaconWallet({
-          name: this.projectName,
-          featuredWallets: this.featuredWallets,
-        });
+      if (!this.toolkit) this.toolkit = new TezosToolkit(this.rpcUrl);
+      if (!this.isConnected) {
+        const provider = new BeaconWallet(this.options);
         this.provider = provider;
         this.toolkit.setProvider({ wallet: provider });
       }
       return this.provider;
     } catch (error) {
-      console.error({ error }, "getProvider");
-      throw error;
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getProvider",
+      });
     }
   }
 
   async getAccount(): Promise<string[]> {
-    if (!this.provider) await this.getProvider();
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
     try {
-      if (!this.provider) throw new Error("Wallet Not Installed");
       const account = await this.provider.getPKH();
-      if (!account) {
-        throw new Error("Wallet Not Conencted");
-      }
       return [account];
     } catch (error) {
-      console.error({ error }, "getAccount");
-      throw error;
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getAccount",
+      });
     }
   }
 
   async getChainId(): Promise<string> {
-    if (!this.provider) await this.getProvider();
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
     try {
       if (!this.provider) throw new Error("Wallet Not Installed");
       const account = await this.provider.client.getActiveAccount();
       if (!account) {
-        await this.connect({});
-        return this.chain;
+        throw new WalletNotConnectedError({ walletName: this.name });
       }
       const {
-        network: { type },
+        network: { type: chainId },
       } = account;
-      return type;
+      return chainId;
     } catch (error) {
-      console.error({ error }, "getChainId");
-      throw error;
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getChainId",
+      });
     }
   }
 
-  async switchChain(chainId: string): Promise<void> {
-    if (!this.provider) await this.getProvider();
-    try {
-      if (!this.provider) throw new Error("Wallet Not Installed");
-      await this.connect({ chainId });
-      this.chain = chainId;
-    } catch (error) {
-      console.error({ error }, "switchChain");
-      throw error;
-    }
-  }
+  // async switchChain(chainId: string): Promise<ChainSwitchResponse> {
+  //   if (!this.provider)
+  //     throw new WalletNotConnectedError({ walletName: this.name });
+  //   try {
+  //     const fromChainId = await this.getChainId();
+  //     const toChainId = chainId;
+  //     await this.provider.clearActiveAccount();
 
-  async connect({ chainId }: { chainId?: string | undefined }): Promise<void> {
+  //     if (isNetwork(toChainId)) {
+  //       await this.connect({ chainId: toChainId });
+  //     }
+
+  //     return {
+  //       fromChainId,
+  //       toChainId,
+  //       activeConnector: BeaconConnector.#instance,
+  //     };
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw new UnknownError({
+  //       walletName: this.name,
+  //       atFunction: "switchChain",
+  //     });
+  //   }
+  // }
+
+  async connect(options?: { chainId: string }): Promise<ConnectionResponse> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("Wallet Not Installed");
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
       let activeAccount = await this.provider.client.getActiveAccount();
       if (!activeAccount) {
         await this.provider.requestPermissions(
-          isNetwork(chainId)
+          options?.chainId && isNetwork(options.chainId)
             ? {
                 network: {
-                  type: chainId,
+                  type: options.chainId,
                 },
                 scopes: [PermissionScope.SIGN],
               }
@@ -124,75 +154,84 @@ export class BeaconConnector extends BaseConnector<BeaconWallet> {
         activeAccount = await this.provider.client.getActiveAccount();
       }
       if (!activeAccount?.address) {
-        throw new Error("Wallet Not Conencted");
+        throw new WalletNotConnectedError({ walletName: this.name });
       }
 
-      BeaconConnector.publicKey = activeAccount.publicKey;
-      this.chain = activeAccount.network.type;
-      setLastUsedConnector(this.name);
+      const address = activeAccount.address;
+      const chainId = activeAccount.network.type;
+
+      this.isConnected = true;
+      this.emitter.emit(
+        "connected",
+        address,
+        chainId,
+        this.name,
+        this.ecosystem,
+        BeaconConnector.#instance
+      );
+
+      return {
+        address,
+        chainId,
+        ecosystem: this.ecosystem,
+        walletName: this.name,
+        activeConnector: BeaconConnector.#instance,
+      };
     } catch (error) {
       console.error({ error }, "connect");
       throw error;
     }
   }
 
-  async disconnect(): Promise<void> {
-    if (!this.provider) await this.getProvider();
+  async disconnect(): Promise<DisconnectionResponse> {
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
     try {
-      if (!this.provider) throw new Error("Wallet Not Installed");
       await this.provider.clearActiveAccount();
-      BeaconConnector.publicKey = undefined;
       await this.provider.disconnect();
+      this.isConnected = false;
+
+      this.emitter.emit("disconnected", this.name, this.ecosystem);
+
+      return {
+        walletName: this.name,
+        ecosystem: this.ecosystem,
+      };
     } catch (error) {
-      console.error({ error }, "disconnect");
-      throw error;
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "disconnect",
+      });
     }
   }
 
-  async resolveDid(address: string): Promise<string | null> {
-    if (!this.provider) await this.getProvider();
+  async signMessage(message: string): Promise<MessageSignedResponse> {
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
     try {
-      if (!this.provider) throw new Error("Wallet Not Connected");
-      const domain = await fetch(
-        `https://api.tzkt.io/v1/domains?owner=${address}`
-      ).then(res => res.json());
-      if (!domain || domain.length == 0 || !domain[0]) return null;
-      return domain[0].name as string;
-    } catch (error) {
-      console.error({ error }, "resolveDid");
-      throw error;
-    }
-  }
-
-  async signMessage(message: string): Promise<string> {
-    if (!this.provider) await this.getProvider();
-    try {
-      if (!this.provider) throw new Error("Wallet Not Connected");
-      const address = await this.provider.getPKH();
+      const address = (await this.getAccount())[0];
       if (!address) {
-        throw new Error("Wallet Not Conencted");
+        throw new AddressNotFoundError({ walletName: this.name });
       }
       const { signature } = await this.provider.client.requestSignPayload({
         signingType: SigningType.MICHELINE,
         payload: formatMessage(message),
         sourceAddress: address,
       });
-      return signature;
+
+      this.emitter.emit("messageSigned", signature, BeaconConnector.#instance);
+
+      return {
+        signature,
+        activeConnector: BeaconConnector.#instance,
+      };
     } catch (error) {
-      console.error({ error }, "signMessage");
-      throw error;
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "signMessage",
+      });
     }
-  }
-
-  protected onAccountsChanged(): void {
-    return;
-  }
-
-  protected onChainChanged(): void {
-    return;
-  }
-
-  protected onDisconnect(): void {
-    return;
   }
 }

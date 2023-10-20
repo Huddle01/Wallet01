@@ -1,9 +1,16 @@
-import { Connection, PublicKey } from "@solana/web3.js";
-import { performReverseLookup, getAllDomains } from "@bonfida/spl-name-service";
-
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import {
+  AddressNotFoundError,
+  BaseConnector,
+  ProviderNotFoundError,
+  UnknownError,
+  WalletNotConnectedError,
+} from "@wallet01/core";
 import { PhantomProvider } from "../providers/phantomProvider";
-import emitter from "../utils/emiter";
+import {
+  ConnectionResponse,
+  MessageSignedResponse,
+} from "@wallet01/core/dist/types/methodTypes";
+import { SolanaErrorHandler } from "../utils/utils";
 
 interface PhantomWindow extends Window {
   solana?: PhantomProvider;
@@ -11,108 +18,131 @@ interface PhantomWindow extends Window {
 
 declare const window: PhantomWindow;
 
-interface PhantomConnectorOptions {
-  rpcUrl: string;
-}
-
 export class PhantomConnector extends BaseConnector<PhantomProvider> {
+  static #instance: BaseConnector<PhantomProvider>;
   provider!: PhantomProvider;
-  private rpcUrl: string;
-  constructor({ rpcUrl }: PhantomConnectorOptions) {
-    super("", "phantom", "solana");
 
-    this.rpcUrl = rpcUrl;
+  private constructor() {
+    super("phantom", "solana");
   }
 
-  async getProvider(): Promise<PhantomProvider> {
-    if (
-      typeof window !== "undefined" &&
-      window.solana &&
-      window.solana.isPhantom
-    ) {
-      this.provider = window.solana;
-      return this.provider;
-    } else {
-      throw new Error("Wallet Not Installed");
+  static init() {
+    if (!PhantomConnector.#instance) {
+      PhantomConnector.#instance =
+        new PhantomConnector() as BaseConnector<PhantomProvider>;
+    }
+    return PhantomConnector.#instance;
+  }
+
+  async getProvider() {
+    try {
+      if (
+        typeof window !== "undefined" &&
+        window.solana &&
+        window.solana.isPhantom
+      ) {
+        this.provider = window.solana;
+        return this.provider;
+      }
+      throw new ProviderNotFoundError({ walletName: this.name });
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getProvider",
+      });
     }
   }
 
   async getAccount(): Promise<string[]> {
     if (!this.provider) throw new Error("Provider Undefined");
     try {
-      await this.connect("");
-      const accounts = this.provider.publicKey;
-      return [String(accounts)];
+      const account = this.provider.publicKey?.toString();
+      if (!account) throw new AddressNotFoundError({ walletName: this.name });
+      return [account];
     } catch (error) {
       console.error(error);
-      throw error;
+      throw SolanaErrorHandler(error, "getAccount", this.name);
     }
   }
 
-  async connect({}): Promise<void> {
+  async connect(): Promise<ConnectionResponse> {
+    if (!this.provider) await this.getProvider();
     try {
-      const provider = await this.getProvider();
-      if (!provider) throw new Error("Phantom is not installed");
-      await this.provider.connect();
-      setLastUsedConnector(this.name);
+      if (!this.provider) throw new Error("Provider Undefined");
+      const { publicKey } = await this.provider.connect();
 
-      if (provider.on) {
-        provider.on("accountChanged", this.onAccountsChanged);
-        provider.on("disconnect", this.onDisconnect);
-      }
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
+      this.provider.on("accountChanged", this.onAccountsChanged);
+      this.provider.on("disconnect", this.onDisconnect);
 
-  async disconnect(): Promise<void> {
-    if (!this.provider) throw new Error("No wallet Conencted");
-    this.provider.disconnect();
-    emitter.emit("disconnected");
-  }
-
-  async resolveDid(address: string): Promise<string | null> {
-    if (!this.provider) throw new Error("No wallet Connected");
-    const connection = new Connection(this.rpcUrl);
-
-    try {
-      const ownerWallet = new PublicKey(address);
-      const allDomainKeys = await getAllDomains(connection, ownerWallet);
-      const allDomainNames = await Promise.all(
-        allDomainKeys.map(key => {
-          return performReverseLookup(connection, key);
-        })
+      this.emitter.emit(
+        "connected",
+        publicKey.toString(),
+        "mainnet",
+        this.name,
+        this.ecosystem,
+        PhantomConnector.#instance
       );
-      if (!allDomainNames[0]) return null;
-      return allDomainNames[0];
+
+      return {
+        address: publicKey.toString(),
+        chainId: "mainnet",
+        ecosystem: this.ecosystem,
+        walletName: this.name,
+        activeConnector: PhantomConnector.#instance,
+      };
     } catch (error) {
       console.error(error);
-      throw error;
+      throw SolanaErrorHandler(error, "connect", this.name);
     }
   }
 
-  async signMessage(message: string): Promise<string> {
-    if (!this.provider) throw new Error("No wallet Connected");
+  async disconnect() {
+    if (!this.provider) await this.getProvider();
     try {
-      const _message = new TextEncoder().encode(message);
-      const { signature } = await this.provider.signMessage(_message);
-      return new TextDecoder("utf-8").decode(signature);
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+      this.provider.disconnect();
+
+      this.emitter.emit("disconnected", this.name, this.ecosystem);
+      return {
+        walletName: this.name,
+        ecosystem: this.ecosystem,
+      };
+    } catch (error) {
+      console.error(error);
+      throw SolanaErrorHandler(error, "disconnect", this.name);
+    }
+  }
+
+  async signMessage(message: string): Promise<MessageSignedResponse> {
+    if (!this.provider)
+      throw new WalletNotConnectedError({ walletName: this.name });
+    try {
+      const encodedMessage = new TextEncoder().encode(message);
+      const { signature } = await this.provider.signMessage(
+        encodedMessage,
+        "utf8"
+      );
+
+      this.emitter.emit("messageSigned", signature, PhantomConnector.#instance);
+
+      return {
+        signature,
+        activeConnector: PhantomConnector.#instance,
+      };
     } catch (err) {
       console.error(err);
-      throw err;
+      throw SolanaErrorHandler(err, "signMessage", this.name);
     }
   }
 
-  protected onAccountsChanged(): void {
-    console.log("Account Changed");
-  }
+  protected onAccountsChanged = (accounts: string[]) => {
+    this.emitter.emit("accountsChanged", accounts, PhantomConnector.#instance);
+  };
 
-  protected onChainChanged(_chain: string | number): void {
-    console.log("Chain Changed");
-  }
-
-  protected onDisconnect(): void {
-    console.log("Wallet disconnected");
-  }
+  protected onDisconnect = (error: any) => {
+    console.error(error);
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
+  };
 }

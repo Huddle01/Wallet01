@@ -1,5 +1,5 @@
-import { StateCreator } from 'zustand';
-import { IAccountState } from './storeTypes';
+import { StateCreator } from "zustand";
+import { IAccountState } from "./storeTypes";
 
 const createAccountSlice: StateCreator<
   IAccountState,
@@ -8,12 +8,12 @@ const createAccountSlice: StateCreator<
   IAccountState
 > = set => ({
   address: null,
-  did: null,
+  addresses: [],
   setAddress: address => {
     set(() => ({ address }));
   },
-  setDid: did => {
-    set(() => ({ did }));
+  setAddresses: addresses => {
+    set(() => ({ addresses }));
   },
 });
 

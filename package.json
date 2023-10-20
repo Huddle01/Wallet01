@@ -16,7 +16,7 @@
     "postinstall": "turbo run build --filter=./packages/*"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.25.2",
+    "@changesets/cli": "^2.26.2",
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
     "turbo": "latest"

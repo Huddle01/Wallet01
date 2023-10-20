@@ -11,7 +11,7 @@ import {
 } from "@wallet01/evm";
 import { KeplrConnector } from "@wallet01/cosmos";
 import { PhantomConnector, SolflareConnector } from "@wallet01/solana";
-import { BeaconConnector, TempleConnector } from "@wallet01/tezos";
+import { BeaconConnector } from "@wallet01/tezos";
 import Layout from "../components/layout";
 import { ColorMode } from "@wallet01/tezos/dist/types";
 
@@ -20,26 +20,22 @@ export default function App({ Component, pageProps }: AppProps) {
     <Wallet01
       autoConnect={true}
       connectors={() => [
-        new InjectedConnector(),
-        new WalletconnectConnector({
-          chain: "1",
+        InjectedConnector.init(),
+        WalletconnectConnector.init({
           chains: [1],
           optionalChains: [137, 80001],
           projectId: "cef77f9c3969fb563468d997449c92d2",
           showQrModal: true,
         }),
-        new BananaConnector(),
-        new OkxWalletConnector(),
-        new CoinbaseConnector(),
-        new PhantomConnector({
-          rpcUrl: "https://api.mainnet-beta.solana.com",
+        BananaConnector.init(),
+        OkxWalletConnector.init(),
+        CoinbaseConnector.init({
+          appName: "Wallet01",
         }),
-        new SolflareConnector({
-          rpcUrl: "https://api.mainnet-beta.solana.com",
-        }),
-        new KeplrConnector(),
-        new TempleConnector({ projectName: "Wallet01" }),
-        new BeaconConnector({
+        PhantomConnector.init(),
+        SolflareConnector.init(),
+        KeplrConnector.init("osmosis"),
+        BeaconConnector.init({
           name: "Wallet01",
           featuredWallets: ["temple", "umami", "kukai", "naan"],
           colorMode: ColorMode.DARK,

@@ -1,10 +1,19 @@
-import { useConnect } from './useConnect';
-import { useMessage } from './useMessage';
-import { useSwitch } from './useSwitch';
-import { useClient } from './useClient';
-import { useWallet } from './useWallet';
-// import { initClientAtom } from '../store/clientStore';
+import { useConnect } from "./useConnect";
+import { useMessage } from "./useMessage";
+import { useSwitch } from "./useSwitch";
+import { useClient } from "./useClient";
+import { useWallet } from "./useWallet";
+import { useDisconnect } from "./useDisconnect";
+import { useChain } from "./useChain";
+import { useAccount } from "./useAccount";
 
-export { useConnect, useMessage, useSwitch, useClient, useWallet };
-
-// export const useInitClient = () => useSetAtom(initClientAtom);
+export {
+  useConnect,
+  useMessage,
+  useSwitch,
+  useClient,
+  useWallet,
+  useDisconnect,
+  useChain,
+  useAccount,
+};

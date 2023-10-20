@@ -1,5 +1,5 @@
-import { StateCreator } from 'zustand';
-import { IWalletState } from './storeTypes';
+import { StateCreator } from "zustand";
+import { IWalletState } from "./storeTypes";
 
 const createWalletSlice: StateCreator<
   IWalletState,
@@ -8,7 +8,7 @@ const createWalletSlice: StateCreator<
   IWalletState
 > = set => ({
   isConnected: false,
-  chainId: null,
+  chainId: "mainnet",
   setIsConnected: isConnected => {
     set(() => ({ isConnected }));
   },

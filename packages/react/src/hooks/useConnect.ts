@@ -1,90 +1,90 @@
-import { BaseConnector, useStore } from "@wallet01/core";
+import { BaseConnector } from "@wallet01/core";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useCallback, useContext, useEffect } from "react";
+import { ClientProvider } from "../context";
+import { ClientNotFoundError, ConnectorNotFoundError } from "../utils/errors";
+import { ConnectionResponse } from "@wallet01/core/dist/types/methodTypes";
+import { TEcosystem } from "@wallet01/core/dist/store/storeTypes";
 
 type ConnectArgs = {
-  connector: BaseConnector | undefined;
+  connector: BaseConnector;
   chainId?: string;
 };
 
-type ConnectResult = {
-  address: string;
-  chain: "ethereum" | "solana" | "cosmos" | "tezos";
-  connector: BaseConnector;
-};
-
 type UseConenctConfig = {
-  onError?: UseMutationOptions<void, Error, unknown>["onError"];
-  onSuccess?: UseMutationOptions<ConnectResult, Error, unknown>["onSuccess"];
+  onError?: UseMutationOptions<void, Error, ConnectArgs>["onError"];
+  onSuccessfulConnect?: UseMutationOptions<
+    ConnectionResponse,
+    Error,
+    ConnectArgs
+  >["onSuccess"];
+  onConnect?: (
+    address: string,
+    chainId: string,
+    walletName: string,
+    ecosystem: TEcosystem,
+    activeConnector: BaseConnector
+  ) => Promise<void> | void;
 };
 
-export const useConnect = ({
-  onError,
-  onSuccess,
-}: Partial<UseConenctConfig> = {}) => {
-  const {
-    connectors,
-    setActiveConnector,
-    setIsConnected,
-    setAddress,
-    setDid,
-    setChainId,
-    setActiveChain,
-  } = useStore();
+export const useConnect = (params?: UseConenctConfig) => {
+  const client = useContext(ClientProvider);
 
   const { mutate, mutateAsync, isLoading, isError, error } = useMutation<
-    ConnectResult,
+    ConnectionResponse,
     Error,
     ConnectArgs,
     unknown
   >({
     mutationFn: async ({ connector, chainId }: ConnectArgs) => {
-      if (connectors.length === 0) throw new Error("Client not initialised");
+      if (!client) throw new ClientNotFoundError("useConnect");
 
-      if (!connector) throw new Error("Connector required to connect");
-      setActiveConnector(connector);
+      const connectors = client.store.getConnectors();
 
       if (!connectors.includes(connector))
-        throw new Error("Connector not found");
+        throw new ConnectorNotFoundError({ connectorName: connector.name });
+
+      let connectionResult: ConnectionResponse;
 
       if (chainId) {
-        await connector.connect({ chainId: chainId });
+        connectionResult = await connector.connect({ chainId: chainId });
       } else {
-        await connector.connect({});
+        connectionResult = await connector.connect();
       }
 
-      const address = (await connector.getAccount())[0];
-      const chain = connector.activeChain;
-
-      if (!address) throw new Error("No account found");
-
-      setAddress(address);
-
-      setActiveChain(connector.activeChain);
-      setIsConnected(true);
-
-      setDid(
-        await connector.resolveDid(address).catch(error => {
-          console.error({ error });
-          return null;
-        })
-      );
-      if (connector.getChainId) {
-        setChainId(await connector.getChainId());
-      }
-
-      return {
-        address,
-        chain,
-        connector,
-      };
+      return connectionResult;
     },
-    onError,
-    onSuccess,
+    onSuccess: params?.onSuccessfulConnect,
+    onError: params?.onError,
   });
 
+  const connect = useCallback(
+    (params?: ConnectArgs) => {
+      return mutate(params as ConnectArgs);
+    },
+    [client]
+  );
+
+  const connectAsync = useCallback(
+    (params?: ConnectArgs) => {
+      return mutateAsync(params as ConnectArgs);
+    },
+    [client]
+  );
+
+  useEffect(() => {
+    if (params?.onConnect && client)
+      client.emitter.on("connected", params.onConnect);
+
+    return () => {
+      if (params?.onConnect && client)
+        client.emitter.off("connected", params.onConnect);
+    };
+  }, [client]);
+
   return {
-    connect: mutate,
-    connectAsync: mutateAsync,
+    connect,
+    connectAsync,
     isLoading,
     isError,
     error,

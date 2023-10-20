@@ -1,5 +1,69 @@
 # vite-react
 
+## 0.0.42-beta.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/evm@0.12.0-beta.2
+
+## 0.0.42-beta.6
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@1.0.0-beta.8
+
+## 0.0.42-beta.5
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@1.0.0-beta.7
+
+## 0.0.42-beta.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@1.0.0-beta.6
+
+## 0.0.42-beta.3
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies
+  - @wallet01/react@1.0.0-beta.5
+
+## 0.0.42-beta.2
+
+### Patch Changes
+
+- Updated dependencies [82d8693]
+- Updated dependencies
+  - @wallet01/react@1.0.0-beta.3
+
+## 0.0.42-beta.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@1.0.0-beta.1
+  - @wallet01/cosmos@0.8.0-beta.1
+  - @wallet01/evm@0.12.0-beta.1
+  - @wallet01/solana@0.7.0-beta.1
+
+## 0.0.42-beta.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @wallet01/react@1.0.0-beta.0
+  - @wallet01/cosmos@0.8.0-beta.0
+  - @wallet01/solana@0.7.0-beta.0
+  - @wallet01/evm@0.12.0-beta.0
+
 ## 0.0.41
 
 ### Patch Changes

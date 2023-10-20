@@ -1,94 +1,98 @@
-import { BaseConnector, setLastUsedConnector } from "@wallet01/core";
+import {
+  BaseConnector,
+  MessageSignError,
+  ProviderNotFoundError,
+  UnknownError,
+  UnsupportedChainError,
+  WalletConnectionError,
+  WalletCreationError,
+  WalletNotConnectedError,
+} from "@wallet01/core";
 import {
   Banana4337Provider,
   Banana,
   Wallet,
+  Chains,
 } from "@rize-labs/banana-wallet-sdk";
 import { isBananSupported, getBananaSupportedChain } from "../utils/helpers";
 
 export class BananaConnector extends BaseConnector<Banana4337Provider> {
-  provider!: Banana4337Provider;
-  BananaInstance: Banana;
-  wallet!: Wallet;
-  address!: string;
-  connected!: boolean;
+  static #instance: BaseConnector<Banana4337Provider>;
 
-  constructor(chain: string = "80001") {
-    super(chain, "banana", "ethereum");
-    if (isBananSupported(chain)) {
-      const bananaChain = getBananaSupportedChain(chain);
-      this.BananaInstance = new Banana(bananaChain);
-    } else {
-      throw new Error("Chainid passed not supported");
+  provider!: Banana4337Provider;
+  private BananaInstance!: Banana;
+  private wallet!: Wallet;
+
+  private constructor() {
+    super("banana", "ethereum");
+  }
+
+  static init() {
+    if (!BananaConnector.#instance) {
+      BananaConnector.#instance =
+        new BananaConnector() as BaseConnector<Banana4337Provider>;
     }
+    return BananaConnector.#instance;
   }
 
   async getProvider(): Promise<Banana4337Provider> {
-    try {
-      if (!this.provider) {
-        if (this.wallet) {
-          const provider = this.wallet.getProvider();
-          this.provider = provider;
-          return this.provider;
-        }
-        await this.connect();
-        //@ts-ignore
-        this.provider = this.wallet.getProvider();
-        return this.provider;
-      }
-
-      return this.provider;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (!this.provider) {
+      throw new ProviderNotFoundError({ walletName: this.name });
     }
+
+    return this.provider;
   }
 
-  async connect(): Promise<void> {
+  async connect() {
+    this.BananaInstance = new Banana(Chains.mumbai);
     const walletName = this.BananaInstance.getWalletName();
-    let provider;
 
     if (walletName) {
       this.wallet = await this.BananaInstance.connectWallet(walletName);
       if (!this.wallet) {
-        throw new Error("Wallet connection failed");
+        throw new WalletConnectionError({ walletName: this.name });
       }
-      provider = this.wallet.getProvider();
+      this.provider = this.wallet.getProvider();
     } else {
       // @ts-ignore-next-line
       this.wallet = await this.BananaInstance.createWallet();
       if (!this.wallet) {
-        throw new Error("Wallet creation failed");
+        throw new WalletCreationError({ walletName: this.name });
       }
 
-      provider = this.wallet.getProvider();
+      this.provider = this.wallet.getProvider();
     }
-    setLastUsedConnector(this.name);
 
-    provider.on("accountsChanged", this.onAccountsChanged.bind(this));
-    provider.on("disconnect", this.onDisconnect.bind(this));
-    provider.on("chainChanged", this.onChainChanged.bind(this));
+    this.provider.on("accountsChanged", this.onAccountsChanged.bind(this));
+    this.provider.on("disconnect", this.onDisconnect.bind(this));
+    this.provider.on("chainChanged", this.onChainChanged.bind(this));
 
-    this.address = await this.wallet.getAddress();
-    this.connected = true;
+    const address = await this.wallet.getAddress();
+    const chainId = await this.getChainId();
+
+    this.emitter.emit(
+      "connected",
+      address,
+      chainId,
+      this.name,
+      this.ecosystem,
+      BananaConnector.#instance
+    );
+
+    return {
+      address,
+      walletName: this.name,
+      chainId,
+      ecosystem: this.ecosystem,
+      activeConnector: BananaConnector.#instance,
+    };
   }
 
-  async resolveDid(address: string): Promise<string | null> {
-    try {
-      if (!this.provider) throw new Error("Wallet not connected");
-      if ((await this.getChainId()) !== "1") return null;
-      const name = this.provider.lookupAddress(address);
-      return name;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  async switchChain(chainId: string): Promise<void> {
+  async switchChain(chainId: string) {
+    const oldChainId = await this.getChainId();
     const isNewChainSupported = isBananSupported(chainId);
     if (!isNewChainSupported)
-      throw new Error(`Unsupported chainId: ${chainId}`);
+      throw new UnsupportedChainError({ chainId: chainId });
 
     const bananaChain = getBananaSupportedChain(chainId);
 
@@ -96,19 +100,30 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
     this.BananaInstance = BananaInstance;
 
     // connect to same wallet with new configs
-    await this.connect();
+    const connection = await this.connect();
+
+    this.emitter.emit("chainChanged", chainId, BananaConnector.#instance);
+
+    return {
+      fromChainId: oldChainId,
+      toChainId: chainId,
+      activeConnector: connection.activeConnector,
+    };
   }
 
-  async signMessage(message: string): Promise<string> {
+  async signMessage(message: string) {
     try {
       if (!this.provider) throw new Error("Wallet not Connected!");
       const signer = this.wallet.getSigner();
       const hash = (await signer.signBananaMessage(message)).signature;
 
-      return hash;
+      return {
+        signature: hash,
+        activeConnector: BananaConnector.#instance,
+      };
     } catch (error) {
       console.error(error);
-      throw error;
+      throw new MessageSignError({ walletName: this.name });
     }
   }
 
@@ -116,8 +131,9 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   async getAccount(): Promise<string[]> {
     if (!this.provider) await this.getProvider();
     try {
-      if (!this.provider) throw new Error("Wallet Not Connected");
-      const result = [this.address];
+      if (!this.provider)
+        throw new WalletNotConnectedError({ walletName: this.name });
+      const result = [await this.wallet.getAddress()];
       return result;
     } catch (error) {
       console.error(error);
@@ -126,16 +142,28 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   }
 
   async disconnect() {
-    this.connected = false;
+    this.onDisconnect();
+    return {
+      walletName: this.name,
+      ecosystem: this.ecosystem,
+    };
   }
 
   async getChainId(): Promise<string> {
-    if (this.provider) {
-      const id = this.provider.chainId;
-      this.chain = id.toString();
-      return this.chain;
+    if (!this.provider) await this.getProvider();
+    try {
+      if (!this.provider)
+        throw new ProviderNotFoundError({ walletName: this.name });
+
+      const chainId = this.provider.chainId.toString();
+      return chainId;
+    } catch (error) {
+      console.error(error);
+      throw new UnknownError({
+        walletName: this.name,
+        atFunction: "getChainId",
+      });
     }
-    return "";
   }
 
   //! Currently Banana wallet has 1:1 mapping with account
@@ -148,6 +176,6 @@ export class BananaConnector extends BaseConnector<Banana4337Provider> {
   }
 
   protected onDisconnect(): void {
-    this.connected = false;
+    this.emitter.emit("disconnected", this.name, this.ecosystem);
   }
 }

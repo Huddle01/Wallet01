@@ -1,15 +1,21 @@
-import { useClient, useMessage, useSwitch, useWallet } from "@wallet01/react";
+import {
+  useClient,
+  useDisconnect,
+  useMessage,
+  useSwitch,
+  useWallet,
+} from "@wallet01/react";
 import React, { useState } from "react";
 import WalletIcons from "./assets/WalletIcons";
-import { BeaconConnector } from "@wallet01/tezos";
 
 const ConnectedModal = () => {
   const [message, setMessage] = useState<string>("");
   const [chainId, setChainId] = useState<string>("");
-  const { did, activeConnector, address, disconnect } = useWallet();
+  const { activeConnector, address, chainId: cId } = useWallet();
   const { signMessage, hash } = useMessage();
+  const { disconnect } = useDisconnect();
   const { switchChain } = useSwitch();
-  const { activeChain } = useClient();
+  const { ecosystem } = useClient();
 
   return (
     <div className="flex flex-col">
@@ -19,18 +25,9 @@ const ConnectedModal = () => {
       </span>
       <div className="grid grid-cols-2 mt-5 justify-center items-center gap-8 border border-slate-600 bg-slate-700 p-4 rounded-lg m-10">
         <div className="flex flex-col p-6 gap-4 max-w-full">
-          {activeChain ? (
-            <span className="text-xl font-base">
-              Connected to {activeChain}
-            </span>
+          {ecosystem ? (
+            <span className="text-xl font-base">Connected to {ecosystem}</span>
           ) : null}
-          {did ? (
-            <span className="text-xl font-base">
-              Hello, <b className="underline underline-offset-1">{did}</b>
-            </span>
-          ) : (
-            ""
-          )}
           {address ? (
             <span className="text-xl font-base truncate">
               Address: <br />
@@ -39,9 +36,15 @@ const ConnectedModal = () => {
           ) : (
             ""
           )}
-          {activeConnector?.name === "beacon" ? (
+          {
+            <span className="text-xl font-base">
+              ChainId: <br />
+              <b className="italic truncate ">{cId}</b>
+            </span>
+          }
+          {/* {activeConnector?.name === "beacon" ? (
             <span>{BeaconConnector.publicKey}</span>
-          ) : null}
+          ) : null} */}
           <button
             className="bg-slate-600 w-fit p-3 text-medium text-lg rounded-md"
             onClick={() => disconnect()}

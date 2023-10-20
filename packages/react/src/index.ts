@@ -1,10 +1,4 @@
-import {
-  useClient,
-  useConnect,
-  useMessage,
-  useSwitch,
-  useWallet,
-} from "./hooks";
 import Wallet01 from "./context";
+export * from "./hooks";
 
-export { Wallet01, useClient, useConnect, useMessage, useSwitch, useWallet };
+export { Wallet01 };

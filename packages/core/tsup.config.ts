@@ -10,5 +10,5 @@ export default defineConfig({
   entryPoints: ["src/index.ts"],
   target: "es2020",
   outDir: "dist",
-  entry: ["src/**/*.ts"], //include all files under src
+  entry: ["src/index.ts"],
 });
